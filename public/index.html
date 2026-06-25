@@ -2156,7 +2156,7 @@ function getBattleName(){
   return battleName;
 }
 function loadBattleRoom(code=battleRoomCode){
-  if(online.ready && online.user && online.battleRoom && online.battleRoom.code === code) return online.battleRoom;
+  if(online.battleRoom && online.battleRoom.code === code) return online.battleRoom;
   if(!code) return null;
   try{ return JSON.parse(localStorage.getItem(battleStorageKey(code)) || 'null'); }catch(e){ return null; }
 }
@@ -2164,13 +2164,9 @@ function saveBattleRoom(room){
   if(!room || !room.code) return;
   online.battleRoom = room;
   try{ localStorage.setItem(battleStorageKey(room.code), JSON.stringify(room)); }catch(e){}
-  if(serverOnline.user){
+  if(serverOnline.enabled){
     serverApi(`/api/rooms/${room.code}`, {method:'POST', body:JSON.stringify({state:room})})
       .catch(e=>setBattleStatus(`서버 방 저장 실패 · ${escapeAttr(e.message || e)}`));
-  }
-  if(online.ready && online.user){
-    const ref = online.modules.doc(online.db, 'battleRooms', room.code);
-    online.modules.setDoc(ref, {...room, updatedAt:Date.now()}, {merge:true}).catch(e=>setBattleStatus(`온라인 방 저장 실패 · ${escapeAttr(e.message || e)}`));
   }
 }
 function currentBattleRoom(){
@@ -2179,13 +2175,6 @@ function currentBattleRoom(){
 function subscribeOnlineBattleRoom(code){
   if(online.battleUnsub) online.battleUnsub();
   online.battleUnsub = null;
-  if(!online.ready || !online.user || !code) return;
-  const ref = online.modules.doc(online.db, 'battleRooms', code);
-  online.battleUnsub = online.modules.onSnapshot(ref, snap=>{
-    if(!snap.exists()) return;
-    online.battleRoom = snap.data();
-    if(battleRoomCode === code) renderBattleTab();
-  });
 }
 function createBattleRoom(){
   battleRoomCode = generateBattleCode();
@@ -2204,21 +2193,12 @@ async function joinBattleRoom(){
     return;
   }
   let room = loadBattleRoom(code);
-  if(!room && serverOnline.user){
+  if(!room && serverOnline.enabled){
     try{
       const data = await serverApi(`/api/rooms/${code}`);
       room = data.room.state;
     }catch(e){
       setBattleStatus('그 방을 찾을 수 없습니다');
-      return;
-    }
-  }
-  if(!room && online.ready && online.user){
-    try{
-      const snap = await online.modules.getDoc(online.modules.doc(online.db, 'battleRooms', code));
-      if(snap.exists()) room = snap.data();
-    }catch(e){
-      setBattleStatus(`온라인 방 입장 실패 · ${escapeAttr(e.message || e)}`);
       return;
     }
   }
