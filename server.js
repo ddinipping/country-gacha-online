@@ -132,13 +132,12 @@ async function handleApi(req, res){
 
     if(req.method === 'POST' && url.pathname === '/api/rooms'){
       const current = getUser(req, db);
-      if(!current) return json(res, 401, { error: 'unauthorized' });
       const body = await readBody(req);
       let code = roomCode();
       while(db.rooms[code]) code = roomCode();
       db.rooms[code] = {
         code,
-        hostUid: current.uid,
+        hostUid: current ? current.uid : '',
         createdAt: Date.now(),
         updatedAt: Date.now(),
         state: body.state || { code, round: 1, host: {}, guest: {}, result: '' }
@@ -156,11 +155,10 @@ async function handleApi(req, res){
 
     if(req.method === 'POST' && url.pathname.startsWith('/api/rooms/')){
       const current = getUser(req, db);
-      if(!current) return json(res, 401, { error: 'unauthorized' });
       const code = url.pathname.split('/').pop().toUpperCase();
       const room = db.rooms[code] || {
         code,
-        hostUid: current.uid,
+        hostUid: current ? current.uid : '',
         createdAt: Date.now(),
         updatedAt: Date.now(),
         state: { code, round: 1, host: {}, guest: {}, result: '' }
