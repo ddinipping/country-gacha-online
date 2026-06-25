@@ -27,6 +27,7 @@ body{background:
 .resource-chip{height:30px;display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:linear-gradient(180deg,rgba(27,39,64,.92),rgba(12,18,32,.92));padding:4px 9px;color:var(--text);font-size:11px;font-weight:800;white-space:nowrap;}
 .resource-chip b{font-size:12px;color:var(--gold);line-height:1;}
 .resource-chip.gem b{color:#BDF6FF;}
+.resource-chip.coin b{color:#FFD45C;}
 .resource-label{color:var(--text-dim);font-weight:700;}
 .resource-icon{position:relative;display:inline-block;flex:0 0 auto;}
 .resource-icon.ticket{width:15px;height:11px;border-radius:3px;background:linear-gradient(135deg,#FFE37A,#FF9B45);box-shadow:0 0 9px rgba(255,212,92,.32);}
@@ -37,6 +38,8 @@ body{background:
 .resource-icon.ticket.dependent{background:linear-gradient(135deg,#FFA75C,#E45A41);}
 .resource-icon.gem{width:13px;height:13px;border:1px solid rgba(255,255,255,.75);border-radius:3px;background:linear-gradient(135deg,#E8FDFF,#55E4FF 48%,#2D8DE0);transform:rotate(45deg);box-shadow:0 0 12px rgba(85,228,255,.5);}
 .resource-icon.gem::after{content:'';position:absolute;left:2px;top:2px;width:4px;height:4px;border-radius:1px;background:rgba(255,255,255,.75);}
+.resource-icon.coin{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff0a8,#ffd45c 45%,#b98016 80%);box-shadow:0 0 12px rgba(255,212,92,.45);}
+.resource-icon.coin::after{content:'';position:absolute;inset:3px;border:1px solid rgba(90,56,5,.55);border-radius:50%;}
 .left-nav{position:fixed;left:12px;top:118px;z-index:19;display:flex;flex-direction:column;gap:9px;padding:8px;border:1px solid rgba(255,255,255,.14);border-radius:20px;background:rgba(8,12,22,.72);box-shadow:0 16px 34px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(14px);}
 .left-tab{width:58px;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px solid rgba(255,255,255,.1);border-radius:15px;background:linear-gradient(180deg,rgba(27,39,64,.9),rgba(12,18,32,.9));color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:900;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);transition:transform .15s,border-color .15s,background .15s,color .15s;}
 .left-tab:hover{border-color:rgba(85,228,255,.42);color:var(--text);}
@@ -285,6 +288,17 @@ body{background:
 .battle-status{min-height:22px;font-size:12px;color:var(--text-dim);line-height:1.5;}
 .battle-status b{color:var(--gold);}
 .battle-grid-title{font-size:11px;letter-spacing:.12em;color:var(--text-dim);font-weight:900;margin:12px 0 8px;}
+.shop-panel{border:1px solid var(--line);border-radius:8px;background:rgba(18,27,46,.72);padding:14px;margin-bottom:18px;}
+.shop-status{min-height:24px;font-size:12px;color:var(--text-dim);line-height:1.5;margin:8px 0 12px;}
+.shop-status b{color:var(--gold);}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;}
+.shop-card{border:1px solid rgba(255,255,255,.11);border-radius:8px;background:rgba(0,0,0,.18);padding:12px;display:flex;flex-direction:column;gap:8px;min-height:150px;}
+.shop-card.owned{opacity:.72;}
+.shop-top{display:flex;align-items:center;gap:8px;min-height:38px;}
+.shop-top img,.shop-top .flag-fallback,.shop-top .composite-flag{width:42px;height:28px;border-radius:4px;box-shadow:none;font-size:8px;}
+.shop-name{font-size:13px;font-weight:900;color:var(--text);}
+.shop-desc{font-size:11px;line-height:1.45;color:var(--text-dim);flex:1;}
+.shop-price{font-size:12px;font-weight:900;color:var(--gold);}
 .settings-panel{border:1px solid var(--line);border-radius:8px;background:rgba(18,27,46,.72);padding:14px;margin-bottom:18px;}
 .settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0;}
 .settings-field{display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--text-dim);font-weight:800;}
@@ -336,6 +350,12 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
   <span class="resource-chip gem" title="보석">
     <span class="resource-icon gem"></span><span class="resource-label">보석</span><b data-resource="gems">0</b>
   </span>
+  <span class="resource-chip coin" title="코인">
+    <span class="resource-icon coin"></span><span class="resource-label">코인</span><b data-resource="coins">0</b>
+  </span>
+  <span class="resource-chip coin" title="강화 토큰">
+    <span class="resource-icon coin"></span><span class="resource-label">강화토큰</span><b data-resource="tokens">0</b>
+  </span>
 </aside>
 <nav class="left-nav" aria-label="화면 이동">
   <button class="tab-btn left-tab active" data-tab="collection" type="button" title="도감">
@@ -382,6 +402,17 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
       </svg>
     </span>
     <span>결투</span>
+  </button>
+  <button class="tab-btn left-tab" data-tab="shop" type="button" title="상점">
+    <span class="nav-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path class="fill" d="M5 10h14l-1 10H6z"/>
+        <path d="M5 10h14l-1 10H6z"/>
+        <path d="M8 10a4 4 0 0 1 8 0"/>
+        <path d="M9 14h6M10 17h4"/>
+      </svg>
+    </span>
+    <span>상점</span>
   </button>
   <button class="tab-btn left-tab" data-tab="settings" type="button" title="설정">
     <span class="nav-icon" aria-hidden="true">
@@ -455,6 +486,7 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
     <button class="tab-btn" data-tab="inventory">보관함</button>
     <button class="tab-btn" data-tab="enhance">강화</button>
     <button class="tab-btn" data-tab="battle">결투장</button>
+    <button class="tab-btn" data-tab="shop">상점</button>
     <button class="tab-btn" data-tab="settings">설정</button>
   </div>
   <div class="tab-panel active" id="collection-panel">
@@ -492,7 +524,7 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
         <span class="synth-title">강화</span>
         <span class="synth-meta" id="enhance-meta">대상 없음</span>
       </div>
-      <div class="formula-line">강화할 카드를 선택하세요 · 재료는 같은 등급 1 / 2 / 3 / 4 / 5 / 10장</div>
+      <div class="formula-line">일반 강화는 상점 강화 토큰을 사용합니다 · 1~10강은 강 수와 같은 토큰, 최종은 100토큰</div>
       <div class="enhance-row">
         <div class="enhance-info" id="enhance-info">강화할 카드를 선택하세요</div>
         <div class="controls">
@@ -540,6 +572,17 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
       </div>
       <div class="battle-grid-title">대표 카드 선택</div>
       <div id="battle-grid"></div>
+    </div>
+  </div>
+  <div class="tab-panel" id="shop-panel-tab">
+    <div class="shop-panel">
+      <div class="synth-top">
+        <span class="synth-title">상점</span>
+        <span class="synth-meta" id="shop-boost-meta">물약 없음</span>
+      </div>
+      <div class="formula-line">코인은 뽑기, 신규 국가 발견, 시크릿 발견으로 얻습니다 · 같은 물약은 남은 시간이 누적되고 서로 다른 물약은 동시에 적용됩니다</div>
+      <div class="shop-status" id="shop-status">상점에서 코인을 사용하세요</div>
+      <div class="shop-grid" id="shop-grid"></div>
     </div>
   </div>
   <div class="tab-panel" id="settings-panel-tab">
@@ -778,8 +821,29 @@ const SECRET_DATA = {
     ['s_benelux','베네룩스','https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Flag_of_Benelux.svg/250px-Flag_of_Benelux.svg.png'],
     ['s_german_confederation','독일 연방',W('Flag of the German Confederation (war).svg')],
     ['s_world','세계',W('International Flag of Planet Earth.svg')],
+    ['s_ryukyu','류큐 왕국',W('Flag of the Ryukyu Kingdom.svg')],
+    ['s_knights_malta','몰타 기사단',W('Flag of the Sovereign Military Order of Malta.svg')],
+    ['s_krakow','크라쿠프 자유시',W('Flag of Kraków.svg')],
   ]
 };
+const COIN_ONLY_COUNTRY_DATA = [
+  ['sg','싱가포르','https://flagcdn.com/w320/sg.png'],
+  ['ch','스위스','https://flagcdn.com/w320/ch.png'],
+  ['li','리히텐슈타인','https://flagcdn.com/w320/li.png'],
+  ['d_bm','버뮤다','https://flagcdn.com/w320/bm.png'],
+  ['lu','룩셈부르크','https://flagcdn.com/w320/lu.png'],
+  ['mc','모나코','https://flagcdn.com/w320/mc.png'],
+  ['d_hk','홍콩','https://flagcdn.com/w320/hk.png'],
+  ['d_mo','마카오','https://flagcdn.com/w320/mo.png'],
+  ['d_ky','케이맨 제도','https://flagcdn.com/w320/ky.png'],
+  ['coin_venice','베네치아 공화국',W('Flag of the Republic of Venice.svg')],
+  ['coin_genoa','제노바 공화국',W('Flag of Genoa.svg')],
+  ['coin_hanse','한자동맹',W('Flag of the Hanseatic League.svg')],
+  ['coin_florence','피렌체 공화국',W('Flag of Florence.svg')],
+  ['coin_voc','네덜란드 동인도회사',W('Flag of the Dutch East India Company.svg')],
+  ['coin_eic','영국 동인도회사',W('Flag of the British East India Company (1801).svg')],
+];
+const COIN_ONLY_IDS = new Set(COIN_ONLY_COUNTRY_DATA.map(entry=>entry[0]));
 
 // Historical countries: [id, name, flagUrl]  — images are fetched from Wikimedia Commons or flagcdn.
 const HIST_FLAG_URLS = {
@@ -959,6 +1023,7 @@ const TIERS = [
   {key:'common',     label:'일반',      prob:43,   color:'#7A8699', rank:5,  historical:false},
 ];
 const SECRET_TIER = {key:'secret', label:'시크릿', prob:0, color:'#000000', rank:-6, secret:true, historical:false, symbol:'✦'};
+const COIN_TIER = {key:'coin', label:'코인 전용', prob:0, color:'#F5B642', rank:-5.5, coinOnly:true, historical:false, symbol:'◎'};
 const DEPENDENT_TIERS = [
   {key:'dep_legend', label:'종속 전설', depLabel:'전설', prob:2,  color:'#FFD45C', rank:0.35, dependent:true, historical:false, symbol:'◆'},
   {key:'dep_myth',   label:'종속 신화', depLabel:'신화', prob:5,  color:'#FF5B6E', rank:1.35, dependent:true, historical:false, symbol:'◆'},
@@ -968,7 +1033,7 @@ const DEPENDENT_TIERS = [
   {key:'dep_common', label:'종속 일반', depLabel:'일반', prob:45, color:'#FF8A3D', rank:5.35, dependent:true, historical:false, symbol:'◆'},
 ];
 const DEPENDENT_TIER_ORDER = DEPENDENT_TIERS.map(t=>t.key);
-const TIER_BY_KEY = Object.fromEntries([SECRET_TIER, ...DEPENDENT_TIERS, ...TIERS].map(t=>[t.key,t]));
+const TIER_BY_KEY = Object.fromEntries([SECRET_TIER, COIN_TIER, ...DEPENDENT_TIERS, ...TIERS].map(t=>[t.key,t]));
 const PREMIUM_EXCLUDED_TIERS = new Set(['common','rare','sr']);
 const PREMIUM_TIERS = TIERS.filter(t=>!PREMIUM_EXCLUDED_TIERS.has(t.key));
 
@@ -1010,6 +1075,7 @@ function buildPool(){
     const src = t.continent ? CONTINENT_DATA[t.key] : t.historical ? HIST_DATA[t.key] : CURRENT_DATA[t.key];
     if(!src) continue;
     for(const entry of src){
+      if(COIN_ONLY_IDS.has(entry[0])) continue;
       all.push(countryFromEntry(entry, t));
     }
   }
@@ -1020,6 +1086,7 @@ function buildDependentPool(){
   for(const t of DEPENDENT_TIERS){
     const src = DEPENDENT_DATA[t.key] || [];
     for(const entry of src){
+      if(COIN_ONLY_IDS.has(entry[0])) continue;
       all.push(countryFromDependentEntry(entry, t));
     }
   }
@@ -1029,7 +1096,8 @@ const MAIN_COUNTRIES = buildPool();
 const ALL_DEPENDENT_COUNTRIES = buildDependentPool();
 const ALL_COUNTRIES = [...MAIN_COUNTRIES, ...ALL_DEPENDENT_COUNTRIES];
 const SECRET_COUNTRIES = SECRET_DATA.secret.map(entry=>countryFromEntry(entry, SECRET_TIER));
-const ALL_COLLECTIBLES = [...SECRET_COUNTRIES, ...ALL_COUNTRIES];
+const COIN_ONLY_COUNTRIES = COIN_ONLY_COUNTRY_DATA.map(entry=>({...countryFromEntry(entry, COIN_TIER), coinOnly:true}));
+const ALL_COLLECTIBLES = [...SECRET_COUNTRIES, ...COIN_ONLY_COUNTRIES, ...ALL_COUNTRIES];
 const COUNTRY_BY_ID = Object.fromEntries(ALL_COLLECTIBLES.map(c=>[c.id,c]));
 const TOTAL = ALL_COLLECTIBLES.length;
 const LEGACY_ID_MAP = {
@@ -1081,6 +1149,9 @@ let enhanceMaterialCards = [];
 let battleRoomCode = '';
 let battleSide = '';
 let battleName = '';
+let coins = 0;
+let enhanceTokens = 0;
+let boosts = {luckUntil:0, doubleUntil:0};
 let settings = {volume:0.75};
 let online = {
   enabled:false, ready:false, user:null, modules:null, app:null, auth:null, db:null,
@@ -1091,6 +1162,33 @@ let serverOnline = {
   token: localStorage.getItem('country_gacha_server_token') || '',
   user: null
 };
+const SHOP_ITEMS = [
+  {id:'luck_potion', type:'boost', boost:'luckUntil', name:'운 2배 물약', price:35, minutes:10, desc:'10분 동안 높은 등급의 가중치가 크게 올라갑니다.'},
+  {id:'double_potion', type:'boost', boost:'doubleUntil', name:'2배로 뜨는 물약', price:45, minutes:5, desc:'5분 동안 뽑기로 얻는 카드 수량이 2배가 됩니다.'},
+  {id:'enhance_tokens_10', type:'tokens', name:'강화 토큰 10개', price:50, amount:10, desc:'일반 강화에 사용하는 전용 토큰입니다.'},
+  {id:'enhance_tokens_50', type:'tokens', name:'강화 토큰 50개', price:220, amount:50, desc:'고강화와 최종 강화에 필요한 토큰 묶음입니다.'},
+  {id:'gem_pack', type:'gems', name:'보석 3개', price:60, amount:3, desc:'스페셜 강화 재료 보석을 3개 얻습니다.'},
+  {id:'country_ryukyu', type:'country', countryId:'s_ryukyu', name:'류큐 왕국', price:140, desc:'상점에서만 살 수 있는 코인 전용 국가입니다.'},
+  {id:'country_malta', type:'country', countryId:'s_knights_malta', name:'몰타 기사단', price:160, desc:'상점에서만 살 수 있는 코인 전용 국가입니다.'},
+  {id:'country_krakow', type:'country', countryId:'s_krakow', name:'크라쿠프 자유시', price:130, desc:'상점에서만 살 수 있는 코인 전용 국가입니다.'},
+  {id:'country_singapore', type:'country', countryId:'sg', name:'싱가포르', price:180, desc:'금융 중심지로 유명한 코인 전용 국가입니다.'},
+  {id:'country_switzerland', type:'country', countryId:'ch', name:'스위스', price:200, desc:'금융 중심지로 유명한 코인 전용 국가입니다.'},
+  {id:'country_liechtenstein', type:'country', countryId:'li', name:'리히텐슈타인', price:170, desc:'금융 중심지로 유명한 코인 전용 국가입니다.'},
+  {id:'country_bermuda', type:'country', countryId:'d_bm', name:'버뮤다', price:160, desc:'금융과 보험으로 유명한 코인 전용 지역입니다.'},
+  {id:'country_luxembourg', type:'country', countryId:'lu', name:'룩셈부르크', price:190, desc:'유럽 금융 중심지 코인 전용 국가입니다.'},
+  {id:'country_monaco', type:'country', countryId:'mc', name:'모나코', price:180, desc:'부와 금융 이미지가 강한 코인 전용 국가입니다.'},
+  {id:'country_hongkong', type:'country', countryId:'d_hk', name:'홍콩', price:210, desc:'아시아 금융 중심지 코인 전용 지역입니다.'},
+  {id:'country_macau', type:'country', countryId:'d_mo', name:'마카오', price:160, desc:'상점에서만 살 수 있는 코인 전용 지역입니다.'},
+  {id:'country_cayman', type:'country', countryId:'d_ky', name:'케이맨 제도', price:190, desc:'금융 허브로 유명한 코인 전용 지역입니다.'},
+  {id:'country_venice', type:'country', countryId:'coin_venice', name:'베네치아 공화국', price:240, desc:'상업과 해상 무역으로 이름난 코인 전용 역사 국가입니다.'},
+  {id:'country_genoa', type:'country', countryId:'coin_genoa', name:'제노바 공화국', price:230, desc:'금융과 해상 무역으로 이름난 코인 전용 역사 국가입니다.'},
+  {id:'country_hanse', type:'country', countryId:'coin_hanse', name:'한자동맹', price:260, desc:'중세 무역 네트워크를 대표하는 코인 전용 역사 세력입니다.'},
+  {id:'country_florence', type:'country', countryId:'coin_florence', name:'피렌체 공화국', price:220, desc:'은행과 르네상스 상업으로 유명한 코인 전용 역사 국가입니다.'},
+  {id:'country_voc', type:'country', countryId:'coin_voc', name:'네덜란드 동인도회사', price:280, desc:'초기 주식회사와 무역 제국을 상징하는 코인 전용 역사 세력입니다.'},
+  {id:'country_eic', type:'country', countryId:'coin_eic', name:'영국 동인도회사', price:280, desc:'상업과 식민 무역을 대표하는 코인 전용 역사 세력입니다.'},
+  {id:'country_benelux', type:'country', countryId:'s_benelux', name:'베네룩스', price:220, desc:'시크릿 국가를 코인으로 바로 획득합니다.'},
+  {id:'country_world', type:'country', countryId:'s_world', name:'세계', price:500, desc:'최고가 상점 상품입니다. 도감 완성 없이도 획득할 수 있습니다.'},
+];
 
 function normalizeStoredId(id){
   return LEGACY_ID_MAP[id] || id;
@@ -1110,7 +1208,11 @@ function totalCollectibles(){
 }
 function renderResourceHud(){
   const gemEl = document.querySelector('[data-resource="gems"]');
+  const coinEl = document.querySelector('[data-resource="coins"]');
+  const tokenEl = document.querySelector('[data-resource="tokens"]');
   if(gemEl) gemEl.textContent = enhanceGems;
+  if(coinEl) coinEl.textContent = coins;
+  if(tokenEl) tokenEl.textContent = enhanceTokens;
 }
 function worldCompletionIds(){
   return ALL_COLLECTIBLES
@@ -1128,6 +1230,92 @@ function maybeGrantWorldSecret(label='도감 완성'){
   showSynthMessage(`${label} · <b>시크릿 세계</b> 획득`);
   return true;
 }
+function isBoostActive(key){
+  return Number(boosts[key] || 0) > Date.now();
+}
+function boostRemainingMs(key){
+  return Math.max(0, Number(boosts[key] || 0) - Date.now());
+}
+function formatDuration(ms){
+  const total = Math.ceil(ms / 1000);
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+function addCoins(amount, reason=''){
+  const gain = Math.max(0, Math.floor(Number(amount)||0));
+  if(!gain) return;
+  coins += gain;
+  renderResourceHud();
+  if(activeTab === 'shop') renderShop();
+}
+function shopBoostMeta(){
+  const luck = boostRemainingMs('luckUntil');
+  const double = boostRemainingMs('doubleUntil');
+  const parts = [];
+  if(luck) parts.push(`운 ${formatDuration(luck)}`);
+  if(double) parts.push(`2배 ${formatDuration(double)}`);
+  return parts.length ? parts.join(' · ') : '물약 없음';
+}
+function renderShop(){
+  const grid = document.getElementById('shop-grid');
+  const meta = document.getElementById('shop-boost-meta');
+  if(meta) meta.textContent = shopBoostMeta();
+  if(!grid) return;
+  grid.innerHTML = SHOP_ITEMS.map(item=>{
+    const country = item.countryId ? COUNTRY_BY_ID[item.countryId] : null;
+    const owned = country && (inventory[country.id] || discovered.has(country.id));
+    const disabled = coins < item.price || owned;
+    const visual = country ? flagImg(country,'flag-img-hist') : `<span class="resource-icon ${item.type === 'gems' ? 'gem' : item.boost === 'luckUntil' ? 'ticket premium' : 'coin'}"></span>`;
+    const action = owned ? '보유 중' : item.type === 'boost' ? '구매/사용' : '구매';
+    return `<div class="shop-card ${owned ? 'owned' : ''}">
+      <div class="shop-top">${visual}<span class="shop-name">${item.name}</span></div>
+      <div class="shop-desc">${item.desc}</div>
+      <div class="shop-price">코인 ${item.price}</div>
+      <button class="btn ${item.type === 'country' ? 'btn-gold' : 'btn-premium'}" data-shop-id="${item.id}" ${disabled ? 'disabled' : ''}>${action}</button>
+    </div>`;
+  }).join('');
+}
+function buyShopItem(id){
+  const item = SHOP_ITEMS.find(entry=>entry.id === id);
+  if(!item) return;
+  const status = document.getElementById('shop-status');
+  if(coins < item.price){
+    if(status) status.textContent = '코인이 부족합니다';
+    return;
+  }
+  if(item.type === 'country'){
+    const country = COUNTRY_BY_ID[item.countryId];
+    if(!country) return;
+    if(inventory[country.id] || discovered.has(country.id)){
+      if(status) status.textContent = '이미 보유한 국가입니다';
+      return;
+    }
+    coins -= item.price;
+    addCountry(country, 1, {coinReward:false});
+    if(status) status.innerHTML = `<b>${country.name}</b> 구매 완료`;
+  }else if(item.type === 'gems'){
+    coins -= item.price;
+    enhanceGems += item.amount;
+    if(status) status.innerHTML = `보석 <b>${item.amount}</b>개 구매 완료`;
+  }else if(item.type === 'tokens'){
+    coins -= item.price;
+    enhanceTokens += item.amount;
+    if(status) status.innerHTML = `강화 토큰 <b>${item.amount}</b>개 구매 완료`;
+  }else if(item.type === 'boost'){
+    coins -= item.price;
+    const now = Date.now();
+    const base = Math.max(now, Number(boosts[item.boost] || 0));
+    boosts[item.boost] = base + item.minutes * 60 * 1000;
+    if(status) status.innerHTML = `<b>${item.name}</b> 활성화 · ${item.minutes}분 추가`;
+  }
+  playSfx('synth');
+  renderResourceHud();
+  renderCollection();
+  renderInventory();
+  renderShop();
+  saveState();
+}
 function loadSettings(){
   try{
     const obj = JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}');
@@ -1138,7 +1326,7 @@ function saveSettings(){
   try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }catch(e){}
 }
 function gameStateSnapshot(){
-  return {discovered:[...discovered], totalPulls, inventory, enhancements, specialEnhancements, enhanceGems, specialSecrets, updatedAt:Date.now()};
+  return {discovered:[...discovered], totalPulls, inventory, enhancements, specialEnhancements, enhanceGems, coins, enhanceTokens, boosts, specialSecrets, updatedAt:Date.now()};
 }
 function applyGameStateSnapshot(obj){
   if(!obj) return;
@@ -1166,7 +1354,7 @@ function applyGameStateSnapshot(obj){
   enhancements = {};
   Object.entries(obj.enhancements || {}).forEach(([rawId,level])=>{
     const id = normalizeStoredId(rawId);
-    const safeLevel = Math.max(0, Math.min(6, Number(level)||0));
+    const safeLevel = Math.max(0, Math.min(11, Number(level)||0));
     if(COUNTRY_BY_ID[id] && safeLevel>0) enhancements[id] = safeLevel;
   });
   specialEnhancements = {};
@@ -1176,6 +1364,12 @@ function applyGameStateSnapshot(obj){
     if(COUNTRY_BY_ID[id] && safeLevel>0) specialEnhancements[id] = safeLevel;
   });
   enhanceGems = Math.max(0, Number(obj.enhanceGems)||0);
+  coins = Math.max(0, Number(obj.coins)||0);
+  enhanceTokens = Math.max(0, Number(obj.enhanceTokens)||0);
+  boosts = {
+    luckUntil: Math.max(0, Number(obj.boosts && obj.boosts.luckUntil)||0),
+    doubleUntil: Math.max(0, Number(obj.boosts && obj.boosts.doubleUntil)||0)
+  };
 }
 function loadState(){
   try{
@@ -1197,6 +1391,12 @@ function loadState(){
     discovered = new Set((obj.discovered||[]).map(normalizeStoredId).filter(id=>COUNTRY_BY_ID[id]));
     totalPulls = obj.totalPulls||0;
     enhanceGems = Math.max(0, Number(obj.enhanceGems)||0);
+    coins = Math.max(0, Number(obj.coins)||0);
+    enhanceTokens = Math.max(0, Number(obj.enhanceTokens)||0);
+    boosts = {
+      luckUntil: Math.max(0, Number(obj.boosts && obj.boosts.luckUntil)||0),
+      doubleUntil: Math.max(0, Number(obj.boosts && obj.boosts.doubleUntil)||0)
+    };
     const hasSavedInventory = Object.prototype.hasOwnProperty.call(obj, 'inventory');
     inventory = {};
     Object.entries(obj.inventory || {}).forEach(([rawId,count])=>{
@@ -1206,7 +1406,7 @@ function loadState(){
     enhancements = {};
     Object.entries(obj.enhancements || {}).forEach(([rawId,level])=>{
       const id = normalizeStoredId(rawId);
-      const safeLevel = Math.max(0, Math.min(6, Number(level)||0));
+      const safeLevel = Math.max(0, Math.min(11, Number(level)||0));
       if(COUNTRY_BY_ID[id] && safeLevel>0) enhancements[id] = Math.max(enhancements[id] || 0, safeLevel);
     });
     specialEnhancements = {};
@@ -1281,11 +1481,33 @@ async function serverLogin(create=false){
     serverOnline.user = data.user;
     localStorage.setItem('country_gacha_server_token', serverOnline.token);
     renderSettingsTab();
-    setSettingsStatus(create ? '서버 가입 완료' : '서버 로그인 완료');
-    await serverUploadSave(false);
+    if(create){
+      setSettingsStatus('서버 가입 완료');
+      await serverUploadSave(false);
+    }else{
+      await serverSyncAfterLogin();
+    }
     return true;
   }catch(e){
     setSettingsStatus(`${create ? '가입' : '로그인'} 실패 · ${escapeAttr(e.message || e)}`);
+    return true;
+  }
+}
+async function serverSyncAfterLogin(){
+  try{
+    const data = await serverApi('/api/save');
+    if(data.state){
+      applyGameStateSnapshot(data.state);
+      try{ localStorage.setItem(STORE_KEY, JSON.stringify(gameStateSnapshot())); }catch(e){}
+      renderResourceHud(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab(); renderShop();
+      setSettingsStatus(`<b>${serverOnline.user.email}</b> 서버 저장 불러오기 완료`);
+      return true;
+    }
+    await serverUploadSave(false);
+    setSettingsStatus('서버 로그인 완료 · 현재 저장을 서버에 올렸습니다');
+    return true;
+  }catch(e){
+    setSettingsStatus(`서버 동기화 실패 · ${escapeAttr(e.message || e)}`);
     return true;
   }
 }
@@ -1318,7 +1540,7 @@ async function serverDownloadSave(){
     }
     applyGameStateSnapshot(data.state);
     try{ localStorage.setItem(STORE_KEY, JSON.stringify(gameStateSnapshot())); }catch(e){}
-    renderResourceHud(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab();
+    renderResourceHud(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab(); renderShop();
     setSettingsStatus('서버 저장 불러오기 완료');
     return true;
   }catch(e){
@@ -1352,10 +1574,14 @@ function scheduleCloudSave(){
     online.saveTimer = setTimeout(()=>serverUploadSave(false), 900);
   }
 }
-function addCountry(country, count=1){
+function addCountry(country, count=1, options={}){
   if(!country) return;
+  const wasNew = !discovered.has(country.id);
   discovered.add(country.id);
   inventory[country.id] = (inventory[country.id] || 0) + count;
+  if(options.coinReward !== false){
+    addCoins(wasNew ? (country.secret ? 50 : 5) : 0);
+  }
   enhanceGems += gemRewardForCountry(country) * count;
   renderResourceHud();
 }
@@ -1372,20 +1598,20 @@ function gemRewardForCountry(country){
   return 0;
 }
 function enhanceLevel(id){
-  return Math.max(0, Math.min(6, Number(enhancements[id]) || 0));
+  return Math.max(0, Math.min(11, Number(enhancements[id]) || 0));
 }
 function specialEnhanceLevel(id){
   return Math.max(0, Math.min(6, Number(specialEnhancements[id]) || 0));
 }
 function enhanceLabel(level){
-  if(level >= 6) return '최종';
-  if(level > 0) return '★'.repeat(level);
+  if(level >= 11) return '최종';
+  if(level > 0) return `+${level}`;
   return '';
 }
 function enhanceLongLabel(level){
-  if(level >= 6) return '최종';
-  if(level > 0) return `${level}성`;
-  return '0성';
+  if(level >= 11) return '최종';
+  if(level > 0) return `${level}강`;
+  return '0강';
 }
 function enhanceBadgeHtml(id){
   const normal = enhanceLabel(enhanceLevel(id));
@@ -1393,6 +1619,11 @@ function enhanceBadgeHtml(id){
   return `${normal ? `<span class="star-badge">${normal}</span>` : ''}${special ? `<span class="star-badge special-star">S${special}</span>` : ''}`;
 }
 function enhanceCost(level){
+  if(level >= 11) return null;
+  if(level >= 10) return 100;
+  return level + 1;
+}
+function specialEnhanceCost(level){
   return [1,2,3,4,5,10][level] || null;
 }
 function enhancementClass(id){
@@ -1400,7 +1631,7 @@ function enhancementClass(id){
   const special = specialEnhanceLevel(id);
   return [
     normal > 0 ? 'enhanced-card' : '',
-    normal >= 6 ? 'final-enhanced-card' : '',
+    normal >= 11 ? 'final-enhanced-card' : '',
     special > 0 ? 'special-enhanced-card' : '',
     special >= 6 ? 'special-final-enhanced-card' : ''
   ].filter(Boolean).join(' ');
@@ -1437,10 +1668,20 @@ function pickDependentTier(){
   return pickWeightedTier(DEPENDENT_TIERS);
 }
 function pickWeightedTier(tiers){
-  const total = tiers.reduce((s,t)=>s+t.prob,0);
+  const total = tiers.reduce((s,t)=>s+effectiveTierWeight(t),0);
   let r = Math.random()*total, acc=0;
-  for(const t of tiers){ acc+=t.prob; if(r<=acc) return t.key; }
+  for(const t of tiers){ acc+=effectiveTierWeight(t); if(r<=acc) return t.key; }
   return tiers[tiers.length-1].key;
+}
+function effectiveTierWeight(t){
+  let weight = t.prob;
+  if(isBoostActive('luckUntil')){
+    if(t.rank <= -1) weight *= 2.6;
+    else if(t.rank <= 1) weight *= 2;
+    else if(t.rank <= 3) weight *= 1.45;
+    else weight *= 0.65;
+  }
+  return Math.max(0.001, weight);
 }
 function pickFromTier(tierKey, usedIds=new Set()){
   const pool = ALL_COUNTRIES.filter(c=>c.tier===tierKey);
@@ -1712,8 +1953,10 @@ async function playPull(getResults, size){
 
   area.innerHTML = results.map((_,i)=>cardSlotHtml(i,size)).join('');
   const newFlags = results.map(c=>!discovered.has(c.id));
-  results.forEach((c,i)=>{ fillCard(i,c,newFlags[i]); addCountry(c); });
+  const gainCount = isBoostActive('doubleUntil') ? 2 : 1;
+  results.forEach((c,i)=>{ fillCard(i,c,newFlags[i]); addCountry(c, gainCount); });
   totalPulls += results.length;
+  addCoins(results.length);
 
   results.forEach((_,i)=>setTimeout(()=>{
     const el=document.getElementById(`ci-${i}`);
@@ -1732,6 +1975,7 @@ async function playPull(getResults, size){
   renderCollection();
   renderInventory();
   renderEnhanceTab();
+  renderShop();
   saveState();
   pullButtons.forEach(btn=>btn.disabled=false);
 }
@@ -1794,6 +2038,28 @@ function renderCollection(){
       <span class="count">${secretEntries.filter(e=>discovered.has(e[0])).length} / ${secretEntries.length}</span>
     </div>
     <div class="chips">${secretChips}</div>
+  </div>`;
+
+  html += `<div class="hist-section-label">✦ 코인 전용 등급 ✦</div>`;
+  const coinChips = COIN_ONLY_COUNTRY_DATA.map(entry=>{
+    const id = entry[0];
+    const name = entry[1];
+    if(discovered.has(id)){
+      const country = countryFromEntry(entry, COIN_TIER, 'w80');
+      return `<div class="chip found divine-chip ${enhancementClass(id)}" style="--tier-color:${COIN_TIER.color}" title="${name}">
+        ${flagImg(country,'flag-img-hist')}
+        ${enhanceBadgeHtml(id)}
+        <span>${name}</span></div>`;
+    }
+    return `<div class="chip" title="코인 전용"><span class="q">◎</span></div>`;
+  }).join('');
+  html += `<div class="tier-group">
+    <div class="tier-group-head">
+      <span class="dot" style="background:${COIN_TIER.color}"></span>
+      <span class="label" style="color:${COIN_TIER.color}">${COIN_TIER.symbol} ${COIN_TIER.label}</span>
+      <span class="count">${COIN_ONLY_COUNTRY_DATA.filter(e=>discovered.has(e[0])).length} / ${COIN_ONLY_COUNTRY_DATA.length}</span>
+    </div>
+    <div class="chips">${coinChips}</div>
   </div>`;
 
   for(const t of TIERS){
@@ -2043,7 +2309,7 @@ function renderEnhancePanel(){
   const target = getEnhanceTarget();
   cleanEnhanceMaterials();
   if(!target){
-    info.innerHTML = `<span class="gem-chip">보석 ${enhanceGems}개</span> 강화할 카드를 선택하세요`;
+    info.innerHTML = `<span class="gem-chip">토큰 ${enhanceTokens}개</span><span class="gem-chip">보석 ${enhanceGems}개</span> 강화할 카드를 선택하세요`;
     meta.textContent = '대상 없음';
     btn.disabled = true;
     specialBtn.disabled = true;
@@ -2052,23 +2318,23 @@ function renderEnhancePanel(){
   const level = enhanceLevel(target.id);
   const specialLevel = specialEnhanceLevel(target.id);
   const nextCost = enhanceCost(level);
-  const specialCost = enhanceCost(specialLevel);
+  const specialCost = specialEnhanceCost(specialLevel);
   const available = countEnhanceMaterials(target.id);
-  const selectedMaterials = enhanceMaterialCards.length;
   const current = enhanceLongLabel(level);
   const next = nextCost ? enhanceLongLabel(level + 1) : '최대';
   const specialCurrent = enhanceLongLabel(specialLevel);
   const specialNext = specialCost ? enhanceLongLabel(specialLevel + 1) : '최대';
   const t = TIER_BY_KEY[target.tier];
-  meta.textContent = `일반 ${current} → ${next} · 스페셜 ${specialCurrent} → ${specialNext}`;
-  btn.disabled = !nextCost || selectedMaterials < nextCost;
+  meta.textContent = `일반 ${current} → ${next} · 스페셜 ${specialCurrent} → ${specialNext} · 강화는 보유 카드 중 1장에만 적용`;
+  btn.disabled = !nextCost || enhanceTokens < nextCost;
   specialBtn.disabled = !specialCost || enhanceGems < specialCost;
   info.innerHTML = `${flagImg(target,'flag-img-hist')}
     <b>${target.name}</b>
     <span class="star-badge">${enhanceLabel(level) || '0성'}</span>
     <span class="star-badge special-star">S${enhanceLabel(specialLevel) || '0성'}</span>
+    <span class="gem-chip">토큰 ${enhanceTokens}개</span>
     <span class="gem-chip">보석 ${enhanceGems}개</span>
-    <span class="enhance-cost">일반: 선택 재료 ${selectedMaterials} / ${nextCost || '-'} · 사용 가능 ${available}장 · 스페셜: 보석 ${enhanceGems} / ${specialCost || '-'}</span>`;
+    <span class="enhance-cost">일반: 토큰 ${enhanceTokens} / ${nextCost || '-'} · 스페셜: 보석 ${enhanceGems} / ${specialCost || '-'}</span>`;
 }
 function renderEnhanceTab(){
   renderEnhancePanel();
@@ -2160,14 +2426,19 @@ function loadBattleRoom(code=battleRoomCode){
   if(!code) return null;
   try{ return JSON.parse(localStorage.getItem(battleStorageKey(code)) || 'null'); }catch(e){ return null; }
 }
-function saveBattleRoom(room){
+async function saveBattleRoom(room, showError=true){
   if(!room || !room.code) return;
   online.battleRoom = room;
   try{ localStorage.setItem(battleStorageKey(room.code), JSON.stringify(room)); }catch(e){}
   if(serverOnline.enabled){
-    serverApi(`/api/rooms/${room.code}`, {method:'POST', body:JSON.stringify({state:room})})
-      .catch(e=>setBattleStatus(`서버 방 저장 실패 · ${escapeAttr(e.message || e)}`));
+    try{
+      await serverApi(`/api/rooms/${room.code}`, {method:'POST', body:JSON.stringify({state:room})});
+    }catch(e){
+      if(showError) setBattleStatus(`서버 방 저장 실패 · ${escapeAttr(e.message || e)}`);
+      return false;
+    }
   }
+  return true;
 }
 function currentBattleRoom(){
   return loadBattleRoom() || null;
@@ -2176,13 +2447,14 @@ function subscribeOnlineBattleRoom(code){
   if(online.battleUnsub) online.battleUnsub();
   online.battleUnsub = null;
 }
-function createBattleRoom(){
+async function createBattleRoom(){
   battleRoomCode = generateBattleCode();
   battleSide = 'host';
   const room = {code:battleRoomCode, round:1, createdAt:Date.now(), host:{name:getBattleName(), cardId:'', power:0}, guest:{name:'', cardId:'', power:0}, result:''};
-  saveBattleRoom(room);
+  const saved = await saveBattleRoom(room);
   subscribeOnlineBattleRoom(battleRoomCode);
   playSfx('summon');
+  setBattleStatus(saved === false ? '방 저장에 실패했습니다' : '방을 만들었습니다 · 코드를 친구에게 보내세요');
   renderBattleTab();
 }
 async function joinBattleRoom(){
@@ -2192,8 +2464,8 @@ async function joinBattleRoom(){
     setBattleStatus('입장할 방 코드를 입력하세요');
     return;
   }
-  let room = loadBattleRoom(code);
-  if(!room && serverOnline.enabled){
+  let room = null;
+  if(serverOnline.enabled){
     try{
       const data = await serverApi(`/api/rooms/${code}`);
       room = data.room.state;
@@ -2202,6 +2474,7 @@ async function joinBattleRoom(){
       return;
     }
   }
+  if(!room) room = loadBattleRoom(code);
   if(!room){
     setBattleStatus('그 방을 찾을 수 없습니다');
     return;
@@ -2209,7 +2482,7 @@ async function joinBattleRoom(){
   battleRoomCode = code;
   battleSide = 'guest';
   room[battleSide].name = getBattleName();
-  saveBattleRoom(room);
+  await saveBattleRoom(room);
   subscribeOnlineBattleRoom(battleRoomCode);
   playSfx('tab');
   renderBattleTab();
@@ -2222,8 +2495,8 @@ function leaveBattleRoom(){
   battleSide = '';
   renderBattleTab();
 }
-function resetBattleRound(){
-  const room = currentBattleRoom();
+async function resetBattleRound(){
+  const room = await fetchServerBattleRoom(false) || currentBattleRoom();
   if(!room){
     setBattleStatus('먼저 방을 만들거나 입장하세요');
     return;
@@ -2234,7 +2507,7 @@ function resetBattleRound(){
   room.guest.cardId = '';
   room.guest.power = 0;
   room.result = '';
-  saveBattleRoom(room);
+  await saveBattleRoom(room);
   playSfx('synth');
   renderBattleTab();
 }
@@ -2248,10 +2521,10 @@ function battlePower(country){
   const rarityBonus = country.secret ? 260 : country.continent ? 170 : country.historical ? 120 : country.dependent ? 60 : 0;
   return base + normal + special + rarityBonus + Math.floor(Math.random() * 80);
 }
-function chooseBattleCard(id){
+async function chooseBattleCard(id){
   const country = COUNTRY_BY_ID[id];
   if(!country || !(inventory[id] > 0)) return;
-  let room = currentBattleRoom();
+  let room = await fetchServerBattleRoom(false) || currentBattleRoom();
   if(!room || !battleSide){
     battleRoomCode = battleRoomCode || 'MANUAL';
     battleSide = battleSide || 'host';
@@ -2261,7 +2534,7 @@ function chooseBattleCard(id){
   room[battleSide].cardId = id;
   room[battleSide].power = battlePower(country);
   room.result = resolveBattle(room);
-  saveBattleRoom(room);
+  await saveBattleRoom(room);
   playSfx(room.result ? 'burst' : 'reveal');
   renderBattleTab();
 }
@@ -2418,16 +2691,23 @@ function renderBattleTab(){
     </button>`;
   }).join('')}</div>`;
 }
-async function refreshServerBattleRoom(){
-  if(!serverOnline.user || !battleRoomCode || battleRoomCode === 'MANUAL') return;
+async function fetchServerBattleRoom(showError=false){
+  if(!serverOnline.enabled || !battleRoomCode || battleRoomCode === 'MANUAL') return null;
   try{
     const data = await serverApi(`/api/rooms/${battleRoomCode}`);
     if(data.room && data.room.state){
       online.battleRoom = data.room.state;
       try{ localStorage.setItem(battleStorageKey(battleRoomCode), JSON.stringify(online.battleRoom)); }catch(e){}
-      if(activeTab === 'battle') renderBattleTab();
+      return online.battleRoom;
     }
-  }catch(e){}
+  }catch(e){
+    if(showError) setBattleStatus('서버 방 정보를 불러오지 못했습니다');
+  }
+  return null;
+}
+async function refreshServerBattleRoom(){
+  const room = await fetchServerBattleRoom(false);
+  if(room && activeTab === 'battle') renderBattleTab();
 }
 function enhanceSelectedCard(){
   const target = getEnhanceTarget();
@@ -2443,15 +2723,12 @@ function enhanceSelectedCard(){
     renderEnhanceTab();
     return;
   }
-  cleanEnhanceMaterials();
-  const materials = enhanceMaterialCards.slice(0, cost);
-  if(materials.length < cost){
-    const t = TIER_BY_KEY[target.tier];
-    showSynthMessage(`${target.name} 강화 재료를 직접 선택하세요 · 같은 등급 ${t.label} ${cost}장 필요`);
+  if(enhanceTokens < cost){
+    showSynthMessage(`${target.name} 강화 토큰이 부족합니다 · 필요 ${cost}개`);
     renderEnhanceTab();
     return;
   }
-  materials.forEach(id=>removeInventory(id, 1));
+  enhanceTokens -= cost;
   enhancements[target.id] = level + 1;
   enhanceTargetId = (inventory[target.id] || 0) > 0 ? target.id : '';
   enhanceMaterialCards = [];
@@ -2470,7 +2747,7 @@ function specialEnhanceSelectedCard(){
     return;
   }
   const level = specialEnhanceLevel(target.id);
-  const cost = enhanceCost(level);
+  const cost = specialEnhanceCost(level);
   if(!cost){
     showSynthMessage(`${target.name}은 이미 스페셜 최종입니다`);
     renderEnhanceTab();
@@ -2720,11 +2997,13 @@ function setTab(tab){
   document.getElementById('inventory-panel').classList.toggle('active', tab==='inventory');
   document.getElementById('enhance-panel-tab').classList.toggle('active', tab==='enhance');
   document.getElementById('battle-panel-tab').classList.toggle('active', tab==='battle');
+  document.getElementById('shop-panel-tab').classList.toggle('active', tab==='shop');
   document.getElementById('settings-panel-tab').classList.toggle('active', tab==='settings');
-  document.getElementById('section-title').textContent = tab==='inventory' ? '보관함' : tab==='enhance' ? '강화' : tab==='battle' ? '결투장' : tab==='settings' ? '설정' : '도감';
+  document.getElementById('section-title').textContent = tab==='inventory' ? '보관함' : tab==='enhance' ? '강화' : tab==='battle' ? '결투장' : tab==='shop' ? '상점' : tab==='settings' ? '설정' : '도감';
   if(tab==='inventory') renderInventory();
   if(tab==='enhance') renderEnhanceTab();
   if(tab==='battle') renderBattleTab();
+  if(tab==='shop') renderShop();
   if(tab==='settings') renderSettingsTab();
 }
 
@@ -2740,11 +3019,11 @@ document.getElementById('btn-dependent-ten').addEventListener('click',()=>playPu
 document.getElementById('btn-reset').addEventListener('click',()=>{
   if(!confirm('정말 초기화하시겠습니까?')) return;
   Object.keys(specialSecrets).forEach(id=>delete COUNTRY_BY_ID[id]);
-  discovered=new Set(); totalPulls=0; inventory={}; enhancements={}; specialEnhancements={}; enhanceGems=0; specialSecrets={}; selectedCards=[]; synthTargetId=''; inventoryQuery=''; enhanceTargetId=''; enhanceQuery=''; enhanceMaterialCards=[]; battleRoomCode=''; battleSide='';
+  discovered=new Set(); totalPulls=0; inventory={}; enhancements={}; specialEnhancements={}; enhanceGems=0; coins=0; enhanceTokens=0; boosts={luckUntil:0,doubleUntil:0}; specialSecrets={}; selectedCards=[]; synthTargetId=''; inventoryQuery=''; enhanceTargetId=''; enhanceQuery=''; enhanceMaterialCards=[]; battleRoomCode=''; battleSide='';
   renderResourceHud();
   document.getElementById('cards-area').innerHTML='';
   document.getElementById('result-banner').innerHTML='&nbsp;';
-  saveState(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab();
+  saveState(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab(); renderShop();
 });
 document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>setTab(btn.dataset.tab)));
 document.getElementById('inventory-grid').addEventListener('click',event=>{
@@ -2758,6 +3037,10 @@ document.getElementById('enhance-grid').addEventListener('click',event=>{
 document.getElementById('battle-grid').addEventListener('click',event=>{
   const card = event.target.closest('.inventory-card');
   if(card) chooseBattleCard(card.dataset.battleId);
+});
+document.getElementById('shop-grid').addEventListener('click',event=>{
+  const btn = event.target.closest('[data-shop-id]');
+  if(btn) buyShopItem(btn.dataset.shopId);
 });
 document.getElementById('btn-synthesize-random').addEventListener('click',()=>synthesizeSelected('random'));
 document.getElementById('btn-synthesize-choice').addEventListener('click',()=>synthesizeSelected('choice'));
@@ -2806,8 +3089,12 @@ renderCollection();
 renderInventory();
 renderEnhanceTab();
 renderBattleTab();
+renderShop();
 renderSettingsTab();
 setInterval(refreshServerBattleRoom, 2200);
+setInterval(()=>{
+  if(activeTab === 'shop') renderShop();
+}, 1000);
 </script>
 </body>
 </html>
