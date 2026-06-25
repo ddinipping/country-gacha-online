@@ -1,1 +1,2932 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>국가 뽑기 — World Power Gacha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#090D18; --bg-panel:#121B2E; --bg-elevated:#1B2740;
+  --line:rgba(255,255,255,.12); --text:#F7F1E8; --text-dim:#A9B3C8; --gold:#FFD45C;
+  --aqua:#55E4FF; --coral:#FF6B6B; --violet:#9B7CFF; --green:#6FE38F;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:
+  radial-gradient(circle at 12% 8%,rgba(85,228,255,.18),transparent 28%),
+  radial-gradient(circle at 88% 12%,rgba(255,107,107,.16),transparent 30%),
+  radial-gradient(circle at 50% 100%,rgba(155,124,255,.18),transparent 34%),
+  linear-gradient(180deg,#11192C 0%,#090D18 48%,#060811 100%);
+  color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;}
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);background-size:34px 34px;pointer-events:none;opacity:.42;mask-image:linear-gradient(black,transparent 78%);-webkit-mask-image:linear-gradient(black,transparent 78%);}
+.wrap{position:relative;max-width:720px;margin:0 auto;padding:82px 14px 92px;}
+.resource-hud{position:fixed;left:12px;top:10px;z-index:20;display:flex;align-items:center;gap:7px;flex-wrap:wrap;max-width:min(680px,calc(100vw - 24px));padding:8px;border:1px solid rgba(255,255,255,.14);border-radius:18px;background:rgba(8,12,22,.76);box-shadow:0 16px 34px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(14px);}
+.resource-chip{height:30px;display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:linear-gradient(180deg,rgba(27,39,64,.92),rgba(12,18,32,.92));padding:4px 9px;color:var(--text);font-size:11px;font-weight:800;white-space:nowrap;}
+.resource-chip b{font-size:12px;color:var(--gold);line-height:1;}
+.resource-chip.gem b{color:#BDF6FF;}
+.resource-label{color:var(--text-dim);font-weight:700;}
+.resource-icon{position:relative;display:inline-block;flex:0 0 auto;}
+.resource-icon.ticket{width:15px;height:11px;border-radius:3px;background:linear-gradient(135deg,#FFE37A,#FF9B45);box-shadow:0 0 9px rgba(255,212,92,.32);}
+.resource-icon.ticket::before,.resource-icon.ticket::after{content:'';position:absolute;top:50%;width:4px;height:4px;border-radius:50%;background:#101827;transform:translateY(-50%);}
+.resource-icon.ticket::before{left:-2px;}
+.resource-icon.ticket::after{right:-2px;}
+.resource-icon.ticket.premium{background:linear-gradient(135deg,#79F4FF,#2D8DE0);}
+.resource-icon.ticket.dependent{background:linear-gradient(135deg,#FFA75C,#E45A41);}
+.resource-icon.gem{width:13px;height:13px;border:1px solid rgba(255,255,255,.75);border-radius:3px;background:linear-gradient(135deg,#E8FDFF,#55E4FF 48%,#2D8DE0);transform:rotate(45deg);box-shadow:0 0 12px rgba(85,228,255,.5);}
+.resource-icon.gem::after{content:'';position:absolute;left:2px;top:2px;width:4px;height:4px;border-radius:1px;background:rgba(255,255,255,.75);}
+.left-nav{position:fixed;left:12px;top:118px;z-index:19;display:flex;flex-direction:column;gap:9px;padding:8px;border:1px solid rgba(255,255,255,.14);border-radius:20px;background:rgba(8,12,22,.72);box-shadow:0 16px 34px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(14px);}
+.left-tab{width:58px;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px solid rgba(255,255,255,.1);border-radius:15px;background:linear-gradient(180deg,rgba(27,39,64,.9),rgba(12,18,32,.9));color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:900;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);transition:transform .15s,border-color .15s,background .15s,color .15s;}
+.left-tab:hover{border-color:rgba(85,228,255,.42);color:var(--text);}
+.left-tab:active{transform:scale(.96);}
+.left-tab.active{border-color:rgba(255,212,92,.55);color:var(--text);background:linear-gradient(180deg,rgba(255,212,92,.2),rgba(85,228,255,.08));box-shadow:0 0 20px -8px var(--gold),inset 0 1px 0 rgba(255,255,255,.14);}
+.nav-icon{width:24px;height:24px;display:block;color:currentColor;}
+.nav-icon svg{width:100%;height:100%;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.nav-icon .fill{fill:currentColor;stroke:none;opacity:.18;}
+
+/* ─── HERO ─── */
+.hero{position:relative;text-align:left;margin-bottom:14px;border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:18px 18px 20px;overflow:hidden;background:
+  linear-gradient(135deg,rgba(255,212,92,.16),rgba(85,228,255,.09) 45%,rgba(255,107,107,.12)),
+  rgba(12,18,32,.78);box-shadow:0 18px 42px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.12);}
+.hero::before{content:'';position:absolute;right:-18px;top:-20px;width:150px;height:150px;border-radius:50%;background:conic-gradient(from 210deg,var(--gold),var(--aqua),var(--violet),var(--coral),var(--gold));opacity:.2;filter:blur(1px);}
+.hero::after{content:'GACHA';position:absolute;right:16px;bottom:8px;font-size:34px;font-weight:900;color:rgba(255,255,255,.055);letter-spacing:0;}
+.eyebrow{font-size:11px;letter-spacing:.18em;color:var(--aqua);margin:0 0 8px;font-weight:700;}
+.hero h1{font-family:'Noto Serif KR',serif;font-size:clamp(30px,8vw,46px);font-weight:700;margin:0 0 8px;text-shadow:0 3px 18px rgba(0,0,0,.45);}
+.hero .sub{color:var(--text-dim);font-size:12px;margin:0;line-height:1.6;max-width:520px;}
+
+/* ─── RATES ─── */
+.summon-panel{position:relative;margin-bottom:18px;padding:14px;border:1px solid rgba(255,255,255,.14);border-radius:20px;background:linear-gradient(180deg,rgba(27,39,64,.9),rgba(12,18,32,.92));box-shadow:0 14px 38px rgba(0,0,0,.32);}
+.summon-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
+.summon-title{font-size:16px;font-weight:900;letter-spacing:.02em;}
+.summon-ticket{font-size:11px;font-weight:800;color:#08101B;background:linear-gradient(135deg,var(--gold),#FF9B45);border-radius:999px;padding:6px 10px;box-shadow:0 8px 18px rgba(255,154,69,.2);}
+.rates-section{margin-bottom:12px;padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(0,0,0,.18);}
+.rates-label{font-size:10px;letter-spacing:.16em;color:var(--text-dim);text-align:left;margin:0 0 10px;font-weight:700;}
+.rates{display:flex;justify-content:flex-start;flex-wrap:wrap;gap:6px 10px;}
+.rate-row{display:flex;justify-content:flex-start;align-items:center;flex-wrap:wrap;gap:6px 10px;width:100%;}
+.rate-row+.rate-row{margin-top:8px;}
+.rate-title{font-size:10px;font-weight:900;color:var(--gold);letter-spacing:.12em;background:rgba(255,212,92,.1);border:1px solid rgba(255,212,92,.2);border-radius:999px;padding:3px 7px;}
+.rate-chip{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-dim);}
+.rate-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.rates-divider{width:1px;height:14px;background:var(--line);margin:0 2px;}
+
+/* ─── CONTROLS ─── */
+.controls{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
+.summon-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:10px;}
+.btn{font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:800;padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,#22314F,#121B2E);color:var(--text);cursor:pointer;transition:transform .15s,border-color .15s,filter .15s;box-shadow:0 9px 20px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.11);}
+.btn:hover{border-color:rgba(255,212,92,.7);filter:brightness(1.06);}
+.btn:active{transform:scale(.97) translateY(1px);}
+.btn-gold{background:linear-gradient(180deg,#FFE37A,#D29122);color:#241300;border:none;font-weight:900;}
+.btn-premium{background:linear-gradient(180deg,#79F4FF,#2D8DE0);color:#041626;border:none;font-weight:900;}
+.btn-territory{background:linear-gradient(180deg,#FFA75C,#E45A41);color:#1D0905;border:none;font-weight:900;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.stats{font-size:12px;color:var(--text-dim);display:inline-flex;align-items:center;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:7px 10px;background:rgba(0,0,0,.16);}
+.btn-link{background:none;border:none;color:var(--text-dim);font-size:12px;text-decoration:underline;cursor:pointer;padding:0;}
+.btn-link:hover{color:var(--gold);}
+.guarantee-note{text-align:center;font-size:11.5px;color:var(--text-dim);margin:0 0 8px;line-height:1.55;}
+.result-banner{text-align:center;font-family:'Noto Serif KR',serif;font-size:13px;color:var(--text-dim);min-height:20px;margin:0 0 18px;}
+.result-banner b{color:var(--gold);}
+
+/* ─── STAGE ─── */
+.stage{position:relative;min-height:300px;display:flex;align-items:center;justify-content:center;margin-bottom:32px;border:1px solid rgba(255,255,255,.12);border-radius:22px;background:radial-gradient(circle at 50% 45%,rgba(255,212,92,.13),transparent 42%),linear-gradient(180deg,rgba(18,27,46,.58),rgba(5,8,17,.76));box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 18px 44px rgba(0,0,0,.26);overflow:hidden;}
+.stage::before{content:'';position:absolute;inset:-90px;border-radius:50%;background:radial-gradient(circle,rgba(255,245,190,.34) 0%,rgba(212,175,55,.18) 24%,rgba(0,0,0,.72) 62%,transparent 76%);opacity:0;transform:scale(.6);pointer-events:none;}
+.stage.secret-omen::before{animation:secretOmen .95s ease forwards;}
+.stage>*{position:relative;z-index:1;}
+@keyframes secretOmen{0%{opacity:0;transform:scale(.55) rotate(-8deg);}38%{opacity:1;transform:scale(1.02) rotate(0deg);}100%{opacity:0;transform:scale(1.34) rotate(4deg);}}
+.seal{position:absolute;width:130px;height:130px;display:none;align-items:center;justify-content:center;}
+.seal.active{display:flex;}
+.seal svg{width:100%;height:100%;}
+.seal.summoning svg{animation:summon 1.1s ease-in-out;}
+.seal.bursting{animation:sealBurst .4s ease forwards;}
+.seal.secret-seal{width:180px;height:180px;filter:drop-shadow(0 0 18px #ffe680) drop-shadow(0 0 42px #d4af37);}
+.seal.secret-seal circle,.seal.secret-seal line,.seal.secret-seal polygon{stroke:#FFF3A6;}
+.seal.secret-seal polygon{fill:#FFE680;}
+.seal.secret-seal.summoning svg{animation:secretSummon 1.15s cubic-bezier(.2,.8,.2,1);}
+.seal.secret-seal.bursting{animation:secretSealBurst .75s ease forwards;}
+@keyframes summon{0%{transform:scale(.82) rotate(0deg);opacity:.5;}50%{transform:scale(1.1) rotate(180deg);opacity:1;}100%{transform:scale(1) rotate(360deg);opacity:1;}}
+@keyframes sealBurst{to{transform:scale(1.8);opacity:0;}}
+@keyframes secretSummon{0%{transform:scale(.55) rotate(0deg);opacity:.25;}45%{transform:scale(1.18) rotate(240deg);opacity:1;}100%{transform:scale(1) rotate(720deg);opacity:1;}}
+@keyframes secretSealBurst{0%{transform:scale(1);opacity:1;}58%{transform:scale(2.1);opacity:1;}100%{transform:scale(2.9);opacity:0;}}
+.flash{position:absolute;left:50%;top:50%;width:36px;height:36px;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.flash.go{animation:flashGo .6s ease forwards;}
+.flash.secret-flash{mix-blend-mode:screen;box-shadow:0 0 55px #fff3b0,0 0 120px #d4af37;}
+.flash.secret-flash.go{animation:secretFlashGo .9s cubic-bezier(.16,.9,.2,1) forwards;}
+@keyframes flashGo{to{width:560px;height:560px;opacity:0;}}
+@keyframes secretFlashGo{0%{width:34px;height:34px;opacity:.95;}42%{width:780px;height:780px;opacity:1;}100%{width:1040px;height:1040px;opacity:0;}}
+.cards-area{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-content:center;}
+
+/* ─── CARDS ─── */
+.card-slot{perspective:1200px;}
+.card-slot.big{width:clamp(150px,40vw,200px);height:clamp(210px,56vw,275px);}
+.card-slot.small{width:clamp(82px,22vw,106px);height:clamp(116px,31vw,150px);}
+.card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .72s cubic-bezier(.34,1.56,.64,1);}
+.card-inner.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
+.card-back{background:linear-gradient(160deg,var(--bg-elevated),var(--bg-panel));border:1px solid var(--line);}
+.card-back .mark{font-family:'Noto Serif KR',serif;font-size:32px;color:var(--gold);opacity:.4;}
+.card-front{background:var(--bg-panel);transform:rotateY(180deg);padding:10px;gap:7px;border:1.5px solid var(--tier-color,#D4AF37);box-shadow:0 0 20px -6px var(--tier-color,transparent);isolation:isolate;}
+.card-front img{width:60%;border-radius:4px;box-shadow:0 2px 10px rgba(0,0,0,.55);object-fit:cover;}
+.composite-flag{width:60%;aspect-ratio:3/2;position:relative;display:block;border-radius:4px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.55);background:var(--bg-elevated);}
+.composite-flag img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0;box-shadow:none;}
+.composite-flag .flag-emblem{inset:15% 29%;width:42%;height:70%;object-fit:contain;}
+.flag-fallback{width:60%;aspect-ratio:3/2;border-radius:4px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(255,255,255,.18),var(--fallback-color,var(--tier-color)));border:1px solid rgba(255,255,255,.28);box-shadow:0 2px 10px rgba(0,0,0,.55);color:#0B1220;font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;letter-spacing:0;}
+.card-front .tag{font-size:9.5px;font-weight:700;letter-spacing:.04em;padding:3px 9px;border-radius:999px;background:var(--tier-color);color:#0B1220;white-space:nowrap;}
+.card-front .hist-tag{font-size:9px;padding:2px 7px;background:rgba(255,255,255,.08);color:var(--tier-color);border:1px solid var(--tier-color);border-radius:999px;letter-spacing:.04em;}
+.card-front .name{font-family:'Noto Serif KR',serif;font-weight:700;text-align:center;font-size:13px;padding:0 3px;line-height:1.3;}
+.card-slot.small .card-front .name{font-size:9.5px;}
+.card-slot.small .card-front .tag{font-size:7.5px;padding:2px 6px;}
+.card-slot.small .card-front .hist-tag{font-size:7px;padding:1px 5px;}
+.card-slot.small .composite-flag{width:60%;}
+.card-slot.small .flag-fallback{font-size:11px;}
+.new-badge{position:absolute;top:5px;right:5px;font-size:8px;font-weight:700;color:var(--gold);letter-spacing:.04em;}
+.hist-badge{position:absolute;top:5px;left:5px;font-size:9px;}
+
+/* ─── HISTORICAL CARD ANIMATIONS ─── */
+@keyframes holoRainbow{
+  0%  {box-shadow:0 0 28px 5px rgba(255,50,50,.7), inset 0 0 20px rgba(255,50,50,.07);}
+  14% {box-shadow:0 0 28px 5px rgba(255,180,0,.7), inset 0 0 20px rgba(255,180,0,.07);}
+  28% {box-shadow:0 0 28px 5px rgba(220,255,0,.7), inset 0 0 20px rgba(220,255,0,.07);}
+  42% {box-shadow:0 0 28px 5px rgba(0,255,120,.7), inset 0 0 20px rgba(0,255,120,.07);}
+  57% {box-shadow:0 0 28px 5px rgba(0,180,255,.7), inset 0 0 20px rgba(0,180,255,.07);}
+  71% {box-shadow:0 0 28px 5px rgba(100,0,255,.7), inset 0 0 20px rgba(100,0,255,.07);}
+  85% {box-shadow:0 0 28px 5px rgba(255,0,200,.7), inset 0 0 20px rgba(255,0,200,.07);}
+  100%{box-shadow:0 0 28px 5px rgba(255,50,50,.7), inset 0 0 20px rgba(255,50,50,.07);}
+}
+@keyframes rainbowBorder{
+  0%  {border-color:#ff3232;}
+  14% {border-color:#ffb400;}
+  28% {border-color:#dcff00;}
+  42% {border-color:#00ff78;}
+  57% {border-color:#00b4ff;}
+  71% {border-color:#6400ff;}
+  85% {border-color:#ff00c8;}
+  100%{border-color:#ff3232;}
+}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 22px -4px var(--tier-color);}50%{box-shadow:0 0 40px 6px var(--tier-color);}}
+@keyframes shimmerGold{0%,100%{box-shadow:0 0 20px -2px #8B6914;}50%{box-shadow:0 0 36px 4px #C67C1A;}}
+@keyframes secretMajesty{0%,100%{box-shadow:0 0 26px 0 rgba(255,230,128,.75),0 0 58px -10px #000,inset 0 0 28px rgba(255,214,86,.12);}50%{box-shadow:0 0 44px 8px rgba(255,246,184,.98),0 0 92px 4px rgba(212,175,55,.5),inset 0 0 46px rgba(255,246,184,.22);}}
+@keyframes secretHalo{to{transform:rotate(360deg);}}
+
+.card-front.tier-continent{animation:holoRainbow 2.4s linear infinite,rainbowBorder 2.4s linear infinite;}
+.card-front.tier-secret{background:radial-gradient(circle at 50% 12%,rgba(255,246,184,.28),transparent 30%),linear-gradient(160deg,#1b1405 0%,#030303 56%,#000 100%);border:2px solid #FFE680;animation:secretMajesty 2.1s ease-in-out infinite;color:#FFF7D1;}
+.card-front.tier-secret::before{content:'';position:absolute;inset:-46%;z-index:0;background:conic-gradient(from 0deg,transparent,rgba(255,240,160,.45),transparent,rgba(212,175,55,.36),transparent);animation:secretHalo 5s linear infinite;opacity:.62;pointer-events:none;}
+.card-front.tier-secret::after{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(125deg,transparent 28%,rgba(255,255,255,.22) 50%,transparent 72%);background-size:220% 220%;animation:holoShine 1.8s linear infinite;pointer-events:none;}
+.card-front.tier-secret>*{position:relative;z-index:1;}
+.card-front.tier-secret img{width:72%;aspect-ratio:16/9;border:1px solid rgba(255,246,184,.55);box-shadow:0 0 20px rgba(255,230,128,.45),0 5px 18px rgba(0,0,0,.72);}
+.card-front.tier-secret .tag{background:linear-gradient(180deg,#FFF6B8,#D4AF37);color:#070707;box-shadow:0 0 14px rgba(255,230,128,.62);}
+.card-front.tier-secret .name{text-shadow:0 0 10px rgba(255,230,128,.9),0 2px 8px #000;}
+.card-front.tier-divine{animation:holoRainbow 3s linear infinite,rainbowBorder 3s linear infinite;}
+.card-front.tier-ancient{animation:glowPulse 2.2s ease-in-out infinite;}
+.card-front.tier-modern_emp{animation:glowPulse 2s ease-in-out infinite;}
+.card-front.tier-hist_state{animation:shimmerGold 2.5s ease-in-out infinite;}
+.card-front.tier-dependent{background:radial-gradient(circle at 50% 0%,rgba(255,167,92,.22),transparent 40%),linear-gradient(160deg,#2A1927,#171C2B);animation:glowPulse 2.3s ease-in-out infinite;}
+
+/* ─── HOLOGRAPHIC shimmer overlay for divine ─── */
+.card-front.tier-divine::after{
+  content:'';position:absolute;inset:0;border-radius:10px;
+  background:linear-gradient(125deg,transparent 30%,rgba(255,255,255,.12) 50%,transparent 70%);
+  background-size:200% 200%;
+  animation:holoShine 2.5s linear infinite;pointer-events:none;
+}
+@keyframes holoShine{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+/* ─── COLLECTION ─── */
+.collection{border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:14px;background:linear-gradient(180deg,rgba(18,27,46,.74),rgba(9,13,24,.78));box-shadow:0 18px 38px rgba(0,0,0,.26);}
+.collection-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;}
+.collection-head h2{font-family:'Noto Serif KR',serif;font-size:20px;margin:0;}
+.collection-head span{font-size:12px;color:var(--text-dim);}
+.tabs{display:none;}
+.tabs .tab-btn{font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:800;padding:10px 12px;border-radius:11px;border:1px solid transparent;background:transparent;color:var(--text-dim);cursor:pointer;}
+.tabs .tab-btn.active{border-color:rgba(255,212,92,.35);color:var(--text);background:linear-gradient(180deg,rgba(255,212,92,.18),rgba(255,255,255,.06));}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.progress-track{height:5px;background:var(--bg-panel);border-radius:999px;margin-bottom:26px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),#6FAE8A);width:0%;transition:width .5s ease;}
+
+.hist-section-label{font-size:10px;letter-spacing:.22em;color:var(--gold);text-align:center;padding:8px 0 14px;display:flex;align-items:center;gap:10px;}
+.hist-section-label::before,.hist-section-label::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.tier-group{margin-bottom:20px;}
+.tier-group-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.tier-group-head .dot{width:9px;height:9px;border-radius:50%;}
+.tier-group-head .label{font-weight:700;font-size:13px;}
+.tier-group-head .count{font-size:12px;color:var(--text-dim);}
+.chips{display:flex;flex-wrap:wrap;gap:7px;}
+.chip{width:60px;height:72px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:8.5px;text-align:center;background:linear-gradient(180deg,rgba(27,39,64,.9),rgba(18,27,46,.9));border:1px solid var(--line);padding:2px;line-height:1.25;box-shadow:0 8px 18px rgba(0,0,0,.18);}
+.chip.found{border-color:var(--tier-color);}
+.chip.found.divine-chip{animation:rainbowBorder 3s linear infinite;}
+.chip img{width:28px;border-radius:2px;object-fit:cover;}
+.chip .flag-img-hist{width:28px;height:18px;border-radius:2px;object-fit:cover;background:var(--bg-elevated);}
+.chip .composite-flag{width:28px;height:18px;border-radius:2px;box-shadow:none;}
+.chip .flag-fallback{width:28px;height:18px;border-radius:2px;box-shadow:none;font-size:8px;}
+.chip .q{color:var(--text-dim);font-size:14px;opacity:.35;}
+.star-badge{display:inline-flex;align-items:center;justify-content:center;min-width:26px;min-height:18px;border-radius:999px;background:rgba(0,0,0,.68);border:1px solid rgba(255,230,128,.7);color:#FFE680;font-size:12px;font-weight:800;line-height:1;padding:3px 7px;text-shadow:0 0 10px rgba(255,230,128,.9);}
+.star-badge.special-star{border-color:#79E8FF;color:#BDF6FF;box-shadow:0 0 14px rgba(0,212,255,.36);text-shadow:0 0 10px rgba(0,212,255,.9);}
+.card-front .star-badge{position:absolute;right:6px;bottom:5px;}
+.card-front .star-badge.special-star{right:6px;bottom:28px;}
+.chip .star-badge{font-size:8px;min-width:18px;min-height:13px;padding:2px 4px;}
+.chip .star-badge.special-star{margin-top:-2px;}
+@keyframes enhanceAura{0%,100%{box-shadow:0 0 20px -6px #FFE680;}50%{box-shadow:0 0 30px 1px #FFE680;}}
+@keyframes specialEnhanceAura{0%,100%{box-shadow:0 0 22px -5px #79E8FF;}50%{box-shadow:0 0 34px 2px #79E8FF;}}
+.card-front.enhanced-card{animation:enhanceAura 2.4s ease-in-out infinite;}
+.card-front.special-enhanced-card{animation:specialEnhanceAura 2s ease-in-out infinite;}
+.card-front.final-enhanced-card{border-width:2px;}
+.card-front.special-final-enhanced-card{border-color:#BDF6FF;box-shadow:0 0 32px 4px rgba(121,232,255,.55),inset 0 0 24px rgba(121,232,255,.18);}
+.card-front.tier-secret.special-enhanced-card{animation:secretMajesty 2.1s ease-in-out infinite,specialEnhanceAura 2s ease-in-out infinite;}
+.inventory-card.enhanced-card,.chip.found.enhanced-card{box-shadow:0 0 16px -8px #FFE680;}
+.inventory-card.special-enhanced-card,.chip.found.special-enhanced-card{box-shadow:0 0 18px -7px #79E8FF;border-color:#79E8FF;}
+
+.synth-panel{background:rgba(18,27,46,.72);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:18px;}
+.synth-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.synth-title{font-family:'Noto Serif KR',serif;font-size:16px;font-weight:700;}
+.synth-meta{font-size:12px;color:var(--text-dim);}
+.formula-line{font-size:11px;color:var(--text-dim);line-height:1.6;margin-bottom:12px;}
+.selected-list{min-height:38px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.selected-pill{font-size:11px;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:4px 8px;background:var(--bg-elevated);}
+.synth-target{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;font-size:12px;color:var(--text-dim);}
+.synth-select{min-width:210px;max-width:100%;font-family:'Noto Sans KR',sans-serif;font-size:12px;color:var(--text);background:var(--bg-elevated);border:1px solid var(--line);border-radius:4px;padding:8px;}
+.synth-target-preview{width:38px;height:25px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:4px;background:var(--bg-elevated);overflow:hidden;}
+.synth-target-preview img,.synth-target-preview .flag-fallback,.synth-target-preview .composite-flag{width:100%;height:100%;border-radius:0;box-shadow:none;font-size:8px;}
+.enhance-panel{border-top:1px solid var(--line);padding-top:12px;margin-top:12px;}
+.enhance-panel.standalone{border:1px solid var(--line);border-radius:8px;background:rgba(18,27,46,.72);padding:14px;margin:0 0 18px;}
+.enhance-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.enhance-info{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--text-dim);}
+.enhance-info b{color:var(--text);}
+.enhance-info img,.enhance-info .flag-fallback,.enhance-info .composite-flag{width:34px;height:22px;border-radius:3px;box-shadow:none;font-size:8px;}
+.enhance-cost{font-size:11px;color:var(--text-dim);}
+.gem-chip{display:inline-flex;align-items:center;gap:4px;border:1px solid rgba(121,232,255,.45);border-radius:999px;background:rgba(0,212,255,.08);color:#BDF6FF;font-size:11px;font-weight:700;padding:4px 8px;}
+.inventory-tools{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.inventory-search{width:min(260px,100%);font-family:'Noto Sans KR',sans-serif;font-size:12px;color:var(--text);background:var(--bg-elevated);border:1px solid var(--line);border-radius:4px;padding:9px 10px;}
+.inventory-search:focus{outline:none;border-color:var(--gold);}
+.inventory-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.inventory-card{width:86px;min-height:94px;border:1px solid var(--line);border-radius:7px;background:var(--bg-panel);color:var(--text);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:6px;cursor:pointer;position:relative;text-align:center;font-family:'Noto Sans KR',sans-serif;}
+.inventory-card:hover{border-color:var(--tier-color);}
+.inventory-card.selected{border-color:var(--tier-color);box-shadow:0 0 18px -7px var(--tier-color);}
+.inventory-card .inv-name{font-size:10px;line-height:1.2;}
+.inventory-card .inv-count{position:absolute;top:4px;right:5px;font-size:10px;font-weight:700;color:var(--gold);}
+.inventory-card .inv-selected{position:absolute;top:4px;left:5px;font-size:10px;color:var(--tier-color);}
+.inventory-card .star-badge{position:absolute;right:5px;bottom:5px;font-size:9px;min-width:22px;min-height:15px;padding:2px 5px;}
+.inventory-card .star-badge.special-star{bottom:23px;}
+.inventory-card img,.inventory-card .flag-fallback,.inventory-card .composite-flag{width:34px;height:22px;border-radius:3px;box-shadow:none;font-size:8px;}
+.battle-panel{border:1px solid var(--line);border-radius:8px;background:rgba(18,27,46,.72);padding:14px;margin-bottom:18px;}
+.battle-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.battle-input{width:150px;max-width:100%;font-family:'Noto Sans KR',sans-serif;font-size:12px;color:var(--text);background:var(--bg-elevated);border:1px solid var(--line);border-radius:4px;padding:9px 10px;text-transform:uppercase;}
+.battle-input:focus{outline:none;border-color:var(--gold);}
+.battle-code{font-size:18px;font-weight:900;color:var(--gold);letter-spacing:.08em;}
+.battle-arena{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;margin:12px 0;}
+.battle-side{min-height:132px;border:1px solid rgba(255,255,255,.11);border-radius:8px;background:rgba(0,0,0,.18);padding:12px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
+.battle-side.active{border-color:var(--tier-color,var(--gold));box-shadow:0 0 20px -10px var(--tier-color,var(--gold));}
+.battle-side img,.battle-side .flag-fallback,.battle-side .composite-flag{width:58px;height:38px;border-radius:4px;box-shadow:none;font-size:10px;}
+.battle-player{font-size:11px;color:var(--text-dim);font-weight:800;}
+.battle-card-name{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:700;}
+.battle-power{font-size:12px;color:var(--gold);font-weight:900;}
+.battle-vs{align-self:center;font-size:13px;font-weight:900;color:var(--text-dim);padding:0 2px;}
+.battle-status{min-height:22px;font-size:12px;color:var(--text-dim);line-height:1.5;}
+.battle-status b{color:var(--gold);}
+.battle-grid-title{font-size:11px;letter-spacing:.12em;color:var(--text-dim);font-weight:900;margin:12px 0 8px;}
+.settings-panel{border:1px solid var(--line);border-radius:8px;background:rgba(18,27,46,.72);padding:14px;margin-bottom:18px;}
+.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0;}
+.settings-field{display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--text-dim);font-weight:800;}
+.settings-input,.settings-textarea{width:100%;font-family:'Noto Sans KR',sans-serif;font-size:12px;color:var(--text);background:var(--bg-elevated);border:1px solid var(--line);border-radius:4px;padding:9px 10px;}
+.settings-textarea{min-height:118px;resize:vertical;line-height:1.45;}
+.settings-input:focus,.settings-textarea:focus{outline:none;border-color:var(--gold);}
+.settings-slider{width:100%;accent-color:var(--gold);}
+.settings-status{min-height:22px;font-size:12px;color:var(--text-dim);line-height:1.5;}
+.settings-status b{color:var(--gold);}
+.empty-note{font-size:12px;color:var(--text-dim);padding:18px 0;text-align:center;}
+
+footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;opacity:.5;}
+@media(max-width:900px){
+  .wrap{padding-left:88px;}
+}
+@media(max-width:560px){
+  .wrap{padding:92px 10px 72px 76px;}
+  .resource-hud{left:8px;top:8px;gap:5px;padding:6px;border-radius:16px;}
+  .resource-chip{height:28px;padding:4px 7px;font-size:10px;gap:5px;}
+  .resource-label{display:none;}
+  .left-nav{left:8px;top:104px;gap:7px;padding:6px;border-radius:17px;}
+  .left-tab{width:50px;min-height:52px;border-radius:13px;font-size:9px;padding:6px 4px;}
+  .nav-icon{width:22px;height:22px;}
+  .hero{border-radius:18px;padding:16px;}
+  .summon-panel,.collection{border-radius:18px;padding:12px;}
+  .summon-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+  .btn{font-size:12.5px;padding:12px 9px;border-radius:12px;}
+  .stats{font-size:11px;}
+  .stage{min-height:270px;border-radius:18px;margin-bottom:18px;}
+  .chip{width:58px;height:70px;}
+  .battle-arena{grid-template-columns:1fr;gap:8px;}
+  .battle-vs{padding:2px 0;}
+  .settings-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<aside class="resource-hud" id="resource-hud" aria-label="재화 현황">
+  <span class="resource-chip" title="일반 티켓">
+    <span class="resource-icon ticket"></span><span class="resource-label">일반티켓</span><b>∞</b>
+  </span>
+  <span class="resource-chip" title="고급 티켓">
+    <span class="resource-icon ticket premium"></span><span class="resource-label">고급티켓</span><b>∞</b>
+  </span>
+  <span class="resource-chip" title="종속지역 티켓">
+    <span class="resource-icon ticket dependent"></span><span class="resource-label">종속티켓</span><b>∞</b>
+  </span>
+  <span class="resource-chip gem" title="보석">
+    <span class="resource-icon gem"></span><span class="resource-label">보석</span><b data-resource="gems">0</b>
+  </span>
+</aside>
+<nav class="left-nav" aria-label="화면 이동">
+  <button class="tab-btn left-tab active" data-tab="collection" type="button" title="도감">
+    <span class="nav-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path class="fill" d="M5 4h10a4 4 0 0 1 4 4v12H8a3 3 0 0 1-3-3z"/>
+        <path d="M5 4h10a4 4 0 0 1 4 4v12H8a3 3 0 0 1-3-3z"/>
+        <path d="M8 4v13a3 3 0 0 0 3 3"/>
+        <path d="M10 8h5M10 12h5"/>
+      </svg>
+    </span>
+    <span>도감</span>
+  </button>
+  <button class="tab-btn left-tab" data-tab="inventory" type="button" title="가방">
+    <span class="nav-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path class="fill" d="M6 8h12l1.4 12H4.6z"/>
+        <path d="M6 8h12l1.4 12H4.6z"/>
+        <path d="M9 8V6a3 3 0 0 1 6 0v2"/>
+        <path d="M8 12h8"/>
+      </svg>
+    </span>
+    <span>가방</span>
+  </button>
+  <button class="tab-btn left-tab" data-tab="enhance" type="button" title="모루">
+    <span class="nav-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path class="fill" d="M4 8h11l3 3-3 3H9l-2 3H4z"/>
+        <path d="M4 8h11l3 3-3 3H9l-2 3H4"/>
+        <path d="M7 17h7"/>
+        <path d="M10 14v3"/>
+        <path d="M3 20h13"/>
+      </svg>
+    </span>
+    <span>모루</span>
+  </button>
+  <button class="tab-btn left-tab" data-tab="battle" type="button" title="결투장">
+    <span class="nav-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path class="fill" d="M5 5l6 6-4 8-3-3 4-8z"/>
+        <path d="M5 5l6 6-4 8-3-3 4-8z"/>
+        <path d="M19 5l-6 6 4 8 3-3-4-8z"/>
+        <path d="M8 8l8 8M16 8l-8 8"/>
+      </svg>
+    </span>
+    <span>결투</span>
+  </button>
+  <button class="tab-btn left-tab" data-tab="settings" type="button" title="설정">
+    <span class="nav-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path class="fill" d="M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/>
+        <path d="M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/>
+        <path d="M4 13v-2l2.2-.4a6.6 6.6 0 0 1 .7-1.6L5.6 7.2 7.2 5.6 9 6.9a6.6 6.6 0 0 1 1.6-.7L11 4h2l.4 2.2a6.6 6.6 0 0 1 1.6.7l1.8-1.3 1.6 1.6L17.1 9a6.6 6.6 0 0 1 .7 1.6L20 11v2l-2.2.4a6.6 6.6 0 0 1-.7 1.6l1.3 1.8-1.6 1.6-1.8-1.3a6.6 6.6 0 0 1-1.6.7L13 20h-2l-.4-2.2a6.6 6.6 0 0 1-1.6-.7l-1.8 1.3-1.6-1.6L6.9 15a6.6 6.6 0 0 1-.7-1.6z"/>
+      </svg>
+    </span>
+    <span>설정</span>
+  </button>
+</nav>
+<main class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">WORLD POWER GACHA</p>
+  <h1>국가 뽑기</h1>
+  <p class="sub">티켓을 꺼내 깃발을 펼치고, 지금의 나라와 사라진 이름들을 수집하세요<br>합성, 강화, 숨겨진 조합으로 당신만의 세계 도감을 완성해 보세요</p>
+</header>
+
+<section class="summon-panel">
+  <div class="summon-head">
+    <span class="summon-title">소환 메뉴</span>
+    <span class="summon-ticket">오늘의 국력 캡슐</span>
+  </div>
+  <section class="rates-section">
+    <p class="rates-label">▸ 등급별 출현 확률</p>
+    <div class="rates" id="rates"></div>
+  </section>
+
+  <section class="controls summon-actions">
+    <button class="btn pull-btn" id="btn-single">1회 뽑기</button>
+    <button class="btn btn-gold pull-btn" id="btn-ten">10연차 뽑기</button>
+    <button class="btn btn-premium pull-btn" id="btn-premium">고급 뽑기</button>
+    <button class="btn btn-premium pull-btn" id="btn-premium-ten">고급 10연차</button>
+    <button class="btn btn-territory pull-btn" id="btn-dependent">종속 지역 1회</button>
+    <button class="btn btn-territory pull-btn" id="btn-dependent-ten">종속 지역 10연차</button>
+  </section>
+  <div class="controls">
+    <span class="stats" id="total-pulls">총 뽑기 0회</span>
+    <button class="btn-link" id="btn-reset">초기화</button>
+  </div>
+  <p class="guarantee-note">10연차는 초희귀 이상 1개 확정 보장 · 고급 10연차는 역사 국가 이상 1개 확정 · 종속 지역은 자치/구성 지역 포함 전용 풀</p>
+  <p class="result-banner" id="result-banner">&nbsp;</p>
+</section>
+
+<section class="stage" id="stage">
+  <div class="seal" id="seal">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#D4AF37" stroke-width="1.5" opacity=".7"/>
+      <circle cx="50" cy="50" r="36" fill="none" stroke="#D4AF37" stroke-width=".8" opacity=".5"/>
+      <g stroke="#D4AF37" stroke-width=".9" opacity=".6">
+        <line x1="50" y1="4" x2="50" y2="19"/><line x1="50" y1="81" x2="50" y2="96"/>
+        <line x1="4" y1="50" x2="19" y2="50"/><line x1="81" y1="50" x2="96" y2="50"/>
+        <line x1="17" y1="17" x2="27" y2="27"/><line x1="73" y1="73" x2="83" y2="83"/>
+        <line x1="83" y1="17" x2="73" y2="27"/><line x1="17" y1="83" x2="27" y2="73"/>
+      </g>
+      <polygon points="50,20 60,50 50,80 40,50" fill="#D4AF37" opacity=".85"/>
+      <circle cx="50" cy="50" r="5" fill="#0B1220" stroke="#D4AF37" stroke-width="1.5"/>
+    </svg>
+  </div>
+  <div class="cards-area" id="cards-area"></div>
+</section>
+
+<section class="collection">
+  <div class="collection-head">
+    <h2 id="section-title">도감</h2>
+    <span id="progress-text">0 / 0 발견</span>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="collection">도감</button>
+    <button class="tab-btn" data-tab="inventory">보관함</button>
+    <button class="tab-btn" data-tab="enhance">강화</button>
+    <button class="tab-btn" data-tab="battle">결투장</button>
+    <button class="tab-btn" data-tab="settings">설정</button>
+  </div>
+  <div class="tab-panel active" id="collection-panel">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div id="collection-grid"></div>
+  </div>
+  <div class="tab-panel" id="inventory-panel">
+    <div class="synth-panel">
+      <div class="synth-top">
+        <span class="synth-title">합성</span>
+        <span class="synth-meta" id="synth-meta">선택 0장</span>
+      </div>
+      <div class="formula-line">같은 등급 3장씩 → 상위 랜덤 또는 원하는 나라 리스트 · 3의 배수는 한꺼번에 합성 · 숨겨진 조합은 직접 발견</div>
+      <div class="selected-list" id="selected-list"></div>
+      <label class="synth-target">획득할 나라
+        <select class="synth-select" id="synth-target">
+          <option value="">재료를 선택하면 목록이 열립니다</option>
+        </select>
+        <span class="synth-target-preview" id="synth-target-preview"></span>
+      </label>
+      <div class="controls">
+        <button class="btn btn-gold" id="btn-synthesize-random">랜덤 합성</button>
+        <button class="btn btn-premium" id="btn-synthesize-choice">선택 합성</button>
+        <button class="btn" id="btn-clear-selection">선택 해제</button>
+      </div>
+    </div>
+    <div class="inventory-tools">
+      <input class="inventory-search" id="inventory-search" type="search" placeholder="보관함 검색">
+    </div>
+    <div id="inventory-grid"></div>
+  </div>
+  <div class="tab-panel" id="enhance-panel-tab">
+    <div class="enhance-panel standalone">
+      <div class="synth-top">
+        <span class="synth-title">강화</span>
+        <span class="synth-meta" id="enhance-meta">대상 없음</span>
+      </div>
+      <div class="formula-line">강화할 카드를 선택하세요 · 재료는 같은 등급 1 / 2 / 3 / 4 / 5 / 10장</div>
+      <div class="enhance-row">
+        <div class="enhance-info" id="enhance-info">강화할 카드를 선택하세요</div>
+        <div class="controls">
+          <button class="btn btn-gold" id="btn-enhance">강화</button>
+          <button class="btn btn-premium" id="btn-special-enhance">스페셜 강화</button>
+          <button class="btn" id="btn-enhance-clear">대상 해제</button>
+        </div>
+      </div>
+    </div>
+    <div class="inventory-tools">
+      <input class="inventory-search" id="enhance-search" type="search" placeholder="강화할 카드 검색">
+    </div>
+    <div id="enhance-grid"></div>
+  </div>
+  <div class="tab-panel" id="battle-panel-tab">
+    <div class="battle-panel">
+      <div class="synth-top">
+        <span class="synth-title">카드 배틀</span>
+        <span class="synth-meta">방 코드로 친구와 대전</span>
+      </div>
+      <div class="formula-line">카드를 선택해 대표로 내보내세요 · 전투력은 등급, 강화, 스페셜 강화가 반영됩니다</div>
+      <div class="battle-row">
+        <input class="battle-input" id="battle-name" maxlength="10" placeholder="이름">
+        <button class="btn btn-gold" id="btn-battle-create">방 만들기</button>
+        <input class="battle-input" id="battle-code-input" maxlength="6" placeholder="방 코드">
+        <button class="btn btn-premium" id="btn-battle-join">입장</button>
+      </div>
+      <div class="battle-row">
+        <span class="synth-meta">현재 방</span>
+        <span class="battle-code" id="battle-code">없음</span>
+        <button class="btn" id="btn-battle-reset">새 라운드</button>
+        <button class="btn" id="btn-battle-leave">나가기</button>
+      </div>
+      <div class="battle-arena">
+        <div class="battle-side" id="battle-host"></div>
+        <div class="battle-vs">VS</div>
+        <div class="battle-side" id="battle-guest"></div>
+      </div>
+      <div class="battle-status" id="battle-status">방을 만들거나 입장하세요</div>
+      <div class="battle-row">
+        <button class="btn btn-gold" id="btn-battle-share">내 배틀 코드 만들기</button>
+        <input class="battle-input" id="battle-share-code" placeholder="내 코드" readonly>
+        <input class="battle-input" id="battle-opponent-code" placeholder="친구 코드 붙여넣기">
+        <button class="btn btn-premium" id="btn-battle-manual">수동 대결</button>
+      </div>
+      <div class="battle-grid-title">대표 카드 선택</div>
+      <div id="battle-grid"></div>
+    </div>
+  </div>
+  <div class="tab-panel" id="settings-panel-tab">
+    <div class="settings-panel">
+      <div class="synth-top">
+        <span class="synth-title">설정</span>
+        <span class="synth-meta" id="online-user">오프라인</span>
+      </div>
+      <div class="settings-grid">
+        <label class="settings-field">효과음 음량
+          <input class="settings-slider" id="setting-volume" type="range" min="0" max="100" value="75">
+        </label>
+        <label class="settings-field">로그인 이메일
+          <input class="settings-input" id="login-email" type="email" autocomplete="username" placeholder="email@example.com">
+        </label>
+        <label class="settings-field">비밀번호
+          <input class="settings-input" id="login-password" type="password" autocomplete="current-password" placeholder="비밀번호">
+        </label>
+        <div class="settings-field">계정
+          <div class="controls">
+            <button class="btn btn-premium" id="btn-login">로그인</button>
+            <button class="btn btn-gold" id="btn-register">가입</button>
+            <button class="btn" id="btn-logout">로그아웃</button>
+          </div>
+        </div>
+      </div>
+      <label class="settings-field">Firebase 설정 JSON
+        <textarea class="settings-textarea" id="firebase-config" spellcheck="false" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","appId":"..."}'></textarea>
+      </label>
+      <div class="controls">
+        <button class="btn btn-premium" id="btn-online-init">온라인 연결</button>
+        <button class="btn btn-gold" id="btn-cloud-upload">저장 올리기</button>
+        <button class="btn" id="btn-cloud-download">저장 불러오기</button>
+      </div>
+      <div class="settings-status" id="settings-status">진짜 로그인은 서버가 필요해서 Firebase 설정 JSON이 있어야 켜집니다 · 서버 없이 다른 기기와 하려면 결투장의 수동 배틀 코드를 쓰세요</div>
+    </div>
+  </div>
+</section>
+
+<footer>진행 상황은 이 브라우저에 자동 저장됩니다 · 국기: flagcdn.com / Wikimedia Commons</footer>
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════ */
+
+// Current countries: [code, name]  → flag from flagcdn.com/w320/{code}.png
+const CURRENT_DATA = {
+  legend:    [['us','미국'],['cn','중국'],['ru','러시아'],['gb','영국'],['fr','프랑스'],['de','독일'],['in','인도']],
+  myth:      [['jp','일본'],['kr','대한민국'],['it','이탈리아'],['ca','캐나다'],['br','브라질'],['au','호주'],['il','이스라엘'],['sa','사우디아라비아'],['es','스페인'],['tr','튀르키예'],['ir','이란'],['pk','파키스탄'],['id','인도네시아'],['mx','멕시코'],['pl','폴란드']],
+  epic:      [['nl','네덜란드'],['ch','스위스'],['se','스웨덴'],['ae','아랍에미리트'],['sg','싱가포르'],['eg','이집트'],['ng','나이지리아'],['za','남아프리카공화국'],['ar','아르헨티나'],['th','태국'],['vn','베트남'],['no','노르웨이'],['be','벨기에'],['ua','우크라이나'],['qa','카타르'],['kw','쿠웨이트'],['iq','이라크'],['dz','알제리'],['ph','필리핀'],['my','말레이시아'],['bd','방글라데시'],['co','콜롬비아'],['cl','칠레'],['cd','콩고민주공화국']],
+  sr:        [['at','오스트리아'],['gr','그리스'],['pt','포르투갈'],['dk','덴마크'],['fi','핀란드'],['ie','아일랜드'],['nz','뉴질랜드'],['cz','체코'],['hu','헝가리'],['ro','루마니아'],['kz','카자흐스탄'],['ma','모로코'],['ke','케냐'],['et','에티오피아'],['lk','스리랑카'],['pe','페루'],['ve','베네수엘라'],['cu','쿠바'],['do','도미니카공화국'],['jo','요르단'],['om','오만'],['bh','바레인'],['mm','미얀마'],['kh','캄보디아'],['la','라오스'],['mn','몽골'],['uz','우즈베키스탄'],['az','아제르바이잔'],['by','벨라루스'],['sk','슬로바키아'],['kp','북한']],
+  rare:      [['bg','불가리아'],['rs','세르비아'],['hr','크로아티아'],['si','슬로베니아'],['lt','리투아니아'],['lv','라트비아'],['ee','에스토니아'],['is','아이슬란드'],['lu','룩셈부르크'],['cy','키프로스'],['mt','몰타'],['tn','튀니지'],['ly','리비아'],['sd','수단'],['gh','가나'],['tz','탄자니아'],['ug','우간다'],['zw','짐바브웨'],['zm','잠비아'],['ao','앙골라'],['mz','모잠비크'],['sn','세네갈'],['ci','코트디부아르'],['cm','카메룬'],['uy','우루과이'],['ec','에콰도르'],['bo','볼리비아'],['py','파라과이'],['pa','파나마'],['cr','코스타리카'],['gt','과테말라'],['hn','온두라스'],['sv','엘살바도르'],['ni','니카라과'],['jm','자메이카'],['tt','트리니다드토바고'],['np','네팔'],['af','아프가니스탄'],['ye','예멘'],['sy','시리아'],['lb','레바논'],['am','아르메니아'],['ge','조지아'],['md','몰도바'],['ba','보스니아헤르체고비나'],['mk','북마케도니아'],['al','알바니아'],['me','몬테네그로'],['xk','코소보'],['tm','투르크메니스탄'],['kg','키르기스스탄'],['tj','타지키스탄']],
+  common:    [['fj','피지'],['pg','파푸아뉴기니'],['sb','솔로몬제도'],['vu','바누아투'],['ws','사모아'],['to','통가'],['ki','키리바시'],['tv','투발루'],['nr','나우루'],['pw','팔라우'],['mh','마셜제도'],['fm','미크로네시아연방'],['bs','바하마'],['bb','바베이도스'],['lc','세인트루시아'],['vc','세인트빈센트그레나딘'],['gd','그레나다'],['dm','도미니카'],['kn','세인트키츠네비스'],['ag','앤티가바부다'],['ml','말리'],['bf','부르키나파소'],['ne','니제르'],['td','차드'],['cf','중앙아프리카공화국'],['cg','콩고공화국'],['ga','가봉'],['gq','적도기니'],['st','상투메프린시페'],['gn','기니'],['gw','기니비사우'],['sl','시에라리온'],['lr','라이베리아'],['tg','토고'],['bj','베냉'],['mr','모리타니'],['gm','감비아'],['cv','카보베르데'],['km','코모로'],['mg','마다가스카르'],['mw','말라위'],['bw','보츠와나'],['na','나미비아'],['ls','레소토'],['sz','에스와티니'],['rw','르완다'],['bi','부룬디'],['dj','지부티'],['er','에리트레아'],['so','소말리아'],['ss','남수단'],['bt','부탄'],['mv','몰디브'],['bn','브루나이'],['tl','동티모르'],['ad','안도라'],['mc','모나코'],['sm','산마리노'],['li','리히텐슈타인'],['va','바티칸시국'],['ps','팔레스타인'],['sc','세이셸'],['mu','모리셔스'],['gy','가이아나'],['sr','수리남'],['bz','벨리즈'],['ht','아이티']]
+};
+
+// Dependent/autonomous regions: [id, name, flag code | file:name | URL | composite, governing country/area]
+const DEPENDENT_DATA = {
+  dep_legend: [
+    ['d_tibet','티베트','file:Flag of Tibet.svg','중국'],
+    ['d_xinjiang','신장 위구르','file:Kokbayraq flag.svg','중국'],
+    ['d_sakha','사하 공화국','file:Flag of Sakha.svg','러시아'],
+    ['d_inner_mongolia','내몽골','file:Flag of the Southern Mongolian independence movement.svg','중국'],
+    ['d_gl','그린란드','gl','덴마크'],
+    ['d_hk','홍콩','hk','중국'],
+    ['d_scotland','스코틀랜드','gb-sct','영국'],
+    ['d_quebec','퀘벡','file:Flag of Quebec.svg','캐나다'],
+    ['d_catalonia','카탈루냐','file:Flag of Catalonia.svg','스페인'],
+    ['d_bavaria','바이에른','file:Flag of Bavaria (lozengy).svg','독일'],
+  ],
+  dep_myth: [
+    ['d_mo','마카오','mo','중국'],
+    ['d_fo','페로 제도','fo','덴마크'],
+    ['d_pr','푸에르토리코','pr','미국'],
+    ['d_chechnya','체첸 공화국','file:Flag of Chechnya.svg','러시아'],
+    ['d_tatarstan','타타르스탄','file:Flag of Tatarstan.svg','러시아'],
+    ['d_bashkortostan','바시키르 공화국','file:Flag of Bashkortostan.svg','러시아'],
+    ['d_basque','바스크','file:Flag of the Basque Country.svg','스페인'],
+    ['d_kurdistan','쿠르디스탄 자치구','file:Flag of Kurdistan.svg','이라크'],
+    ['d_crimea','크림','file:Flag of Crimea.svg','우크라이나/러시아'],
+    ['d_flanders','플란데런','file:Flag of Flanders.svg','벨기에'],
+    ['d_wallonia','왈롱','file:Flag of Wallonia.svg','벨기에'],
+    ['d_occitania','옥시타니아','file:Flag of Occitania.svg','프랑스'],
+    ['d_galicia','갈리시아','file:Flag of Galicia.svg','스페인'],
+    ['d_silesia','실레시아','file:Flag of Silesia.svg','폴란드/체코'],
+  ],
+  dep_epic: [
+    ['d_wales','웨일스','gb-wls','영국'],
+    ['d_northern_ireland','북아일랜드','gb-nir','영국'],
+    ['d_gu','괌','gu','미국'],
+    ['d_pf','프랑스령 폴리네시아','pf','프랑스'],
+    ['d_nc','누벨칼레도니','nc','프랑스'],
+    ['d_aw','아루바','aw','네덜란드'],
+    ['d_cw','퀴라소','cw','네덜란드'],
+    ['d_nunavut','누나부트','file:Flag of Nunavut.svg','캐나다'],
+    ['d_sicily','시칠리아','file:Flag of Sicily.svg','이탈리아'],
+    ['d_corsica','코르시카','file:Flag of Corsica.svg','프랑스'],
+    ['d_dagestan','다게스탄','file:Flag of Dagestan.svg','러시아'],
+    ['d_tuva','투바 공화국','file:Flag of Tuva.svg','러시아'],
+    ['d_buryatia','부랴티야','file:Flag of Buryatia.svg','러시아'],
+    ['d_khakassia','하카시야','file:Flag of Khakassia.svg','러시아'],
+    ['d_ingushetia','인구셰티야','file:Flag of Ingushetia.svg','러시아'],
+    ['d_north_ossetia','북오세티야-알라니야','file:Flag of North Ossetia.svg','러시아'],
+    ['d_kabardino_balkaria','카바르디노-발카리야','file:Flag of Kabardino-Balkaria.svg','러시아'],
+    ['d_karachay_cherkessia','카라차이-체르케스','file:Flag of Karachay-Cherkessia.svg','러시아'],
+    ['d_sami','사미','file:Sami flag.svg','북유럽'],
+    ['d_andalusia','안달루시아','file:Flag of Andalusia.svg','스페인'],
+    ['d_brittany','브르타뉴','file:Flag of Brittany.svg','프랑스'],
+  ],
+  dep_sr: [
+    ['d_gi','지브롤터','gi','영국'],
+    ['d_bm','버뮤다','bm','영국'],
+    ['d_ky','케이맨 제도','ky','영국'],
+    ['d_as','아메리칸사모아','as','미국'],
+    ['d_vi','미국령 버진아일랜드','vi','미국'],
+    ['d_mp','북마리아나 제도','mp','미국'],
+    ['d_ck','쿡 제도','ck','뉴질랜드'],
+    ['d_aland','올란드','ax','핀란드'],
+    ['d_sardinia','사르데냐','file:Flag of Sardinia.svg','이탈리아'],
+    ['d_karelia','카렐리야','file:Flag of Karelia.svg','러시아'],
+    ['d_kalmykia','칼미키야','file:Flag of Kalmykia.svg','러시아'],
+    ['d_komi','코미 공화국','file:Flag of Komi.svg','러시아'],
+    ['d_altai','알타이 공화국','file:Flag of Altai Republic.svg','러시아'],
+    ['d_ningxia','후이족자치구','file:Flag of Ningxia Hui Autonomous Region.svg','중국'],
+    ['d_guangxi','좡족자치구','file:Flag of Guangxi Zhuang Autonomous Region.svg','중국'],
+    ['d_wurttemberg','뷔르템부르크','file:Flag of Württemberg.svg','독일'],
+    ['d_baden','바덴','file:Flag of Baden.svg','독일'],
+    ['d_saxony','작센','file:Flag of Saxony.svg','독일'],
+    ['d_thuringia','튀링겐','file:Flag of Thuringia.svg','독일'],
+    ['d_srpska','스릅스카','file:Flag of Republika Srpska.svg','보스니아 헤르체고비나'],
+    ['d_vojvodina','보이보디나','file:Flag of Vojvodina.svg','세르비아'],
+  ],
+  dep_rare: [
+    ['d_tc','터크스 케이커스 제도','tc','영국'],
+    ['d_vg','영국령 버진아일랜드','vg','영국'],
+    ['d_ai','앵귈라','ai','영국'],
+    ['d_sh','세인트헬레나','sh','영국'],
+    ['d_im','맨섬','im','영국 왕실령'],
+    ['d_je','저지','je','영국 왕실령'],
+    ['d_gg','건지','gg','영국 왕실령'],
+    ['d_gp','과들루프','gp','프랑스'],
+    ['d_mq','마르티니크','mq','프랑스'],
+    ['d_gf','프랑스령 기아나','gf','프랑스'],
+    ['d_re','레위니옹','re','프랑스'],
+    ['d_yt','마요트','yt','프랑스'],
+    ['d_sx','신트마르턴','sx','네덜란드'],
+    ['d_chuvashia','추바시야','file:Flag of Chuvashia.svg','러시아'],
+    ['d_adygea','아디게야','file:Flag of Adygea.svg','러시아'],
+    ['d_mari_el','마리옐','file:Flag of Mari El.svg','러시아'],
+    ['d_udmurtia','우드무르티야','file:Flag of Udmurtia.svg','러시아'],
+    ['d_mordovia','모르도비야','file:Flag of Mordovia.svg','러시아'],
+    ['d_chukotka','추코트카 자치구','file:Flag of Chukotka Autonomous Okrug.svg','러시아'],
+    ['d_khanty_mansi','한티-만시 자치구','file:Flag of Khanty-Mansi Autonomous Okrug.svg','러시아'],
+    ['d_yamalo_nenets','야말로-네네츠 자치구','file:Flag of Yamalo-Nenets Autonomous Okrug.svg','러시아'],
+    ['d_nenets','네네츠 자치구','file:Flag of Nenets Autonomous District.svg','러시아'],
+    ['d_jewish_autonomous','유대인 자치주','file:Flag of the Jewish Autonomous Oblast.svg','러시아'],
+    ['d_hanover','하노버','file:Flag of Hanover 1837-1866.svg','독일'],
+    ['d_anhalt','안할트','file:Flagge Herzogtum Anhalt.svg','독일'],
+    ['d_oldenburg','올덴부르크','file:Flag of Oldenburg.svg','독일'],
+  ],
+  dep_common: [
+    ['d_fk','포클랜드 제도','fk','영국'],
+    ['d_ms','몬트세랫','ms','영국'],
+    ['d_wf','왈리스 푸투나','wf','프랑스'],
+    ['d_pm','생피에르 미클롱','pm','프랑스'],
+    ['d_bl','생바르텔레미','bl','프랑스'],
+    ['d_mf','생마르탱','mf','프랑스'],
+    ['d_nu','니우에','nu','뉴질랜드'],
+    ['d_tk','토켈라우','tk','뉴질랜드'],
+    ['d_nf','노퍽섬','nf','호주'],
+    ['d_cc','코코스 제도','cc','호주'],
+    ['d_cx','크리스마스섬','cx','호주'],
+  ],
+};
+
+// Continents: [id, name, symbol] — 대륙 전용 등급
+const CONTINENT_DATA = {
+  continent: [
+    ['ct_europe','유럽','EU'],
+    ['ct_africa','아프리카','AF'],
+    ['ct_asia','아시아','AS'],
+    ['ct_north_america','북아메리카','NA'],
+    ['ct_south_america','남아메리카','SA'],
+    ['ct_oceania','오세아니아','OC'],
+    ['ct_antarctica','남극','AN'],
+  ]
+};
+
+const W = filename => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(filename)}?width=320`;
+const DEPENDENT_FLAG_OVERRIDES = {
+  'file:Flag of the Southern Mongolian independence movement.svg': W('Flag of the Southern Mongolian Independence Movement.svg'),
+  'file:Flag of Ningxia Hui Autonomous Region.svg': 'https://flagcdn.com/w320/cn.png',
+  'file:Flag of Guangxi Zhuang Autonomous Region.svg': 'https://flagcdn.com/w320/cn.png',
+  'file:Flag of Württemberg.svg': W('Flag of Württemberg.svg'),
+  'file:Flag of Chukotka Autonomous Okrug.svg': W('Flag of Chukotka.svg'),
+  'file:Flag of Khanty-Mansi Autonomous Okrug.svg': W('Flag of Yugra.svg'),
+  'file:Flag of Hanover 1837-1866.svg': W('Flag of Hanover 1837-1866.svg'),
+  'file:Flagge Herzogtum Anhalt.svg': W('Flagge Herzogtum Anhalt.svg'),
+};
+const C = (base, emblem) => `composite:${base}||${emblem}`;
+const SVG = svg => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+const GOGURYEO_SAMJOGO_FLAG = SVG(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <rect width="900" height="600" fill="#b5121b"/>
+  <circle cx="450" cy="300" r="205" fill="#f2c64b" opacity=".12"/>
+  <g fill="#050505" transform="translate(450 300)">
+    <ellipse cx="0" cy="8" rx="118" ry="82"/>
+    <circle cx="96" cy="-50" r="43"/>
+    <path d="M128-58 203-90 151-29z"/>
+    <path d="M-12-38c-94-83-211-55-268 11 91-6 166 33 231 103z"/>
+    <path d="M-52-83c-8-82 54-143 127-158-39 70-31 123 7 185z"/>
+    <path d="M38-37c79-70 171-64 229-13-75 6-130 46-184 111z"/>
+    <path d="M-48 82c-25 63-65 98-118 118l49 14c-27 29-58 45-96 52 63 17 126-11 166-75 23-37 35-70 44-103z"/>
+    <path d="M8 92c1 72-21 121-62 158l51-1c-15 36-37 62-68 83 65-8 111-59 126-132 9-43 7-78 0-111z"/>
+    <path d="M65 78c44 58 92 84 150 89l-42 29c35 18 68 24 105 17-51 42-120 37-176-9-35-29-56-58-73-90z"/>
+    <circle cx="111" cy="-61" r="7" fill="#b5121b"/>
+  </g>
+</svg>`);
+const CONTINENT_FLAG_URLS = {
+  ct_europe: W('Flag of Europe.svg'),
+  ct_africa: W('Flag of the African Union.svg'),
+  ct_asia: 'https://upload.wikimedia.org/wikipedia/de/thumb/8/87/Flag_of_ASEAN.svg/250px-Flag_of_ASEAN.svg.png',
+  ct_north_america: W('Flag of the Organization of American States.svg'),
+  ct_south_america: W('Flag of UNASUR.svg'),
+  ct_oceania: W('Flag of the Pacific Islands Forum.svg'),
+  ct_antarctica: W('True South Antarctic Flag.svg'),
+};
+
+// Secret countries are synthesis-only and never enter a gacha pool.
+const SECRET_DATA = {
+  secret: [
+    ['s_papacy','교황청',W('Flag of the Vatican City.svg')],
+    ['s_politu','폴란드 리투아니아',W('Royal Banner of Stanisław II of Poland.svg')],
+    ['s_unified_korea','통일한국',W('Unification flag of Korea.svg')],
+    ['s_heaven','하늘나라','https://www.pradonuevo.es/wp-content/uploads/2017/05/Jes%C3%BAs-en-el-cielo-escalera.jpg'],
+    ['s_unified_goguryeo','통일고구려',GOGURYEO_SAMJOGO_FLAG],
+    ['s_unified_baekje','통일백제',W('Military flag of Baekje.svg')],
+    ['s_unified_silla','통일신라',W('Military Banner of Silla.svg')],
+    ['s_benelux','베네룩스','https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Flag_of_Benelux.svg/250px-Flag_of_Benelux.svg.png'],
+    ['s_german_confederation','독일 연방',W('Flag of the German Confederation (war).svg')],
+    ['s_world','세계',W('International Flag of Planet Earth.svg')],
+  ]
+};
+
+// Historical countries: [id, name, flagUrl]  — images are fetched from Wikimedia Commons or flagcdn.
+const HIST_FLAG_URLS = {
+  h_rome: W('Vexilloid of the Roman Empire.svg'),
+  h_mongol: W('Flag of the Mongol Empire.svg'),
+  h_alex: W('Vergina_Sun_WIPO.svg'),
+  h_han: 'https://www.pngkey.com/png/detail/120-1200339_han-chinese-flag-chinese-han-dynasty-flag.png',
+  h_abbasid: W('Black flag.svg'),
+  h_umayyad: W('White flag 3 to 2.svg'),
+  h_goguryeo: GOGURYEO_SAMJOGO_FLAG,
+  h_silla: W('Military Banner of Silla.svg'),
+  h_baekje: W('Military flag of Baekje.svg'),
+  h_gojoseon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Bronze_dagger.jpg/330px-Bronze_dagger.jpg',
+  h_byz: W('Byzantine imperial flag, 14th century.svg'),
+  h_otto: W('Ottoman flag.svg'),
+  h_mughal: W('Flag of the Mughal Empire.svg'),
+  h_pers: W('Derafsh Kaviani flag of the late Sassanid Empire.svg'),
+  h_inca: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Suntur_Paucar.svg/250px-Suntur_Paucar.svg.png',
+  h_aztec: C(W('White flag 3 to 2.svg'), W('Glyphs for the member States of the Aztec Triple Alliance.svg')),
+  h_egypt: W('Ankh.svg'),
+  h_babylon: C(W('White flag 3 to 2.svg'), W('Babylonlion.svg')),
+  h_assyria: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_the_Assyrians_%28gold_and_blue_Assur%29.svg/330px-Flag_of_the_Assyrians_%28gold_and_blue_Assur%29.svg.png',
+  h_carthage: W('Carthage standard.svg'),
+  h_maurya: W('Sarnath_capital.jpg'),
+  h_gupta: W('Garuda_emblem.png'),
+  h_xiongnu: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Plaque_with_3_Ibexes%2C_2nd-1st_century_BCE%2C_Xiongnu.jpg/500px-Plaque_with_3_Ibexes%2C_2nd-1st_century_BCE%2C_Xiongnu.jpg',
+  h_maya: W('Palenque glyphs-edit1.jpg'),
+  h_songhai: W('Flag of the Songhai Empire.jpg'),
+  h_mali_emp: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Flag_of_the_Mali_Empire.svg/250px-Flag_of_the_Mali_Empire.svg.png',
+  h_nazi: W('Flag of Germany (1935–1945).svg'),
+  h_ussr: W('Flag of the Soviet Union.svg'),
+  h_impjp: W('War flag of the Imperial Japanese Army (1868–1945).svg'),
+  h_brit: W('Flag of the United Kingdom.svg'),
+  h_nap: C(W('Flag of France.svg'), W('Coat of arms of the First French Empire.svg')),
+  h_austrian_emp: W('Flag of the Habsburg Monarchy.svg'),
+  h_ah: W('Flag of Austria-Hungary (1869-1918).svg'),
+  h_qing: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Flag_of_China_%281889%E2%80%931912%29.svg/330px-Flag_of_China_%281889%E2%80%931912%29.svg.png',
+  h_hre: W('Banner of the Holy Roman Emperor with haloes (1400-1806).svg'),
+  h_deukaiser: W('Flag of the German Empire.svg'),
+  h_russian_emp: W('Flag of the Russian Empire (black-yellow-white).svg'),
+  h_french_emp: W('Flag of France.svg'),
+  h_spanish_emp: W('Flag of Cross of Burgundy.svg'),
+  h_port_emp: W('Flag of Portugal.svg'),
+  h_dutch_emp: W('Flag of the Netherlands.svg'),
+  h_belgian_emp: W('Flag of Belgium.svg'),
+  h_italian_emp: W('Flag of Italy (1861-1946) crowned.svg'),
+  h_brazil_emp: W('Flag of Empire of Brazil (1870-1889).svg'),
+  h_safavid: W('Safavid Flag.svg'),
+  h_ethiopian_emp: W('Flag of Ethiopia (1897-1936; 1941-1974).svg'),
+  h_yugo: W('Flag of Yugoslavia (1946-1992).svg'),
+  h_czecho: W('Flag of Czechoslovakia.svg'),
+  h_ddr: W('Flag of East Germany.svg'),
+  h_svn: W('Flag of South Vietnam.svg'),
+  h_roc: W('Flag of the Republic of China.svg'),
+  h_csa: W('Flag of the Confederate States (1861–1863).svg'),
+  h_korean: W('Flag of Korea (1899).svg'),
+  h_prus: W('Flag of Prussia (1892-1918).svg'),
+  h_gran_colombia: W('Flag of Gran Colombia.svg'),
+  h_texas: W('Flag of Texas.svg'),
+  h_zanzibar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Flag_of_the_Sultanate_of_Zanzibar_%281963%29.svg/250px-Flag_of_the_Sultanate_of_Zanzibar_%281963%29.svg.png',
+  h_hawaii: W('Flag of Hawaii.svg'),
+  h_tanganyika: W('Flag of Tanganyika (1961–1964).svg'),
+  h_sikkim: W('Flag of Sikkim (1967-1975).svg'),
+  h_manchukuo: W('Flag of Manchukuo.svg'),
+  h_danzig: W('Flag of the Free City of Danzig.svg'),
+  h_uar: W('Flag of the United Arab Republic.svg'),
+  h_goryeo: W('Royal flag of Goryeo (Bong-gi).svg'),
+  h_joseon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Flag_of_the_king_of_Joseon.svg/250px-Flag_of_the_king_of_Joseon.svg.png',
+  h_gaya: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/PressapochistaA.jpg/330px-PressapochistaA.jpg',
+  h_manchuria: W('Flag of Manchukuo.svg'),
+  h_tonga_emp: W('Flag of Tonga (1862-1866).svg'),
+  h_venice: W('Flag of the Republic of Venice.svg'),
+  h_teutonic: W('Flag of the State of the Teutonic Order.svg'),
+  h_kongo: W('Flag of the Kingdom of Kongo according to Giovanni Cavazzi da Montecuccolo.svg'),
+  h_jerusalem: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Vexillum_Regni_Hierosolymae.svg/250px-Vexillum_Regni_Hierosolymae.svg.png',
+  h_burgundy: W('Ancient Flag of Burgundy.svg'),
+};
+const H = id => HIST_FLAG_URLS[id] || W(`${id}.svg`);
+const HIST_DATA = {
+  divine: [
+    ['h_rome',  '로마 제국',           H('h_rome')],
+    ['h_mongol','몽골 제국',           H('h_mongol')],
+    ['h_alex',  '마케도니아 제국',     H('h_alex')],
+    ['h_han',   '한나라',              H('h_han')],
+    ['h_abbasid','아바스 왕조',        H('h_abbasid')],
+    ['h_umayyad','우마이야 왕조',      H('h_umayyad')],
+  ],
+  ancient: [
+    ['h_byz',   '비잔티움 제국',       H('h_byz')],
+    ['h_otto',  '오스만 제국',         H('h_otto')],
+    ['h_mughal','무굴 제국',           H('h_mughal')],
+    ['h_pers',  '아케메네스 페르시아', H('h_pers')],
+    ['h_inca',  '잉카 제국',           H('h_inca')],
+    ['h_aztec', '아즈텍 제국',         H('h_aztec')],
+    ['h_goguryeo','고구려',            H('h_goguryeo')],
+    ['h_silla', '신라',                H('h_silla')],
+    ['h_baekje','백제',                H('h_baekje')],
+    ['h_gojoseon','고조선',            H('h_gojoseon')],
+    ['h_egypt', '고대 이집트',         H('h_egypt')],
+    ['h_babylon','바빌로니아',         H('h_babylon')],
+    ['h_assyria','아시리아',           H('h_assyria')],
+    ['h_carthage','카르타고',          H('h_carthage')],
+    ['h_maurya','마우리아 제국',       H('h_maurya')],
+    ['h_gupta', '굽타 제국',           H('h_gupta')],
+    ['h_xiongnu','흉노',               H('h_xiongnu')],
+    ['h_maya',  '마야 문명',           H('h_maya')],
+    ['h_songhai','송가이 제국',        H('h_songhai')],
+    ['h_mali_emp','말리 제국',         H('h_mali_emp')],
+  ],
+  modern_emp: [
+    ['h_nazi',  '나치 독일',           H('h_nazi')],
+    ['h_ussr',  '소련',                H('h_ussr')],
+    ['h_impjp', '일본 제국',           H('h_impjp')],
+    ['h_brit',  '대영제국',            H('h_brit')],
+    ['h_nap',   '나폴레옹 프랑스',     H('h_nap')],
+    ['h_austrian_emp','오스트리아 제국', H('h_austrian_emp')],
+    ['h_ah',    '오스트리아-헝가리 제국', H('h_ah')],
+    ['h_qing',  '청나라',              H('h_qing')],
+    ['h_hre',   '신성 로마 제국',      H('h_hre')],
+    ['h_deukaiser','독일 제국',        H('h_deukaiser')],
+    ['h_russian_emp','러시아 제국',    H('h_russian_emp')],
+    ['h_french_emp','프랑스 식민제국', H('h_french_emp')],
+    ['h_spanish_emp','스페인 제국',    H('h_spanish_emp')],
+    ['h_port_emp','포르투갈 제국',     H('h_port_emp')],
+    ['h_dutch_emp','네덜란드 제국',    H('h_dutch_emp')],
+    ['h_belgian_emp','벨기에 식민제국', H('h_belgian_emp')],
+    ['h_italian_emp','이탈리아 왕국',  H('h_italian_emp')],
+    ['h_brazil_emp','브라질 제국',     H('h_brazil_emp')],
+    ['h_safavid','사파비 제국',        H('h_safavid')],
+    ['h_ethiopian_emp','에티오피아 제국', H('h_ethiopian_emp')],
+  ],
+  hist_state: [
+    ['h_yugo',  '유고슬라비아',        H('h_yugo')],
+    ['h_czecho','체코슬로바키아',      H('h_czecho')],
+    ['h_ddr',   '동독',                H('h_ddr')],
+    ['h_svn',   '남베트남',            H('h_svn')],
+    ['h_roc',   '중화민국(대륙)',       H('h_roc')],
+    ['h_csa',   '남부 연합',           H('h_csa')],
+    ['h_korean','대한제국',            H('h_korean')],
+    ['h_prus',  '프로이센',            H('h_prus')],
+    ['h_gran_colombia','그란 콜롬비아', H('h_gran_colombia')],
+    ['h_texas', '텍사스 공화국',        H('h_texas')],
+    ['h_zanzibar','잔지바르 술탄국',   H('h_zanzibar')],
+    ['h_hawaii','하와이 왕국',         H('h_hawaii')],
+    ['h_tanganyika','탕가니카',        H('h_tanganyika')],
+    ['h_sikkim','시킴 왕국',           H('h_sikkim')],
+    ['h_manchukuo','만주국',           H('h_manchukuo')],
+    ['h_danzig','단치히 자유시',       H('h_danzig')],
+    ['h_uar',   '아랍 연합 공화국',    H('h_uar')],
+    ['h_goryeo','고려',                H('h_goryeo')],
+    ['h_joseon','조선',                H('h_joseon')],
+    ['h_gaya',  '가야',                H('h_gaya')],
+    ['h_manchuria','만주',             H('h_manchuria')],
+    ['h_tonga_emp','통가제국',         H('h_tonga_emp')],
+    ['h_venice','베네치아 공화국',     H('h_venice')],
+    ['h_teutonic','튜턴 기사단국',      H('h_teutonic')],
+    ['h_kongo','콩고 왕국',            H('h_kongo')],
+    ['h_jerusalem','예루살렘 왕국',    H('h_jerusalem')],
+    ['h_burgundy','부르고뉴 공국',     H('h_burgundy')],
+  ]
+};
+
+/* ═══════════════════════════════════════════════
+   TIER CONFIG  (prob must sum to 100)
+═══════════════════════════════════════════════ */
+const TIERS = [
+  {key:'continent',  label:'대륙',      prob:0.1,  color:'#00D4FF', rank:-5, continent:true,   historical:false, symbol:'🌐'},
+  {key:'divine',     label:'신성',      prob:0.3,  color:'#FFD700', rank:-4, historical:true,  symbol:'👑'},
+  {key:'ancient',    label:'문명 유산', prob:0.6,  color:'#8A2BE2', rank:-3, historical:true,  symbol:'🏛️'},
+  {key:'modern_emp', label:'패권 국가', prob:0.7,  color:'#DC143C', rank:-2, historical:true,  symbol:'⚔️'},
+  {key:'hist_state', label:'역사 국가', prob:0.8,  color:'#C67C1A', rank:-1, historical:true,  symbol:'📜'},
+  {key:'legend',     label:'전설',      prob:1.5,  color:'#D4AF37', rank:0,  historical:false},
+  {key:'myth',       label:'신화',      prob:5,    color:'#C0392B', rank:1,  historical:false},
+  {key:'epic',       label:'영웅',      prob:8,    color:'#7C5CBF', rank:2,  historical:false},
+  {key:'sr',         label:'초희귀',    prob:15,   color:'#3E7CB1', rank:3,  historical:false},
+  {key:'rare',       label:'희귀',      prob:25,   color:'#2C9A82', rank:4,  historical:false},
+  {key:'common',     label:'일반',      prob:43,   color:'#7A8699', rank:5,  historical:false},
+];
+const SECRET_TIER = {key:'secret', label:'시크릿', prob:0, color:'#000000', rank:-6, secret:true, historical:false, symbol:'✦'};
+const DEPENDENT_TIERS = [
+  {key:'dep_legend', label:'종속 전설', depLabel:'전설', prob:2,  color:'#FFD45C', rank:0.35, dependent:true, historical:false, symbol:'◆'},
+  {key:'dep_myth',   label:'종속 신화', depLabel:'신화', prob:5,  color:'#FF5B6E', rank:1.35, dependent:true, historical:false, symbol:'◆'},
+  {key:'dep_epic',   label:'종속 영웅', depLabel:'영웅', prob:8,  color:'#9B7CFF', rank:2.35, dependent:true, historical:false, symbol:'◆'},
+  {key:'dep_sr',     label:'종속 초희귀', depLabel:'초희귀', prob:15, color:'#55E4FF', rank:3.35, dependent:true, historical:false, symbol:'◆'},
+  {key:'dep_rare',   label:'종속 희귀', depLabel:'희귀', prob:25, color:'#6FE38F', rank:4.35, dependent:true, historical:false, symbol:'◆'},
+  {key:'dep_common', label:'종속 일반', depLabel:'일반', prob:45, color:'#FF8A3D', rank:5.35, dependent:true, historical:false, symbol:'◆'},
+];
+const DEPENDENT_TIER_ORDER = DEPENDENT_TIERS.map(t=>t.key);
+const TIER_BY_KEY = Object.fromEntries([SECRET_TIER, ...DEPENDENT_TIERS, ...TIERS].map(t=>[t.key,t]));
+const PREMIUM_EXCLUDED_TIERS = new Set(['common','rare','sr']);
+const PREMIUM_TIERS = TIERS.filter(t=>!PREMIUM_EXCLUDED_TIERS.has(t.key));
+
+// Build flat country pool
+function countryFromEntry(entry, t, flagSize='w320'){
+  if(t.secret){
+    return {id:entry[0], name:entry[1], flagUrl:entry[2], tier:t.key, historical:false, secret:true};
+  }
+  if(t.continent){
+    return {id:entry[0], name:entry[1], flagUrl:CONTINENT_FLAG_URLS[entry[0]], tier:t.key, historical:false, continent:true, symbol:entry[2]};
+  }
+  if(t.historical){
+    return {id:entry[0], name:entry[1], flagUrl:entry[2], tier:t.key, historical:true};
+  }
+  return {id:entry[0], name:entry[1], flagUrl:`https://flagcdn.com/${flagSize}/${entry[0]}.png`, tier:t.key, historical:false};
+}
+function dependentFlagUrl(ref, flagSize='w320'){
+  if(!ref) return '';
+  if(DEPENDENT_FLAG_OVERRIDES[ref]) return DEPENDENT_FLAG_OVERRIDES[ref];
+  if(ref.startsWith('http')) return ref;
+  if(ref.startsWith('file:')) return W(ref.slice('file:'.length));
+  return `https://flagcdn.com/${flagSize}/${ref}.png`;
+}
+function countryFromDependentEntry(entry, t, flagSize='w320'){
+  return {
+    id:entry[0],
+    name:entry[1],
+    flagUrl:dependentFlagUrl(entry[2], flagSize),
+    tier:t.key,
+    historical:false,
+    dependent:true,
+    parent:entry[3],
+    symbol:t.symbol
+  };
+}
+function buildPool(){
+  const all = [];
+  for(const t of TIERS){
+    const src = t.continent ? CONTINENT_DATA[t.key] : t.historical ? HIST_DATA[t.key] : CURRENT_DATA[t.key];
+    if(!src) continue;
+    for(const entry of src){
+      all.push(countryFromEntry(entry, t));
+    }
+  }
+  return all;
+}
+function buildDependentPool(){
+  const all = [];
+  for(const t of DEPENDENT_TIERS){
+    const src = DEPENDENT_DATA[t.key] || [];
+    for(const entry of src){
+      all.push(countryFromDependentEntry(entry, t));
+    }
+  }
+  return all;
+}
+const MAIN_COUNTRIES = buildPool();
+const ALL_DEPENDENT_COUNTRIES = buildDependentPool();
+const ALL_COUNTRIES = [...MAIN_COUNTRIES, ...ALL_DEPENDENT_COUNTRIES];
+const SECRET_COUNTRIES = SECRET_DATA.secret.map(entry=>countryFromEntry(entry, SECRET_TIER));
+const ALL_COLLECTIBLES = [...SECRET_COUNTRIES, ...ALL_COUNTRIES];
+const COUNTRY_BY_ID = Object.fromEntries(ALL_COLLECTIBLES.map(c=>[c.id,c]));
+const TOTAL = ALL_COLLECTIBLES.length;
+const LEGACY_ID_MAP = {
+  h_united_netherlands:'s_benelux',
+  h_tibet:'d_tibet'
+};
+
+const UNIFIED_THREE_KINGDOM_TARGET_IDS = ['s_unified_goguryeo','s_unified_baekje','s_unified_silla'];
+const SPECIAL_SYNTH_RECIPES = [
+  {
+    key:'unified_three_kingdoms',
+    label:'통일삼국 시크릿 합성',
+    ingredients:['h_goguryeo','h_baekje','h_silla','h_gaya'],
+    targetIds:UNIFIED_THREE_KINGDOM_TARGET_IDS
+  },
+  {
+    key:'german_confederation',
+    label:'독일 연방 시크릿 합성',
+    ingredients:['d_bavaria','d_wurttemberg','d_baden','d_hanover','d_saxony','d_anhalt','d_thuringia','d_oldenburg','h_prus','h_austrian_emp'],
+    targetIds:['s_german_confederation']
+  },
+  {
+    key:'world_continents',
+    label:'세계 시크릿 합성',
+    ingredients:CONTINENT_DATA.continent.map(entry=>entry[0]),
+    targetIds:['s_world']
+  }
+];
+
+/* ═══════════════════════════════════════════════
+   STATE & STORAGE
+═══════════════════════════════════════════════ */
+const STORE_KEY = 'country_gacha_v2';
+const SETTINGS_KEY = 'country_gacha_settings_v1';
+let discovered = new Set();
+let totalPulls = 0;
+let inventory = {};
+let selectedCards = [];
+let synthTargetId = '';
+let inventoryQuery = '';
+let activeTab = 'collection';
+let enhancements = {};
+let specialEnhancements = {};
+let enhanceGems = 0;
+let specialSecrets = {};
+let enhanceTargetId = '';
+let enhanceQuery = '';
+let enhanceMaterialCards = [];
+let battleRoomCode = '';
+let battleSide = '';
+let battleName = '';
+let settings = {volume:0.75, firebaseConfig:''};
+let online = {
+  enabled:false, ready:false, user:null, modules:null, app:null, auth:null, db:null,
+  profileUnsub:null, battleUnsub:null, battleRoom:null, saveTimer:null
+};
+let serverOnline = {
+  enabled: location.protocol.startsWith('http'),
+  token: localStorage.getItem('country_gacha_server_token') || '',
+  user: null
+};
+
+function normalizeStoredId(id){
+  return LEGACY_ID_MAP[id] || id;
+}
+function registerSpecialSecret(country){
+  if(!country || !country.id) return null;
+  specialSecrets[country.id] = country;
+  COUNTRY_BY_ID[country.id] = country;
+  return country;
+}
+function secretEntriesForCollection(){
+  const earned = Object.values(specialSecrets).map(c=>[c.id,c.name,c.flagUrl]);
+  return [...SECRET_DATA.secret, ...earned];
+}
+function totalCollectibles(){
+  return TOTAL + Object.keys(specialSecrets).length;
+}
+function renderResourceHud(){
+  const gemEl = document.querySelector('[data-resource="gems"]');
+  if(gemEl) gemEl.textContent = enhanceGems;
+}
+function worldCompletionIds(){
+  return ALL_COLLECTIBLES
+    .filter(country=>country.id !== 's_world')
+    .map(country=>country.id);
+}
+function isBaseCollectionCompleteForWorld(){
+  return worldCompletionIds().every(id=>discovered.has(id));
+}
+function maybeGrantWorldSecret(label='도감 완성'){
+  const world = COUNTRY_BY_ID.s_world;
+  if(!world || discovered.has(world.id) || !isBaseCollectionCompleteForWorld()) return false;
+  addCountry(world, 1);
+  triggerSecretStagePulse();
+  showSynthMessage(`${label} · <b>시크릿 세계</b> 획득`);
+  return true;
+}
+function loadSettings(){
+  try{
+    const obj = JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}');
+    settings.volume = Math.max(0, Math.min(1, Number(obj.volume ?? settings.volume)));
+    settings.firebaseConfig = obj.firebaseConfig || '';
+  }catch(e){}
+}
+function saveSettings(){
+  try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }catch(e){}
+}
+function gameStateSnapshot(){
+  return {discovered:[...discovered], totalPulls, inventory, enhancements, specialEnhancements, enhanceGems, specialSecrets, updatedAt:Date.now()};
+}
+function applyGameStateSnapshot(obj){
+  if(!obj) return;
+  specialSecrets = {};
+  Object.entries(obj.specialSecrets || {}).forEach(([id,country])=>{
+    if(!country || !id) return;
+    registerSpecialSecret({
+      id,
+      name:country.name || id,
+      flagUrl:country.flagUrl || '',
+      tier:'secret',
+      historical:false,
+      secret:true,
+      specialFinal:true,
+      baseId:country.baseId || ''
+    });
+  });
+  discovered = new Set((obj.discovered||[]).map(normalizeStoredId).filter(id=>COUNTRY_BY_ID[id]));
+  totalPulls = obj.totalPulls||0;
+  inventory = {};
+  Object.entries(obj.inventory || {}).forEach(([rawId,count])=>{
+    const id = normalizeStoredId(rawId);
+    if(COUNTRY_BY_ID[id] && count>0) inventory[id] = (inventory[id] || 0) + Number(count);
+  });
+  enhancements = {};
+  Object.entries(obj.enhancements || {}).forEach(([rawId,level])=>{
+    const id = normalizeStoredId(rawId);
+    const safeLevel = Math.max(0, Math.min(6, Number(level)||0));
+    if(COUNTRY_BY_ID[id] && safeLevel>0) enhancements[id] = safeLevel;
+  });
+  specialEnhancements = {};
+  Object.entries(obj.specialEnhancements || {}).forEach(([rawId,level])=>{
+    const id = normalizeStoredId(rawId);
+    const safeLevel = Math.max(0, Math.min(6, Number(level)||0));
+    if(COUNTRY_BY_ID[id] && safeLevel>0) specialEnhancements[id] = safeLevel;
+  });
+  enhanceGems = Math.max(0, Number(obj.enhanceGems)||0);
+}
+function loadState(){
+  try{
+    const obj = JSON.parse(localStorage.getItem(STORE_KEY)||'{}');
+    specialSecrets = {};
+    Object.entries(obj.specialSecrets || {}).forEach(([id,country])=>{
+      if(!country || !id) return;
+      registerSpecialSecret({
+        id,
+        name:country.name || id,
+        flagUrl:country.flagUrl || '',
+        tier:'secret',
+        historical:false,
+        secret:true,
+        specialFinal:true,
+        baseId:country.baseId || ''
+      });
+    });
+    discovered = new Set((obj.discovered||[]).map(normalizeStoredId).filter(id=>COUNTRY_BY_ID[id]));
+    totalPulls = obj.totalPulls||0;
+    enhanceGems = Math.max(0, Number(obj.enhanceGems)||0);
+    const hasSavedInventory = Object.prototype.hasOwnProperty.call(obj, 'inventory');
+    inventory = {};
+    Object.entries(obj.inventory || {}).forEach(([rawId,count])=>{
+      const id = normalizeStoredId(rawId);
+      if(COUNTRY_BY_ID[id] && count>0) inventory[id] = (inventory[id] || 0) + Number(count);
+    });
+    enhancements = {};
+    Object.entries(obj.enhancements || {}).forEach(([rawId,level])=>{
+      const id = normalizeStoredId(rawId);
+      const safeLevel = Math.max(0, Math.min(6, Number(level)||0));
+      if(COUNTRY_BY_ID[id] && safeLevel>0) enhancements[id] = Math.max(enhancements[id] || 0, safeLevel);
+    });
+    specialEnhancements = {};
+    Object.entries(obj.specialEnhancements || {}).forEach(([rawId,level])=>{
+      const id = normalizeStoredId(rawId);
+      const safeLevel = Math.max(0, Math.min(6, Number(level)||0));
+      if(COUNTRY_BY_ID[id] && safeLevel>0) specialEnhancements[id] = Math.max(specialEnhancements[id] || 0, safeLevel);
+    });
+    if(!hasSavedInventory){
+      discovered.forEach(id=>{
+        if(COUNTRY_BY_ID[id] && !inventory[id]) inventory[id] = 1;
+      });
+    }
+  }catch(e){}
+}
+function saveState(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(gameStateSnapshot())); }catch(e){}
+  scheduleCloudSave();
+}
+function setSettingsStatus(message){
+  const el = document.getElementById('settings-status');
+  if(el) el.innerHTML = message;
+}
+function renderSettingsTab(){
+  const volume = document.getElementById('setting-volume');
+  const config = document.getElementById('firebase-config');
+  const user = document.getElementById('online-user');
+  if(volume) volume.value = Math.round(settings.volume * 100);
+  if(config && config.value !== settings.firebaseConfig) config.value = settings.firebaseConfig;
+  if(user) user.textContent = serverOnline.user ? `서버 로그인: ${serverOnline.user.email}` : online.user ? `Firebase 로그인: ${online.user.email || online.user.uid}` : serverOnline.enabled ? '서버 접속 가능' : online.ready ? '온라인 준비됨' : '오프라인';
+}
+async function serverApi(path, options={}){
+  const headers = {'content-type':'application/json', ...(options.headers || {})};
+  if(serverOnline.token) headers.authorization = `Bearer ${serverOnline.token}`;
+  const res = await fetch(path, {...options, headers});
+  const data = await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(data.error || data.message || `HTTP ${res.status}`);
+  return data;
+}
+async function initServerOnline(){
+  if(!serverOnline.enabled) return false;
+  if(!serverOnline.token){
+    renderSettingsTab();
+    setSettingsStatus('서버 온라인 모드 · 가입 또는 로그인하세요');
+    return true;
+  }
+  try{
+    const data = await serverApi('/api/me');
+    serverOnline.user = data.user;
+    renderSettingsTab();
+    setSettingsStatus(`<b>${serverOnline.user.email}</b> 서버 계정 연결됨`);
+    return true;
+  }catch(e){
+    serverOnline.token = '';
+    serverOnline.user = null;
+    localStorage.removeItem('country_gacha_server_token');
+    renderSettingsTab();
+    return true;
+  }
+}
+async function serverLogin(create=false){
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  if(!email || !password){
+    setSettingsStatus('이메일과 비밀번호를 입력하세요');
+    return true;
+  }
+  try{
+    const data = await serverApi(create ? '/api/register' : '/api/login', {
+      method:'POST',
+      body:JSON.stringify({email, password})
+    });
+    serverOnline.token = data.token;
+    serverOnline.user = data.user;
+    localStorage.setItem('country_gacha_server_token', serverOnline.token);
+    renderSettingsTab();
+    setSettingsStatus(create ? '서버 가입 완료' : '서버 로그인 완료');
+    await serverUploadSave(false);
+    return true;
+  }catch(e){
+    setSettingsStatus(`${create ? '가입' : '로그인'} 실패 · ${escapeAttr(e.message || e)}`);
+    return true;
+  }
+}
+async function serverLogout(){
+  serverOnline.token = '';
+  serverOnline.user = null;
+  localStorage.removeItem('country_gacha_server_token');
+  renderSettingsTab();
+  setSettingsStatus('서버 로그아웃 완료');
+  return true;
+}
+async function serverUploadSave(show=true){
+  if(!serverOnline.user) return false;
+  try{
+    await serverApi('/api/save', {method:'POST', body:JSON.stringify({state:gameStateSnapshot()})});
+    if(show) setSettingsStatus('서버 저장 완료');
+    return true;
+  }catch(e){
+    if(show) setSettingsStatus(`서버 저장 실패 · ${escapeAttr(e.message || e)}`);
+    return true;
+  }
+}
+async function serverDownloadSave(){
+  if(!serverOnline.user) return false;
+  try{
+    const data = await serverApi('/api/save');
+    if(!data.state){
+      setSettingsStatus('서버 저장 데이터가 없습니다');
+      return true;
+    }
+    applyGameStateSnapshot(data.state);
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(gameStateSnapshot())); }catch(e){}
+    renderResourceHud(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab();
+    setSettingsStatus('서버 저장 불러오기 완료');
+    return true;
+  }catch(e){
+    setSettingsStatus(`서버 저장 불러오기 실패 · ${escapeAttr(e.message || e)}`);
+    return true;
+  }
+}
+function firebaseConfigObject(){
+  const raw = settings.firebaseConfig.trim();
+  if(!raw) throw new Error('Firebase 설정 JSON이 필요합니다');
+  return JSON.parse(raw);
+}
+async function initOnline(){
+  if(await initServerOnline()) return;
+  try{
+    const config = firebaseConfigObject();
+    const appMod = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js');
+    const authMod = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js');
+    const dbMod = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
+    online.modules = {...appMod, ...authMod, ...dbMod};
+    online.app = appMod.getApps().length ? appMod.getApp() : appMod.initializeApp(config);
+    online.auth = authMod.getAuth(online.app);
+    online.db = dbMod.getFirestore(online.app);
+    online.ready = true;
+    online.enabled = true;
+    authMod.onAuthStateChanged(online.auth, user=>{
+      online.user = user || null;
+      renderSettingsTab();
+      setSettingsStatus(user ? `<b>${user.email || user.uid}</b> 계정 연결됨` : '온라인 준비됨 · 로그인하세요');
+      if(user) scheduleCloudSave();
+    });
+    setSettingsStatus('온라인 연결 준비 완료');
+    renderSettingsTab();
+  }catch(e){
+    online.ready = false;
+    setSettingsStatus(`온라인 연결 실패 · ${escapeAttr(e.message || e)}`);
+  }
+}
+async function loginOnline(create=false){
+  if(serverOnline.enabled) return serverLogin(create);
+  if(!online.ready) await initOnline();
+  if(!online.ready) return;
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  if(!email || !password){
+    setSettingsStatus('이메일과 비밀번호를 입력하세요');
+    return;
+  }
+  try{
+    if(create){
+      await online.modules.createUserWithEmailAndPassword(online.auth, email, password);
+    }else{
+      await online.modules.signInWithEmailAndPassword(online.auth, email, password);
+    }
+    setSettingsStatus(create ? '가입 완료 · 클라우드 저장 가능' : '로그인 완료');
+  }catch(e){
+    setSettingsStatus(`로그인 실패 · ${escapeAttr(e.message || e)}`);
+  }
+}
+async function logoutOnline(){
+  if(serverOnline.user) return serverLogout();
+  try{
+    if(online.auth) await online.modules.signOut(online.auth);
+    online.user = null;
+    setSettingsStatus('로그아웃 완료');
+    renderSettingsTab();
+  }catch(e){
+    setSettingsStatus(`로그아웃 실패 · ${escapeAttr(e.message || e)}`);
+  }
+}
+function userDocRef(){
+  if(!online.ready || !online.user) return null;
+  return online.modules.doc(online.db, 'users', online.user.uid);
+}
+async function uploadCloudSave(){
+  if(await serverUploadSave(true)) return;
+  const ref = userDocRef();
+  if(!ref){
+    setSettingsStatus('로그인 후 저장을 올릴 수 있습니다');
+    return;
+  }
+  try{
+    await online.modules.setDoc(ref, {state:gameStateSnapshot(), email:online.user.email || '', updatedAt:Date.now()}, {merge:true});
+    setSettingsStatus('클라우드 저장 완료');
+  }catch(e){
+    setSettingsStatus(`저장 올리기 실패 · ${escapeAttr(e.message || e)}`);
+  }
+}
+async function downloadCloudSave(){
+  if(await serverDownloadSave()) return;
+  const ref = userDocRef();
+  if(!ref){
+    setSettingsStatus('로그인 후 저장을 불러올 수 있습니다');
+    return;
+  }
+  try{
+    const snap = await online.modules.getDoc(ref);
+    if(!snap.exists() || !snap.data().state){
+      setSettingsStatus('클라우드 저장 데이터가 없습니다');
+      return;
+    }
+    applyGameStateSnapshot(snap.data().state);
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(gameStateSnapshot())); }catch(e){}
+    renderResourceHud(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab();
+    setSettingsStatus('클라우드 저장 불러오기 완료');
+  }catch(e){
+    setSettingsStatus(`저장 불러오기 실패 · ${escapeAttr(e.message || e)}`);
+  }
+}
+function scheduleCloudSave(){
+  if(serverOnline.user){
+    clearTimeout(online.saveTimer);
+    online.saveTimer = setTimeout(()=>serverUploadSave(false), 900);
+    return;
+  }
+  if(!online.ready || !online.user) return;
+  clearTimeout(online.saveTimer);
+  online.saveTimer = setTimeout(()=>uploadCloudSave(), 900);
+}
+function addCountry(country, count=1){
+  if(!country) return;
+  discovered.add(country.id);
+  inventory[country.id] = (inventory[country.id] || 0) + count;
+  enhanceGems += gemRewardForCountry(country) * count;
+  renderResourceHud();
+}
+function removeInventory(id, count=1){
+  inventory[id] = Math.max(0, (inventory[id] || 0) - count);
+  if(inventory[id] <= 0) delete inventory[id];
+}
+function gemRewardForCountry(country){
+  const t = TIER_BY_KEY[country.tier];
+  if(!t) return 0;
+  if(t.secret) return 3;
+  if(t.continent) return 2;
+  if(t.key === 'divine') return 1;
+  return 0;
+}
+function enhanceLevel(id){
+  return Math.max(0, Math.min(6, Number(enhancements[id]) || 0));
+}
+function specialEnhanceLevel(id){
+  return Math.max(0, Math.min(6, Number(specialEnhancements[id]) || 0));
+}
+function enhanceLabel(level){
+  if(level >= 6) return '최종';
+  if(level > 0) return '★'.repeat(level);
+  return '';
+}
+function enhanceLongLabel(level){
+  if(level >= 6) return '최종';
+  if(level > 0) return `${level}성`;
+  return '0성';
+}
+function enhanceBadgeHtml(id){
+  const normal = enhanceLabel(enhanceLevel(id));
+  const special = enhanceLabel(specialEnhanceLevel(id));
+  return `${normal ? `<span class="star-badge">${normal}</span>` : ''}${special ? `<span class="star-badge special-star">S${special}</span>` : ''}`;
+}
+function enhanceCost(level){
+  return [1,2,3,4,5,10][level] || null;
+}
+function enhancementClass(id){
+  const normal = enhanceLevel(id);
+  const special = specialEnhanceLevel(id);
+  return [
+    normal > 0 ? 'enhanced-card' : '',
+    normal >= 6 ? 'final-enhanced-card' : '',
+    special > 0 ? 'special-enhanced-card' : '',
+    special >= 6 ? 'special-final-enhanced-card' : ''
+  ].filter(Boolean).join(' ');
+}
+function specialSecretIdFor(id){
+  return `sx_${id.replace(/[^a-zA-Z0-9_:-]/g,'_')}`;
+}
+function createSpecialFinalSecret(baseCountry){
+  if(!baseCountry) return null;
+  const id = specialSecretIdFor(baseCountry.id);
+  if(specialSecrets[id]) return specialSecrets[id];
+  return registerSpecialSecret({
+    id,
+    name:`최종 ${baseCountry.name}`,
+    flagUrl:baseCountry.flagUrl,
+    tier:'secret',
+    historical:false,
+    secret:true,
+    specialFinal:true,
+    baseId:baseCountry.id
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   GACHA LOGIC
+═══════════════════════════════════════════════ */
+function pickTier(){
+  return pickWeightedTier(TIERS);
+}
+function pickPremiumTier(){
+  return pickWeightedTier(PREMIUM_TIERS);
+}
+function pickDependentTier(){
+  return pickWeightedTier(DEPENDENT_TIERS);
+}
+function pickWeightedTier(tiers){
+  const total = tiers.reduce((s,t)=>s+t.prob,0);
+  let r = Math.random()*total, acc=0;
+  for(const t of tiers){ acc+=t.prob; if(r<=acc) return t.key; }
+  return tiers[tiers.length-1].key;
+}
+function pickFromTier(tierKey, usedIds=new Set()){
+  const pool = ALL_COUNTRIES.filter(c=>c.tier===tierKey);
+  const available = pool.filter(c=>!usedIds.has(c.id));
+  if(usedIds.size && !available.length) return null;
+  const finalPool = available.length ? available : pool;
+  return finalPool[Math.floor(Math.random()*finalPool.length)] || null;
+}
+function pickFromPool(pool, usedIds=new Set()){
+  const available = pool.filter(c=>!usedIds.has(c.id));
+  if(usedIds.size && !available.length) return null;
+  const finalPool = available.length ? available : pool;
+  return finalPool[Math.floor(Math.random()*finalPool.length)] || null;
+}
+function singlePull(){
+  return pickFromTier(pickTier());
+}
+function premiumPull(){
+  return pickFromTier(pickPremiumTier());
+}
+function dependentPull(){
+  return pickFromTier(pickDependentTier());
+}
+function pullMany(count, tierPicker, fallbackPool=MAIN_COUNTRIES){
+  const used = new Set();
+  const res = [];
+  for(let i=0;i<count;i++){
+    let country = null;
+    for(let tries=0;tries<80 && !country;tries++){
+      country = pickFromTier(tierPicker(), used);
+    }
+    if(!country){
+      const fallback = fallbackPool.filter(c=>!used.has(c.id));
+      country = fallback[Math.floor(Math.random()*fallback.length)];
+    }
+    res.push(country);
+    used.add(country.id);
+  }
+  return res;
+}
+function pullManyFromPool(count, pool){
+  const used = new Set();
+  const res = [];
+  for(let i=0;i<count;i++){
+    const country = pickFromPool(pool, used);
+    if(!country) break;
+    res.push(country);
+    used.add(country.id);
+  }
+  return res;
+}
+function tenPull(){
+  const used = new Set();
+  const res = pullMany(10, pickTier);
+  res.forEach(c=>used.add(c.id));
+  const hasHigh = res.some(c=>TIER_BY_KEY[c.tier].rank<=3);
+  if(!hasHigh){
+    const pool = TIERS.filter(t=>t.rank<=3);
+    const removed = res[res.length-1];
+    used.delete(removed.id);
+    let guaranteed = null;
+    for(let tries=0;tries<80 && !guaranteed;tries++){
+      guaranteed = pickFromTier(pickWeightedTier(pool), used);
+    }
+    const highAvailable = MAIN_COUNTRIES.filter(c=>TIER_BY_KEY[c.tier].rank<=3 && !used.has(c.id));
+    res[res.length-1] = guaranteed || highAvailable[0] || MAIN_COUNTRIES.filter(c=>!used.has(c.id))[0];
+  }
+  return res;
+}
+function premiumTenPull(){
+  const used = new Set();
+  const res = pullMany(10, pickPremiumTier);
+  res.forEach(c=>used.add(c.id));
+  const hasHistoricalOrHigher = res.some(c=>TIER_BY_KEY[c.tier].rank<=-1);
+  if(!hasHistoricalOrHigher){
+    const pool = PREMIUM_TIERS.filter(t=>t.rank<=-1);
+    const removed = res[res.length-1];
+    used.delete(removed.id);
+    let guaranteed = null;
+    for(let tries=0;tries<80 && !guaranteed;tries++){
+      guaranteed = pickFromTier(pickWeightedTier(pool), used);
+    }
+    const historicalAvailable = MAIN_COUNTRIES.filter(c=>TIER_BY_KEY[c.tier].rank<=-1 && !used.has(c.id));
+    res[res.length-1] = guaranteed || historicalAvailable[0] || MAIN_COUNTRIES.filter(c=>!used.has(c.id))[0];
+  }
+  return res;
+}
+function dependentTenPull(){
+  return pullMany(10, pickDependentTier, ALL_DEPENDENT_COUNTRIES);
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER HELPERS
+═══════════════════════════════════════════════ */
+function escapeAttr(value){
+  return String(value)
+    .replace(/&/g,'&amp;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;')
+    .replace(/</g,'&lt;');
+}
+function fallbackMark(country){
+  const t = TIER_BY_KEY[country.tier];
+  if(country.symbol) return country.symbol;
+  if(t.symbol) return t.symbol;
+  return country.id.toUpperCase();
+}
+function flagFallback(el, label, color){
+  const fallback = document.createElement('span');
+  fallback.className = `flag-fallback ${el.className || ''}`.trim();
+  fallback.style.setProperty('--fallback-color', color);
+  fallback.textContent = label;
+  fallback.setAttribute('aria-label', el.getAttribute('alt') || '국기 대체 표식');
+  el.replaceWith(fallback);
+}
+function flagImg(country, cls=''){
+  const t = TIER_BY_KEY[country.tier];
+  const mark = escapeAttr(fallbackMark(country));
+  if(!country.flagUrl){
+    return `<span class="flag-fallback ${cls}" style="--fallback-color:${t.color}" aria-label="${country.name} 대체 표식">${mark}</span>`;
+  }
+  if(country.flagUrl.startsWith('composite:')){
+    const [base, emblem] = country.flagUrl.slice('composite:'.length).split('||');
+    return `<span class="composite-flag ${cls}" aria-label="${country.name} 국기">
+      <img src="${base}" alt="" loading="lazy" onerror="flagFallback(this.parentElement,'${mark}','${t.color}')">
+      <img class="flag-emblem" src="${emblem}" alt="" loading="lazy" onerror="this.remove()">
+    </span>`;
+  }
+  return `<img class="${cls}" src="${country.flagUrl}" alt="${country.name} 국기" loading="lazy"
+    onerror="flagFallback(this,'${mark}','${t.color}')">`;
+}
+
+function cardSlotHtml(idx, size){
+  return `<div class="card-slot ${size}"><div class="card-inner" id="ci-${idx}">
+    <div class="card-face card-back"><span class="mark">?</span></div>
+    <div class="card-face card-front" id="cf-${idx}"></div>
+  </div></div>`;
+}
+
+function fillCard(idx, country, isNew){
+  const t = TIER_BY_KEY[country.tier];
+  const el = document.getElementById(`cf-${idx}`);
+  el.style.setProperty('--tier-color', t.color);
+  el.className = `card-face card-front tier-${t.key} ${country.dependent ? 'tier-dependent' : ''} ${enhancementClass(country.id)}`;
+  const isSpecial = country.historical || country.continent || country.dependent;
+  const histBadge = isSpecial ? `<span class="hist-badge">${t.symbol||'📜'}</span>` : '';
+  const newBadge  = isNew ? `<span class="new-badge">NEW</span>` : '';
+  const tagClass  = isSpecial ? 'hist-tag' : 'tag';
+  const starBadge = enhanceBadgeHtml(country.id);
+  el.innerHTML = `${histBadge}${newBadge}${starBadge}
+    <span class="${tagClass}">${t.label}</span>
+    ${flagImg(country)}
+    <span class="name">${country.name}</span>`;
+}
+
+function topCountry(list){
+  return list.reduce((b,c)=>TIER_BY_KEY[c.tier].rank<TIER_BY_KEY[b.tier].rank?c:b, list[0]);
+}
+
+/* ═══════════════════════════════════════════════
+   ANIMATION
+═══════════════════════════════════════════════ */
+function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+let sfxContext = null;
+function getSfxContext(){
+  try{
+    const AudioCtor = window.AudioContext || window.webkitAudioContext;
+    if(!AudioCtor) return null;
+    if(!sfxContext) sfxContext = new AudioCtor();
+    if(sfxContext.state === 'suspended') sfxContext.resume();
+    return sfxContext;
+  }catch(e){
+    return null;
+  }
+}
+function sfxTone(ctx, freq, start, duration, type='sine', volume=.06, endFreq=null){
+  const scaledVolume = Math.max(0.0001, volume * settings.volume);
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, start);
+  if(endFreq) osc.frequency.exponentialRampToValueAtTime(Math.max(1,endFreq), start + duration);
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(scaledVolume, start + duration*.12);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(start);
+  osc.stop(start + duration + .02);
+}
+function playSfx(kind){
+  if(settings.volume <= 0) return;
+  const ctx = getSfxContext();
+  if(!ctx) return;
+  const now = ctx.currentTime;
+  if(kind === 'tab'){
+    sfxTone(ctx, 520, now, .06, 'triangle', .035, 680);
+  }else if(kind === 'summon'){
+    sfxTone(ctx, 120, now, .34, 'sawtooth', .035, 260);
+    sfxTone(ctx, 360, now+.08, .22, 'triangle', .025, 760);
+  }else if(kind === 'burst'){
+    sfxTone(ctx, 190, now, .18, 'square', .045, 80);
+    sfxTone(ctx, 720, now+.03, .16, 'triangle', .04, 1040);
+  }else if(kind === 'reveal'){
+    sfxTone(ctx, 880, now, .13, 'sine', .045, 1320);
+    sfxTone(ctx, 1320, now+.07, .16, 'sine', .035);
+  }else if(kind === 'secret'){
+    [392,523,659,988].forEach((freq,i)=>sfxTone(ctx, freq, now+i*.05, .55, 'triangle', .045));
+    sfxTone(ctx, 130, now, .7, 'sine', .04, 65);
+  }else if(kind === 'synth'){
+    [330,440,660].forEach((freq,i)=>sfxTone(ctx, freq, now+i*.055, .18, 'triangle', .04));
+  }else if(kind === 'enhance'){
+    sfxTone(ctx, 740, now, .09, 'square', .035, 1020);
+    sfxTone(ctx, 1480, now+.05, .12, 'triangle', .035);
+  }
+}
+
+function triggerSecretStagePulse(){
+  playSfx('secret');
+  const stage = document.getElementById('stage');
+  if(!stage) return;
+  stage.classList.add('secret-omen');
+  const flash = document.createElement('div');
+  flash.className = 'flash secret-flash';
+  flash.style.background = 'radial-gradient(circle, #fff8cc 0%, #ffe680 18%, #d4af37 38%, rgba(0,0,0,.2) 62%, transparent 72%)';
+  stage.appendChild(flash);
+  requestAnimationFrame(()=>flash.classList.add('go'));
+  setTimeout(()=>{
+    flash.remove();
+    stage.classList.remove('secret-omen');
+  }, 950);
+}
+
+async function playPull(getResults, size){
+  const pullButtons = document.querySelectorAll('.pull-btn');
+  pullButtons.forEach(btn=>btn.disabled=true);
+  document.getElementById('result-banner').innerHTML='&nbsp;';
+
+  const stage = document.getElementById('stage');
+  const seal  = document.getElementById('seal');
+  const area  = document.getElementById('cards-area');
+  area.innerHTML='';
+  seal.className='seal active summoning';
+  playSfx('summon');
+  await wait(1100);
+
+  const results = getResults();
+  const top = topCountry(results);
+  const topT = TIER_BY_KEY[top.tier];
+  const isSecret = !!topT.secret;
+
+  if(isSecret){
+    stage.classList.add('secret-omen');
+    seal.classList.add('secret-seal');
+  }
+  playSfx(isSecret ? 'secret' : 'burst');
+  seal.className=`seal active bursting${isSecret ? ' secret-seal' : ''}`;
+  const flash = document.createElement('div');
+  flash.className=`flash${isSecret ? ' secret-flash' : ''}`;
+  flash.style.background=isSecret
+    ? 'radial-gradient(circle, #fff8cc 0%, #ffe680 18%, #d4af37 38%, rgba(0,0,0,.2) 62%, transparent 72%)'
+    : `radial-gradient(circle, ${topT.color}66, transparent 70%)`;
+  stage.appendChild(flash);
+  requestAnimationFrame(()=>flash.classList.add('go'));
+  await wait(isSecret ? 760 : 420);
+  seal.className='seal';
+  flash.remove();
+  stage.classList.remove('secret-omen');
+
+  area.innerHTML = results.map((_,i)=>cardSlotHtml(i,size)).join('');
+  const newFlags = results.map(c=>!discovered.has(c.id));
+  results.forEach((c,i)=>{ fillCard(i,c,newFlags[i]); addCountry(c); });
+  totalPulls += results.length;
+
+  results.forEach((_,i)=>setTimeout(()=>{
+    const el=document.getElementById(`ci-${i}`);
+    if(el) el.classList.add('flipped');
+    if(i<4) playSfx('reveal');
+  }, i*130));
+
+  const t = topT;
+  const histMark = (top.historical || top.continent || top.dependent) ? ` ${t.symbol}` : '';
+  document.getElementById('result-banner').innerHTML =
+    `최고 등급 <b>${t.label}${histMark}</b> · ${top.name}`;
+  maybeGrantWorldSecret('도감 완성');
+
+  await wait(results.length*130+700);
+  document.getElementById('total-pulls').textContent=`총 뽑기 ${totalPulls}회`;
+  renderCollection();
+  renderInventory();
+  renderEnhanceTab();
+  saveState();
+  pullButtons.forEach(btn=>btn.disabled=false);
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER RATES
+═══════════════════════════════════════════════ */
+function renderRates(){
+  const el = document.getElementById('rates');
+  const normalParts = TIERS.map((t,i)=>{
+    const divider = (t.key==='legend') ? '<span class="rates-divider"></span>' : '';
+    return `${divider}<span class="rate-chip"><span class="rate-dot" style="background:${t.color}"></span>${t.label} ${formatProb(t.prob)}%</span>`;
+  });
+  const premiumTotal = PREMIUM_TIERS.reduce((s,t)=>s+t.prob,0);
+  const premiumParts = PREMIUM_TIERS.map(t=>{
+    const prob = t.prob / premiumTotal * 100;
+    return `<span class="rate-chip"><span class="rate-dot" style="background:${t.color}"></span>${t.label} ${formatProb(prob)}%</span>`;
+  });
+  const dependentTotal = DEPENDENT_TIERS.reduce((s,t)=>s+t.prob,0);
+  const dependentParts = DEPENDENT_TIERS.map(t=>{
+    const prob = t.prob / dependentTotal * 100;
+    return `<span class="rate-chip"><span class="rate-dot" style="background:${t.color}"></span>${t.depLabel} ${formatProb(prob)}%</span>`;
+  });
+  const dependentCount = ALL_DEPENDENT_COUNTRIES.length;
+  el.innerHTML = `<div class="rate-row"><span class="rate-title">일반</span>${normalParts.join('')}</div>
+    <div class="rate-row"><span class="rate-title">고급</span>${premiumParts.join('')}</div>
+    <div class="rate-row"><span class="rate-title">종속</span>${dependentParts.join('')}<span class="rate-chip">${dependentCount}개 지역</span></div>`;
+}
+function formatProb(value){
+  return Number(value).toFixed(1).replace(/\.0$/,'');
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER COLLECTION
+═══════════════════════════════════════════════ */
+function renderCollection(){
+  const el = document.getElementById('collection-grid');
+  let html = '';
+  let histHeaderShown = false;
+  let currentHeaderShown = false;
+
+  html += `<div class="hist-section-label">✦ 시크릿 등급 ✦</div>`;
+  const secretEntries = secretEntriesForCollection();
+  const secretChips = secretEntries.map(entry=>{
+    const id = entry[0];
+    const name = entry[1];
+    if(discovered.has(id)){
+      const country = countryFromEntry(entry, SECRET_TIER, 'w80');
+      return `<div class="chip found divine-chip ${enhancementClass(id)}" style="--tier-color:${SECRET_TIER.color}" title="${name}">
+        ${flagImg(country,'flag-img-hist')}
+        ${enhanceBadgeHtml(id)}
+        <span>${name}</span></div>`;
+    }
+    return `<div class="chip" title="???"><span class="q">?</span></div>`;
+  }).join('');
+  html += `<div class="tier-group">
+    <div class="tier-group-head">
+      <span class="dot" style="background:${SECRET_TIER.color}"></span>
+      <span class="label" style="color:${SECRET_TIER.color}">${SECRET_TIER.symbol} ${SECRET_TIER.label}</span>
+      <span class="count">${secretEntries.filter(e=>discovered.has(e[0])).length} / ${secretEntries.length}</span>
+    </div>
+    <div class="chips">${secretChips}</div>
+  </div>`;
+
+  for(const t of TIERS){
+    if(t.continent){
+      html += `<div class="hist-section-label">✦ 대륙 등급 ✦</div>`;
+    } else if(t.historical && !histHeaderShown){
+      html += `<div class="hist-section-label">✦ 역사적 국가 전용 등급 ✦</div>`;
+      histHeaderShown = true;
+    } else if(!t.historical && !t.continent && !currentHeaderShown){
+      html += `<div class="hist-section-label">✦ 현재 국가 등급 ✦</div>`;
+      currentHeaderShown = true;
+    }
+
+    const src = t.continent ? CONTINENT_DATA[t.key] : t.historical ? HIST_DATA[t.key] : CURRENT_DATA[t.key];
+    if(!src) continue;
+    const total = src.length;
+    const found = src.filter(e=>discovered.has(e[0])).length;
+    const isHist = t.historical;
+    const isContinent = t.continent;
+    const isSpecial = isHist || isContinent;
+
+    const chips = src.map(entry=>{
+      const id = entry[0];
+      const name = entry[1];
+      const has = discovered.has(id);
+      if(has){
+        const specialGlow = (t.key==='continent' || t.key==='divine') ? 'divine-chip' : '';
+        const country = countryFromEntry(entry, t, 'w80');
+        return `<div class="chip found ${specialGlow} ${enhancementClass(id)}" style="--tier-color:${t.color}" title="${name}">
+          ${flagImg(country,'flag-img-hist')}
+          ${enhanceBadgeHtml(id)}
+          <span>${name}</span></div>`;
+      }
+      return `<div class="chip" title="???"><span class="q">?</span></div>`;
+    }).join('');
+
+    html += `<div class="tier-group">
+      <div class="tier-group-head">
+        <span class="dot" style="background:${t.color}"></span>
+        <span class="label" style="color:${t.color}">${isSpecial?t.symbol+' ':''}${t.label}</span>
+        <span class="count">${found} / ${total}</span>
+      </div>
+      <div class="chips">${chips}</div>
+    </div>`;
+  }
+
+  html += `<div class="hist-section-label">✦ 종속/자치 지역 전용 뽑기 ✦</div>`;
+  for(const t of DEPENDENT_TIERS){
+    const src = DEPENDENT_DATA[t.key] || [];
+    const found = src.filter(e=>discovered.has(e[0])).length;
+    const chips = src.map(entry=>{
+      const id = entry[0];
+      const name = entry[1];
+      const parent = entry[3];
+      if(discovered.has(id)){
+        const country = countryFromDependentEntry(entry, t, 'w80');
+        return `<div class="chip found ${enhancementClass(id)}" style="--tier-color:${t.color}" title="${name} · ${parent}">
+          ${flagImg(country,'flag-img-hist')}
+          ${enhanceBadgeHtml(id)}
+          <span>${name}</span></div>`;
+      }
+      return `<div class="chip" title="???"><span class="q">?</span></div>`;
+    }).join('');
+    html += `<div class="tier-group">
+      <div class="tier-group-head">
+        <span class="dot" style="background:${t.color}"></span>
+        <span class="label" style="color:${t.color}">${t.symbol} ${t.depLabel}</span>
+        <span class="count">${found} / ${src.length}</span>
+      </div>
+      <div class="chips">${chips}</div>
+    </div>`;
+  }
+
+  el.innerHTML = html;
+  const totalNow = totalCollectibles();
+  document.getElementById('progress-text').textContent=`${discovered.size} / ${totalNow} 발견`;
+  document.getElementById('progress-fill').style.width=`${Math.round(discovered.size/totalNow*100)}%`;
+  document.getElementById('total-pulls').textContent=`총 뽑기 ${totalPulls}회`;
+}
+
+/* ═══════════════════════════════════════════════
+   INVENTORY & SYNTHESIS
+═══════════════════════════════════════════════ */
+function selectedCounts(){
+  return selectedCards.reduce((map,id)=>{
+    map[id] = (map[id] || 0) + 1;
+    return map;
+  }, {});
+}
+function selectedCount(id){
+  return selectedCards.filter(item=>item===id).length;
+}
+function hasRecipeIngredients(counts, ingredients){
+  return ingredients.every(id=>(counts[id] || 0) >= 1);
+}
+function getSelectedSpecialRecipe(counts=selectedCounts()){
+  return SPECIAL_SYNTH_RECIPES.find(recipe=>hasRecipeIngredients(counts, recipe.ingredients)) || null;
+}
+function getSpecialRecipeTargets(recipe){
+  return recipe ? recipe.targetIds.map(id=>COUNTRY_BY_ID[id]).filter(Boolean) : [];
+}
+function pickOne(list){
+  return list[Math.floor(Math.random()*list.length)] || null;
+}
+function cleanSelection(){
+  const counts = {};
+  selectedCards = selectedCards.filter(id=>{
+    counts[id] = (counts[id] || 0) + 1;
+    return COUNTRY_BY_ID[id] && (inventory[id] || 0) >= counts[id];
+  });
+}
+function renderInventory(){
+  const grid = document.getElementById('inventory-grid');
+  const selectedList = document.getElementById('selected-list');
+  const meta = document.getElementById('synth-meta');
+  const search = document.getElementById('inventory-search');
+  if(!grid || !selectedList || !meta) return;
+  if(search && search.value !== inventoryQuery) search.value = inventoryQuery;
+  cleanSelection();
+  renderSynthTarget();
+
+  const selectedMap = selectedCounts();
+  const selectedGroups = Object.entries(selectedMap);
+  const batchCount = getSelectedSynthBatchCount();
+  const specialRecipe = getSelectedSpecialRecipe(selectedMap);
+  meta.textContent = specialRecipe
+    ? `선택 ${selectedCards.length}장 · ${specialRecipe.label}`
+    : batchCount ? `선택 ${selectedCards.length}장 · ${batchCount}회 합성` : `선택 ${selectedCards.length}장`;
+  selectedList.innerHTML = selectedGroups.length
+    ? selectedGroups.map(([id,count])=>{
+        const c = COUNTRY_BY_ID[id];
+        return `<span class="selected-pill">${c ? c.name : id} x${count}</span>`;
+      }).join('')
+    : `<span class="synth-meta">선택한 카드 없음</span>`;
+
+  const ownedAll = Object.entries(inventory)
+    .filter(([,count])=>count>0)
+    .map(([id,count])=>({country:COUNTRY_BY_ID[id], count}))
+    .filter(item=>item.country)
+    .sort((a,b)=>{
+      const rankA = TIER_BY_KEY[a.country.tier].rank;
+      const rankB = TIER_BY_KEY[b.country.tier].rank;
+      return rankA-rankB || a.country.name.localeCompare(b.country.name, 'ko');
+    });
+  const query = inventoryQuery.trim().toLowerCase();
+  const owned = query
+    ? ownedAll.filter(({country})=>{
+        const t = TIER_BY_KEY[country.tier];
+        return `${country.name} ${country.id} ${country.parent||''} ${t.label} ${country.symbol||''} ${t.symbol||''}`.toLowerCase().includes(query);
+      })
+    : ownedAll;
+
+  if(!ownedAll.length){
+    grid.innerHTML = `<div class="empty-note">보관함이 비었습니다</div>`;
+    return;
+  }
+  if(!owned.length){
+    grid.innerHTML = `<div class="empty-note">검색 결과 없음</div>`;
+    return;
+  }
+
+  grid.innerHTML = `<div class="inventory-grid">${owned.map(({country,count})=>{
+    const t = TIER_BY_KEY[country.tier];
+    const picked = selectedCount(country.id);
+    return `<button class="inventory-card ${picked ? 'selected' : ''} ${enhancementClass(country.id)}" data-id="${country.id}" style="--tier-color:${t.color}" title="${country.name}">
+      <span class="inv-selected">${picked ? picked : ''}</span>
+      <span class="inv-count">x${count}</span>
+      ${enhanceBadgeHtml(country.id)}
+      ${flagImg(country,'flag-img-hist')}
+      <span class="inv-name">${country.name}</span>
+    </button>`;
+  }).join('')}</div>`;
+}
+function toggleInventorySelection(id){
+  const count = inventory[id] || 0;
+  if(!count) return;
+  if(selectedCount(id) >= count){
+    selectedCards = selectedCards.filter(item=>item!==id);
+  } else {
+    selectedCards.push(id);
+  }
+  renderInventory();
+}
+function clearSelection(){
+  selectedCards = [];
+  synthTargetId = '';
+  renderInventory();
+}
+function getEnhanceTarget(){
+  if(!COUNTRY_BY_ID[enhanceTargetId] || !(inventory[enhanceTargetId] > 0)) enhanceTargetId = '';
+  return enhanceTargetId ? COUNTRY_BY_ID[enhanceTargetId] : null;
+}
+function countEnhanceMaterials(targetId){
+  const target = COUNTRY_BY_ID[targetId];
+  if(!target) return 0;
+  let total = 0;
+  for(const [id,count] of Object.entries(inventory)){
+    const country = COUNTRY_BY_ID[id];
+    if(country && country.tier === target.tier) total += count;
+  }
+  return Math.max(0, total - 1);
+}
+function enhanceMaterialCounts(){
+  return enhanceMaterialCards.reduce((map,id)=>{
+    map[id] = (map[id] || 0) + 1;
+    return map;
+  }, {});
+}
+function selectedEnhanceMaterialCount(id){
+  return enhanceMaterialCards.filter(item=>item===id).length;
+}
+function cleanEnhanceMaterials(){
+  const target = getEnhanceTarget();
+  if(!target){
+    enhanceMaterialCards = [];
+    return;
+  }
+  const counts = {};
+  enhanceMaterialCards = enhanceMaterialCards.filter(id=>{
+    const country = COUNTRY_BY_ID[id];
+    if(!country || country.tier !== target.tier) return false;
+    counts[id] = (counts[id] || 0) + 1;
+    const reserveTarget = id === target.id ? 1 : 0;
+    return (inventory[id] || 0) - reserveTarget >= counts[id];
+  });
+}
+function toggleEnhanceMaterial(id){
+  const target = getEnhanceTarget();
+  const country = COUNTRY_BY_ID[id];
+  if(!target || !country || country.tier !== target.tier) return;
+  const reserveTarget = id === target.id ? 1 : 0;
+  const available = Math.max(0, (inventory[id] || 0) - reserveTarget);
+  const selected = selectedEnhanceMaterialCount(id);
+  if(selected >= available){
+    enhanceMaterialCards = enhanceMaterialCards.filter(item=>item!==id);
+  }else{
+    enhanceMaterialCards.push(id);
+  }
+  renderEnhanceTab();
+}
+function renderEnhancePanel(){
+  const info = document.getElementById('enhance-info');
+  const meta = document.getElementById('enhance-meta');
+  const btn = document.getElementById('btn-enhance');
+  const specialBtn = document.getElementById('btn-special-enhance');
+  if(!info || !meta || !btn || !specialBtn) return;
+  const target = getEnhanceTarget();
+  cleanEnhanceMaterials();
+  if(!target){
+    info.innerHTML = `<span class="gem-chip">보석 ${enhanceGems}개</span> 강화할 카드를 선택하세요`;
+    meta.textContent = '대상 없음';
+    btn.disabled = true;
+    specialBtn.disabled = true;
+    return;
+  }
+  const level = enhanceLevel(target.id);
+  const specialLevel = specialEnhanceLevel(target.id);
+  const nextCost = enhanceCost(level);
+  const specialCost = enhanceCost(specialLevel);
+  const available = countEnhanceMaterials(target.id);
+  const selectedMaterials = enhanceMaterialCards.length;
+  const current = enhanceLongLabel(level);
+  const next = nextCost ? enhanceLongLabel(level + 1) : '최대';
+  const specialCurrent = enhanceLongLabel(specialLevel);
+  const specialNext = specialCost ? enhanceLongLabel(specialLevel + 1) : '최대';
+  const t = TIER_BY_KEY[target.tier];
+  meta.textContent = `일반 ${current} → ${next} · 스페셜 ${specialCurrent} → ${specialNext}`;
+  btn.disabled = !nextCost || selectedMaterials < nextCost;
+  specialBtn.disabled = !specialCost || enhanceGems < specialCost;
+  info.innerHTML = `${flagImg(target,'flag-img-hist')}
+    <b>${target.name}</b>
+    <span class="star-badge">${enhanceLabel(level) || '0성'}</span>
+    <span class="star-badge special-star">S${enhanceLabel(specialLevel) || '0성'}</span>
+    <span class="gem-chip">보석 ${enhanceGems}개</span>
+    <span class="enhance-cost">일반: 선택 재료 ${selectedMaterials} / ${nextCost || '-'} · 사용 가능 ${available}장 · 스페셜: 보석 ${enhanceGems} / ${specialCost || '-'}</span>`;
+}
+function renderEnhanceTab(){
+  renderEnhancePanel();
+  renderEnhanceGrid();
+}
+function renderEnhanceGrid(){
+  const grid = document.getElementById('enhance-grid');
+  const search = document.getElementById('enhance-search');
+  if(!grid) return;
+  if(search && search.value !== enhanceQuery) search.value = enhanceQuery;
+  if(enhanceTargetId && !(inventory[enhanceTargetId] > 0)) enhanceTargetId = '';
+  const ownedAll = Object.entries(inventory)
+    .filter(([,count])=>count>0)
+    .map(([id,count])=>({country:COUNTRY_BY_ID[id], count}))
+    .filter(item=>item.country)
+    .sort((a,b)=>{
+      const rankA = TIER_BY_KEY[a.country.tier].rank;
+      const rankB = TIER_BY_KEY[b.country.tier].rank;
+      return rankA-rankB || a.country.name.localeCompare(b.country.name, 'ko');
+    });
+  const query = enhanceQuery.trim().toLowerCase();
+  const owned = query
+    ? ownedAll.filter(({country})=>{
+        const t = TIER_BY_KEY[country.tier];
+        return `${country.name} ${country.id} ${country.parent||''} ${t.label} ${country.symbol||''} ${t.symbol||''}`.toLowerCase().includes(query);
+      })
+    : ownedAll;
+  if(!ownedAll.length){
+    grid.innerHTML = `<div class="empty-note">강화할 카드가 없습니다</div>`;
+    return;
+  }
+  if(!owned.length){
+    grid.innerHTML = `<div class="empty-note">검색 결과 없음</div>`;
+    return;
+  }
+  grid.innerHTML = `<div class="inventory-grid">${owned.map(({country,count})=>{
+    const t = TIER_BY_KEY[country.tier];
+    const picked = country.id === enhanceTargetId;
+    const canMaterial = enhanceTargetId && COUNTRY_BY_ID[enhanceTargetId] && country.tier === COUNTRY_BY_ID[enhanceTargetId].tier;
+    const materialPicked = selectedEnhanceMaterialCount(country.id);
+    const reserveTarget = country.id === enhanceTargetId ? 1 : 0;
+    const materialAvailable = Math.max(0, count - reserveTarget);
+    return `<button class="inventory-card ${picked ? 'selected' : ''} ${materialPicked ? 'selected' : ''} ${enhancementClass(country.id)}" data-enhance-id="${country.id}" style="--tier-color:${t.color}" title="${country.name}">
+      <span class="inv-selected">${picked ? '대상' : materialPicked ? '재료 '+materialPicked : ''}</span>
+      <span class="inv-count">x${count}</span>
+      ${enhanceBadgeHtml(country.id)}
+      ${flagImg(country,'flag-img-hist')}
+      <span class="inv-name">${country.name}</span>
+      ${canMaterial ? `<span class="synth-meta">재료 ${materialPicked}/${materialAvailable}</span>` : ''}
+    </button>`;
+  }).join('')}</div>`;
+}
+function selectEnhanceTarget(id){
+  if(!COUNTRY_BY_ID[id] || !(inventory[id] > 0)) return;
+  const currentTarget = getEnhanceTarget();
+  const clicked = COUNTRY_BY_ID[id];
+  if(currentTarget && clicked.tier === currentTarget.tier){
+    toggleEnhanceMaterial(id);
+    return;
+  }
+  enhanceTargetId = id;
+  enhanceMaterialCards = [];
+  renderEnhanceTab();
+}
+function clearEnhanceTarget(){
+  enhanceTargetId = '';
+  enhanceMaterialCards = [];
+  renderEnhanceTab();
+}
+function battleStorageKey(code=battleRoomCode){
+  return code ? `country_gacha_battle_${code}` : '';
+}
+function battlePlayerLabel(side){
+  if(side === 'host') return '방장';
+  if(side === 'guest') return '도전자';
+  return '대기';
+}
+function generateBattleCode(){
+  return Math.random().toString(36).slice(2,8).toUpperCase();
+}
+function getBattleName(){
+  const input = document.getElementById('battle-name');
+  battleName = (input && input.value.trim()) || battleName || (battleSide === 'guest' ? '도전자' : '방장');
+  if(input) input.value = battleName;
+  return battleName;
+}
+function loadBattleRoom(code=battleRoomCode){
+  if(online.ready && online.user && online.battleRoom && online.battleRoom.code === code) return online.battleRoom;
+  if(!code) return null;
+  try{ return JSON.parse(localStorage.getItem(battleStorageKey(code)) || 'null'); }catch(e){ return null; }
+}
+function saveBattleRoom(room){
+  if(!room || !room.code) return;
+  online.battleRoom = room;
+  try{ localStorage.setItem(battleStorageKey(room.code), JSON.stringify(room)); }catch(e){}
+  if(serverOnline.user){
+    serverApi(`/api/rooms/${room.code}`, {method:'POST', body:JSON.stringify({state:room})})
+      .catch(e=>setBattleStatus(`서버 방 저장 실패 · ${escapeAttr(e.message || e)}`));
+  }
+  if(online.ready && online.user){
+    const ref = online.modules.doc(online.db, 'battleRooms', room.code);
+    online.modules.setDoc(ref, {...room, updatedAt:Date.now()}, {merge:true}).catch(e=>setBattleStatus(`온라인 방 저장 실패 · ${escapeAttr(e.message || e)}`));
+  }
+}
+function currentBattleRoom(){
+  return loadBattleRoom() || null;
+}
+function subscribeOnlineBattleRoom(code){
+  if(online.battleUnsub) online.battleUnsub();
+  online.battleUnsub = null;
+  if(!online.ready || !online.user || !code) return;
+  const ref = online.modules.doc(online.db, 'battleRooms', code);
+  online.battleUnsub = online.modules.onSnapshot(ref, snap=>{
+    if(!snap.exists()) return;
+    online.battleRoom = snap.data();
+    if(battleRoomCode === code) renderBattleTab();
+  });
+}
+function createBattleRoom(){
+  battleRoomCode = generateBattleCode();
+  battleSide = 'host';
+  const room = {code:battleRoomCode, round:1, createdAt:Date.now(), host:{name:getBattleName(), cardId:'', power:0}, guest:{name:'', cardId:'', power:0}, result:''};
+  saveBattleRoom(room);
+  subscribeOnlineBattleRoom(battleRoomCode);
+  playSfx('summon');
+  renderBattleTab();
+}
+async function joinBattleRoom(){
+  const input = document.getElementById('battle-code-input');
+  const code = (input ? input.value : '').trim().toUpperCase();
+  if(!code){
+    setBattleStatus('입장할 방 코드를 입력하세요');
+    return;
+  }
+  let room = loadBattleRoom(code);
+  if(!room && serverOnline.user){
+    try{
+      const data = await serverApi(`/api/rooms/${code}`);
+      room = data.room.state;
+    }catch(e){
+      setBattleStatus('그 방을 찾을 수 없습니다');
+      return;
+    }
+  }
+  if(!room && online.ready && online.user){
+    try{
+      const snap = await online.modules.getDoc(online.modules.doc(online.db, 'battleRooms', code));
+      if(snap.exists()) room = snap.data();
+    }catch(e){
+      setBattleStatus(`온라인 방 입장 실패 · ${escapeAttr(e.message || e)}`);
+      return;
+    }
+  }
+  if(!room){
+    setBattleStatus('그 방을 찾을 수 없습니다');
+    return;
+  }
+  battleRoomCode = code;
+  battleSide = 'guest';
+  room[battleSide].name = getBattleName();
+  saveBattleRoom(room);
+  subscribeOnlineBattleRoom(battleRoomCode);
+  playSfx('tab');
+  renderBattleTab();
+}
+function leaveBattleRoom(){
+  if(online.battleUnsub) online.battleUnsub();
+  online.battleUnsub = null;
+  online.battleRoom = null;
+  battleRoomCode = '';
+  battleSide = '';
+  renderBattleTab();
+}
+function resetBattleRound(){
+  const room = currentBattleRoom();
+  if(!room){
+    setBattleStatus('먼저 방을 만들거나 입장하세요');
+    return;
+  }
+  room.round = (room.round || 1) + 1;
+  room.host.cardId = '';
+  room.host.power = 0;
+  room.guest.cardId = '';
+  room.guest.power = 0;
+  room.result = '';
+  saveBattleRoom(room);
+  playSfx('synth');
+  renderBattleTab();
+}
+function battlePower(country){
+  if(!country) return 0;
+  const t = TIER_BY_KEY[country.tier];
+  const rank = Number(t.rank) || 0;
+  const base = Math.round((8 - rank) * 120);
+  const normal = enhanceLevel(country.id) * 70;
+  const special = specialEnhanceLevel(country.id) * 95;
+  const rarityBonus = country.secret ? 260 : country.continent ? 170 : country.historical ? 120 : country.dependent ? 60 : 0;
+  return base + normal + special + rarityBonus + Math.floor(Math.random() * 80);
+}
+function chooseBattleCard(id){
+  const country = COUNTRY_BY_ID[id];
+  if(!country || !(inventory[id] > 0)) return;
+  let room = currentBattleRoom();
+  if(!room || !battleSide){
+    battleRoomCode = battleRoomCode || 'MANUAL';
+    battleSide = battleSide || 'host';
+    room = {code:battleRoomCode, round:1, createdAt:Date.now(), host:{name:getBattleName(), cardId:'', power:0}, guest:{name:'', cardId:'', power:0}, result:''};
+  }
+  room[battleSide].name = getBattleName();
+  room[battleSide].cardId = id;
+  room[battleSide].power = battlePower(country);
+  room.result = resolveBattle(room);
+  saveBattleRoom(room);
+  playSfx(room.result ? 'burst' : 'reveal');
+  renderBattleTab();
+}
+function resolveBattle(room){
+  const hostReady = room.host.cardId && room.host.power;
+  const guestReady = room.guest.cardId && room.guest.power;
+  if(!hostReady || !guestReady) return '';
+  const hostCountry = COUNTRY_BY_ID[room.host.cardId];
+  const guestCountry = COUNTRY_BY_ID[room.guest.cardId];
+  if(room.host.power === room.guest.power) return `무승부 · ${hostCountry.name} ${room.host.power} vs ${guestCountry.name} ${room.guest.power}`;
+  const winnerSide = room.host.power > room.guest.power ? 'host' : 'guest';
+  const loserSide = winnerSide === 'host' ? 'guest' : 'host';
+  const winner = room[winnerSide];
+  const loser = room[loserSide];
+  const winnerCountry = COUNTRY_BY_ID[winner.cardId];
+  const loserCountry = COUNTRY_BY_ID[loser.cardId];
+  return `${winner.name || battlePlayerLabel(winnerSide)} 승리 · ${winnerCountry.name} ${winner.power} vs ${loserCountry.name} ${loser.power}`;
+}
+function encodeBattlePayload(payload){
+  return btoa(unescape(encodeURIComponent(JSON.stringify(payload)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function decodeBattlePayload(code){
+  const normalized = String(code||'').trim().replace(/-/g,'+').replace(/_/g,'/');
+  const padded = normalized + '='.repeat((4 - normalized.length % 4) % 4);
+  return JSON.parse(decodeURIComponent(escape(atob(padded))));
+}
+function currentManualBattleCard(){
+  const room = currentBattleRoom();
+  const id = room && battleSide && room[battleSide] ? room[battleSide].cardId : '';
+  return COUNTRY_BY_ID[id] ? {country:COUNTRY_BY_ID[id], power:room[battleSide].power} : null;
+}
+function makeManualBattleCode(){
+  const picked = currentManualBattleCard();
+  if(!picked){
+    setBattleStatus('먼저 대표 카드를 선택하세요');
+    return;
+  }
+  const payload = {
+    v:1,
+    code:battleRoomCode || 'MANUAL',
+    side:battleSide || 'host',
+    name:getBattleName(),
+    cardId:picked.country.id,
+    power:picked.power || battlePower(picked.country)
+  };
+  const code = encodeBattlePayload(payload);
+  const input = document.getElementById('battle-share-code');
+  if(input) input.value = code;
+  setBattleStatus('내 배틀 코드를 친구에게 보내세요');
+}
+function runManualBattle(){
+  const picked = currentManualBattleCard();
+  const input = document.getElementById('battle-opponent-code');
+  if(!picked){
+    setBattleStatus('먼저 대표 카드를 선택하세요');
+    return;
+  }
+  try{
+    const rival = decodeBattlePayload(input ? input.value : '');
+    const rivalCountry = COUNTRY_BY_ID[rival.cardId];
+    if(!rivalCountry || !rival.power) throw new Error('잘못된 코드');
+    const myPower = picked.power || battlePower(picked.country);
+    const rivalPower = Number(rival.power) || 0;
+    const room = currentBattleRoom() || {
+      code:battleRoomCode || 'MANUAL',
+      round:1,
+      createdAt:Date.now(),
+      host:{name:getBattleName(), cardId:picked.country.id, power:myPower},
+      guest:{name:'', cardId:'', power:0},
+      result:''
+    };
+    if(!battleRoomCode) battleRoomCode = room.code;
+    if(!battleSide) battleSide = 'host';
+    room[battleSide] = {name:getBattleName(), cardId:picked.country.id, power:myPower};
+    const rivalSide = battleSide === 'guest' ? 'host' : 'guest';
+    room[rivalSide] = {name:rival.name || '친구', cardId:rivalCountry.id, power:rivalPower};
+    room.result = resolveBattle(room);
+    saveBattleRoom(room);
+    renderBattleTab();
+    playSfx('burst');
+  }catch(e){
+    setBattleStatus('친구 배틀 코드가 올바르지 않습니다');
+  }
+}
+function setBattleStatus(text){
+  const el = document.getElementById('battle-status');
+  if(el) el.innerHTML = text;
+}
+function battleSideHtml(room, side){
+  const player = room && room[side] ? room[side] : {name:'', cardId:'', power:0};
+  const country = COUNTRY_BY_ID[player.cardId];
+  const t = country ? TIER_BY_KEY[country.tier] : null;
+  const active = battleSide === side ? 'active' : '';
+  const color = t ? t.color : 'var(--gold)';
+  if(!country){
+    return `<div class="battle-side ${active}" style="--tier-color:${color}">
+      <span class="battle-player">${battlePlayerLabel(side)}</span>
+      <span class="battle-card-name">${player.name || '대기 중'}</span>
+      <span class="synth-meta">카드 미제출</span>
+    </div>`;
+  }
+  return `<div class="battle-side ${active}" style="--tier-color:${color}">
+    <span class="battle-player">${battlePlayerLabel(side)} · ${player.name || '이름 없음'}</span>
+    ${flagImg(country,'flag-img-hist')}
+    <span class="battle-card-name">${country.name}</span>
+    <span class="battle-power">${player.power}</span>
+  </div>`;
+}
+function renderBattleTab(){
+  const codeEl = document.getElementById('battle-code');
+  const hostEl = document.getElementById('battle-host');
+  const guestEl = document.getElementById('battle-guest');
+  const grid = document.getElementById('battle-grid');
+  if(!codeEl || !hostEl || !guestEl || !grid) return;
+  const room = currentBattleRoom();
+  codeEl.textContent = battleRoomCode || '없음';
+  const hostHtml = battleSideHtml(room, 'host');
+  const guestHtml = battleSideHtml(room, 'guest');
+  hostEl.outerHTML = hostHtml.replace('battle-side', 'battle-side').replace('<div', '<div id="battle-host"');
+  guestEl.outerHTML = guestHtml.replace('battle-side', 'battle-side').replace('<div', '<div id="battle-guest"');
+  if(!room){
+    setBattleStatus('방을 만들거나 입장하세요');
+  }else if(room.result){
+    setBattleStatus(`<b>${room.result}</b>`);
+  }else if(room.host.cardId || room.guest.cardId){
+    setBattleStatus('상대가 대표 카드를 고르면 결과가 공개됩니다');
+  }else{
+    const mode = online.ready && online.user ? '온라인' : '오프라인';
+    setBattleStatus(`${mode} ${battlePlayerLabel(battleSide)}로 입장했습니다 · 라운드 ${room.round || 1}`);
+  }
+
+  const ownedAll = Object.entries(inventory)
+    .filter(([,count])=>count>0)
+    .map(([id,count])=>({country:COUNTRY_BY_ID[id], count}))
+    .filter(item=>item.country)
+    .sort((a,b)=>{
+      const rankA = TIER_BY_KEY[a.country.tier].rank;
+      const rankB = TIER_BY_KEY[b.country.tier].rank;
+      return rankA-rankB || a.country.name.localeCompare(b.country.name, 'ko');
+    });
+  if(!ownedAll.length){
+    grid.innerHTML = `<div class="empty-note">배틀에 낼 카드가 없습니다</div>`;
+    return;
+  }
+  grid.innerHTML = `<div class="inventory-grid">${ownedAll.map(({country,count})=>{
+    const t = TIER_BY_KEY[country.tier];
+    const picked = room && battleSide && room[battleSide] && room[battleSide].cardId === country.id;
+    return `<button class="inventory-card ${picked ? 'selected' : ''} ${enhancementClass(country.id)}" data-battle-id="${country.id}" style="--tier-color:${t.color}" title="${country.name}">
+      <span class="inv-selected">${picked ? '출전' : ''}</span>
+      <span class="inv-count">x${count}</span>
+      ${enhanceBadgeHtml(country.id)}
+      ${flagImg(country,'flag-img-hist')}
+      <span class="inv-name">${country.name}</span>
+    </button>`;
+  }).join('')}</div>`;
+}
+async function refreshServerBattleRoom(){
+  if(!serverOnline.user || !battleRoomCode || battleRoomCode === 'MANUAL') return;
+  try{
+    const data = await serverApi(`/api/rooms/${battleRoomCode}`);
+    if(data.room && data.room.state){
+      online.battleRoom = data.room.state;
+      try{ localStorage.setItem(battleStorageKey(battleRoomCode), JSON.stringify(online.battleRoom)); }catch(e){}
+      if(activeTab === 'battle') renderBattleTab();
+    }
+  }catch(e){}
+}
+function enhanceSelectedCard(){
+  const target = getEnhanceTarget();
+  if(!target){
+    showSynthMessage('강화할 카드를 선택하세요');
+    renderEnhanceTab();
+    return;
+  }
+  const level = enhanceLevel(target.id);
+  const cost = enhanceCost(level);
+  if(!cost){
+    showSynthMessage(`${target.name}은 이미 최종입니다`);
+    renderEnhanceTab();
+    return;
+  }
+  cleanEnhanceMaterials();
+  const materials = enhanceMaterialCards.slice(0, cost);
+  if(materials.length < cost){
+    const t = TIER_BY_KEY[target.tier];
+    showSynthMessage(`${target.name} 강화 재료를 직접 선택하세요 · 같은 등급 ${t.label} ${cost}장 필요`);
+    renderEnhanceTab();
+    return;
+  }
+  materials.forEach(id=>removeInventory(id, 1));
+  enhancements[target.id] = level + 1;
+  enhanceTargetId = (inventory[target.id] || 0) > 0 ? target.id : '';
+  enhanceMaterialCards = [];
+  playSfx('enhance');
+  showSynthMessage(`${target.name} 강화 성공 · <b>${enhanceLongLabel(level + 1)}</b>`);
+  renderCollection();
+  renderInventory();
+  renderEnhanceTab();
+  saveState();
+}
+function specialEnhanceSelectedCard(){
+  const target = getEnhanceTarget();
+  if(!target){
+    showSynthMessage('스페셜 강화할 카드를 선택하세요');
+    renderEnhanceTab();
+    return;
+  }
+  const level = specialEnhanceLevel(target.id);
+  const cost = enhanceCost(level);
+  if(!cost){
+    showSynthMessage(`${target.name}은 이미 스페셜 최종입니다`);
+    renderEnhanceTab();
+    return;
+  }
+  if(enhanceGems < cost){
+    showSynthMessage(`${target.name} 스페셜 강화 보석이 부족합니다 · 보석 ${cost}개 필요`);
+    renderEnhanceTab();
+    return;
+  }
+  enhanceGems -= cost;
+  renderResourceHud();
+  const nextLevel = level + 1;
+  specialEnhancements[target.id] = nextLevel;
+  let finalSecret = null;
+  if(nextLevel >= 6 && !target.secret){
+    finalSecret = createSpecialFinalSecret(target);
+    removeInventory(target.id, 1);
+    if(finalSecret){
+      specialEnhancements[finalSecret.id] = 6;
+      addCountry(finalSecret, 1);
+    }
+    enhanceTargetId = finalSecret && inventory[finalSecret.id] > 0 ? finalSecret.id : '';
+  }else{
+    enhanceTargetId = (inventory[target.id] || 0) > 0 ? target.id : '';
+  }
+  playSfx(finalSecret ? 'secret' : 'enhance');
+  showSynthMessage(finalSecret
+    ? `${target.name} 스페셜 강화 최종 · <b>${finalSecret.name}</b> 시크릿 획득`
+    : `${target.name} 스페셜 강화 성공 · <b>${enhanceLongLabel(nextLevel)}</b>`);
+  renderCollection();
+  renderInventory();
+  renderEnhanceTab();
+  saveState();
+}
+function consumeSelected(ids){
+  ids.forEach(id=>removeInventory(id, 1));
+  selectedCards = [];
+  synthTargetId = '';
+}
+function getSelectedSynthInfo(){
+  if(selectedCards.length < 3 || selectedCards.length % 3 !== 0) return null;
+  const countries = selectedCards.map(id=>COUNTRY_BY_ID[id]).filter(Boolean);
+  if(countries.length !== selectedCards.length || countries.some(c=>c.tier!==countries[0].tier)) return null;
+  const fromTier = TIER_BY_KEY[countries[0].tier];
+  if(!fromTier || fromTier.secret) return null;
+  return {fromTier, count:selectedCards.length / 3, countries};
+}
+function getSelectedSynthBaseTier(){
+  const info = getSelectedSynthInfo();
+  return info ? info.fromTier : null;
+}
+function getSelectedSynthBatchCount(){
+  const info = getSelectedSynthInfo();
+  return info ? info.count : 0;
+}
+function getSelectedSynthInvalidReason(){
+  if(selectedCards.length < 3) return '합성은 같은 등급 카드 3장 이상이 필요합니다';
+  if(selectedCards.length % 3 !== 0) return '합성은 3의 배수로 선택해야 합니다';
+  const countries = selectedCards.map(id=>COUNTRY_BY_ID[id]).filter(Boolean);
+  if(countries.length !== selectedCards.length) return '선택한 카드 중 사용할 수 없는 카드가 있습니다';
+  if(countries.some(c=>c.tier!==countries[0].tier)) return '같은 등급 카드끼리만 합성할 수 있습니다';
+  const fromTier = TIER_BY_KEY[countries[0].tier];
+  if(!fromTier || fromTier.secret) return '시크릿 등급은 합성 재료로 사용할 수 없습니다';
+  return '';
+}
+function getRandomSynthTargetTier(){
+  const fromTier = getSelectedSynthBaseTier();
+  if(!fromTier) return null;
+  if(fromTier.dependent){
+    const idx = DEPENDENT_TIER_ORDER.indexOf(fromTier.key);
+    return idx > 0 ? TIER_BY_KEY[DEPENDENT_TIER_ORDER[idx - 1]] : null;
+  }
+  return TIERS.find(t=>t.rank===fromTier.rank-1) || null;
+}
+function getChoiceSynthTargetTier(){
+  return getSelectedSynthBaseTier();
+}
+function renderSynthTarget(){
+  const select = document.getElementById('synth-target');
+  if(!select) return;
+  const preview = document.getElementById('synth-target-preview');
+  const specialRecipe = getSelectedSpecialRecipe();
+  if(specialRecipe){
+    const options = getSpecialRecipeTargets(specialRecipe);
+    if(!options.some(c=>c.id===synthTargetId)) synthTargetId = options[0] ? options[0].id : '';
+    select.disabled = !options.length;
+    select.innerHTML = options.map(c=>`<option value="${c.id}" ${c.id===synthTargetId ? 'selected' : ''}>${c.name}</option>`).join('');
+    updateSynthTargetPreview();
+    return;
+  }
+  const targetTier = getChoiceSynthTargetTier();
+  if(!targetTier){
+    synthTargetId = '';
+    select.disabled = true;
+    select.innerHTML = `<option value="">같은 등급 3장씩 선택하세요</option>`;
+    if(preview) preview.innerHTML = '';
+    return;
+  }
+  const batchCount = getSelectedSynthBatchCount();
+  const options = ALL_COUNTRIES
+    .filter(c=>c.tier===targetTier.key)
+    .sort((a,b)=>a.name.localeCompare(b.name, 'ko'));
+  if(!options.some(c=>c.id===synthTargetId)) synthTargetId = options[0] ? options[0].id : '';
+  select.disabled = !options.length;
+  select.innerHTML = options.map(c=>{
+    const amount = batchCount>1 ? ' x' + batchCount : '';
+    return `<option value="${c.id}" ${c.id===synthTargetId ? 'selected' : ''}>${c.name}${amount}</option>`;
+  }).join('');
+  updateSynthTargetPreview();
+}
+function updateSynthTargetPreview(){
+  const preview = document.getElementById('synth-target-preview');
+  if(!preview) return;
+  const country = COUNTRY_BY_ID[synthTargetId];
+  preview.innerHTML = country ? flagImg(country,'flag-img-hist') : '';
+}
+function showSynthMessage(message){
+  document.getElementById('result-banner').innerHTML = message;
+}
+function revealSynthResults(countries, label){
+  countries = countries.filter(Boolean);
+  if(!countries.length) return;
+  playSfx('synth');
+  const area = document.getElementById('cards-area');
+  const size = countries.length > 1 ? 'small' : 'big';
+  const newFlags = countries.map(country=>!discovered.has(country.id));
+  countries.forEach(country=>addCountry(country));
+  area.innerHTML = countries.map((_,i)=>cardSlotHtml(i, size)).join('');
+  countries.forEach((country,i)=>fillCard(i, country, newFlags[i]));
+  countries.forEach((_,i)=>setTimeout(()=>{
+    const card = document.getElementById(`ci-${i}`);
+    if(card) card.classList.add('flipped');
+  }, i*110));
+  const top = topCountry(countries);
+  const t = TIER_BY_KEY[top.tier];
+  if(t.secret) triggerSecretStagePulse();
+  const batchText = countries.length > 1 ? ` x${countries.length}` : '';
+  const distinctCount = new Set(countries.map(country=>country.id)).size;
+  const extraText = countries.length > 1 && distinctCount > 1 ? ` 외 ${countries.length-1}장` : '';
+  showSynthMessage(`${label}${batchText} <b>${t.label}</b> · ${top.name}${extraText}`);
+  maybeGrantWorldSecret('도감 완성');
+  renderCollection();
+  renderInventory();
+  renderEnhanceTab();
+  saveState();
+}
+function revealSynthResult(country, label){
+  revealSynthResults([country], label);
+}
+function pickManyFromTier(tierKey, count){
+  const used = new Set();
+  const results = [];
+  for(let i=0;i<count;i++){
+    const picked = pickFromTier(tierKey, used) || pickFromTier(tierKey);
+    if(picked){
+      results.push(picked);
+      used.add(picked.id);
+    }
+  }
+  return results;
+}
+function repeatCountry(country, count){
+  return Array.from({length:count}, ()=>country);
+}
+function synthesizeSelected(mode='choice'){
+  cleanSelection();
+  const counts = selectedCounts();
+
+  const specialRecipe = getSelectedSpecialRecipe(counts);
+  if(specialRecipe){
+    const targets = getSpecialRecipeTargets(specialRecipe);
+    const target = mode === 'random' ? pickOne(targets) : COUNTRY_BY_ID[synthTargetId];
+    if(!target || !targets.some(country=>country.id===target.id)){
+      showSynthMessage(`${specialRecipe.label} 결과를 선택하세요`);
+      renderSynthTarget();
+      return;
+    }
+    consumeSelected(specialRecipe.ingredients);
+    revealSynthResult(target, mode === 'random' ? '랜덤 시크릿 합성' : '선택 시크릿 합성');
+    return;
+  }
+  if((counts.h_jerusalem || 0) >= 1 && (counts.h_rome || 0) >= 1 && (counts.h_byz || 0) >= 1){
+    consumeSelected(['h_jerusalem','h_rome','h_byz']);
+    revealSynthResult(COUNTRY_BY_ID.s_heaven, '시크릿 합성');
+    return;
+  }
+  if((counts.va || 0) >= 10){
+    consumeSelected(Array.from({length:10}, ()=> 'va'));
+    revealSynthResult(COUNTRY_BY_ID.s_papacy, '시크릿 합성');
+    return;
+  }
+  if((counts.pl || 0) >= 1 && (counts.lt || 0) >= 1){
+    consumeSelected(['pl','lt']);
+    revealSynthResult(COUNTRY_BY_ID.s_politu, '시크릿 합성');
+    return;
+  }
+  if((counts.kr || 0) >= 1 && (counts.kp || 0) >= 1){
+    consumeSelected(['kr','kp']);
+    revealSynthResult(COUNTRY_BY_ID.s_unified_korea, '시크릿 합성');
+    return;
+  }
+  if((counts.be || 0) >= 1 && (counts.nl || 0) >= 1 && (counts.lu || 0) >= 1){
+    consumeSelected(['be','nl','lu']);
+    revealSynthResult(COUNTRY_BY_ID.s_benelux, '시크릿 합성');
+    return;
+  }
+
+  const synthInfo = getSelectedSynthInfo();
+  if(!synthInfo){
+    showSynthMessage(getSelectedSynthInvalidReason());
+    return;
+  }
+
+  let targetCountries = [];
+  if(mode === 'random'){
+    const targetTier = getRandomSynthTargetTier();
+    if(!targetTier){
+      showSynthMessage('이 등급보다 높은 합성 등급이 없습니다');
+      return;
+    }
+    targetCountries = pickManyFromTier(targetTier.key, synthInfo.count);
+  } else {
+    const targetTier = getChoiceSynthTargetTier();
+    const targetCountry = COUNTRY_BY_ID[synthTargetId];
+    if(!targetCountry || targetCountry.tier !== targetTier.key){
+      showSynthMessage('획득할 나라를 선택하세요');
+      renderSynthTarget();
+      return;
+    }
+    targetCountries = repeatCountry(targetCountry, synthInfo.count);
+  }
+  if(targetCountries.length !== synthInfo.count){
+    showSynthMessage('합성 결과를 만들 수 있는 나라가 부족합니다');
+    return;
+  }
+
+  const materials = [...selectedCards];
+  consumeSelected(materials);
+  revealSynthResults(targetCountries, mode === 'random' ? '랜덤 합성 결과' : '선택 합성 결과');
+}
+function setTab(tab){
+  if(activeTab !== tab) playSfx('tab');
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.toggle('active', btn.dataset.tab===tab));
+  document.getElementById('collection-panel').classList.toggle('active', tab==='collection');
+  document.getElementById('inventory-panel').classList.toggle('active', tab==='inventory');
+  document.getElementById('enhance-panel-tab').classList.toggle('active', tab==='enhance');
+  document.getElementById('battle-panel-tab').classList.toggle('active', tab==='battle');
+  document.getElementById('settings-panel-tab').classList.toggle('active', tab==='settings');
+  document.getElementById('section-title').textContent = tab==='inventory' ? '보관함' : tab==='enhance' ? '강화' : tab==='battle' ? '결투장' : tab==='settings' ? '설정' : '도감';
+  if(tab==='inventory') renderInventory();
+  if(tab==='enhance') renderEnhanceTab();
+  if(tab==='battle') renderBattleTab();
+  if(tab==='settings') renderSettingsTab();
+}
+
+/* ═══════════════════════════════════════════════
+   EVENTS
+═══════════════════════════════════════════════ */
+document.getElementById('btn-single').addEventListener('click',()=>playPull(()=>[singlePull()],'big'));
+document.getElementById('btn-ten').addEventListener('click',()=>playPull(tenPull,'small'));
+document.getElementById('btn-premium').addEventListener('click',()=>playPull(()=>[premiumPull()],'big'));
+document.getElementById('btn-premium-ten').addEventListener('click',()=>playPull(premiumTenPull,'small'));
+document.getElementById('btn-dependent').addEventListener('click',()=>playPull(()=>[dependentPull()],'big'));
+document.getElementById('btn-dependent-ten').addEventListener('click',()=>playPull(dependentTenPull,'small'));
+document.getElementById('btn-reset').addEventListener('click',()=>{
+  if(!confirm('도감과 뽑기 기록을 모두 초기화할까요?')) return;
+  Object.keys(specialSecrets).forEach(id=>delete COUNTRY_BY_ID[id]);
+  discovered=new Set(); totalPulls=0; inventory={}; enhancements={}; specialEnhancements={}; enhanceGems=0; specialSecrets={}; selectedCards=[]; synthTargetId=''; inventoryQuery=''; enhanceTargetId=''; enhanceQuery=''; enhanceMaterialCards=[]; battleRoomCode=''; battleSide='';
+  renderResourceHud();
+  document.getElementById('cards-area').innerHTML='';
+  document.getElementById('result-banner').innerHTML='&nbsp;';
+  saveState(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab();
+});
+document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>setTab(btn.dataset.tab)));
+document.getElementById('inventory-grid').addEventListener('click',event=>{
+  const card = event.target.closest('.inventory-card');
+  if(card) toggleInventorySelection(card.dataset.id);
+});
+document.getElementById('enhance-grid').addEventListener('click',event=>{
+  const card = event.target.closest('.inventory-card');
+  if(card) selectEnhanceTarget(card.dataset.enhanceId);
+});
+document.getElementById('battle-grid').addEventListener('click',event=>{
+  const card = event.target.closest('.inventory-card');
+  if(card) chooseBattleCard(card.dataset.battleId);
+});
+document.getElementById('btn-synthesize-random').addEventListener('click',()=>synthesizeSelected('random'));
+document.getElementById('btn-synthesize-choice').addEventListener('click',()=>synthesizeSelected('choice'));
+document.getElementById('btn-clear-selection').addEventListener('click',clearSelection);
+document.getElementById('btn-enhance').addEventListener('click',enhanceSelectedCard);
+document.getElementById('btn-special-enhance').addEventListener('click',specialEnhanceSelectedCard);
+document.getElementById('btn-enhance-clear').addEventListener('click',clearEnhanceTarget);
+document.getElementById('btn-battle-create').addEventListener('click',createBattleRoom);
+document.getElementById('btn-battle-join').addEventListener('click',joinBattleRoom);
+document.getElementById('btn-battle-reset').addEventListener('click',resetBattleRound);
+document.getElementById('btn-battle-leave').addEventListener('click',leaveBattleRoom);
+document.getElementById('btn-battle-share').addEventListener('click',makeManualBattleCode);
+document.getElementById('btn-battle-manual').addEventListener('click',runManualBattle);
+document.getElementById('btn-online-init').addEventListener('click',initOnline);
+document.getElementById('btn-login').addEventListener('click',()=>loginOnline(false));
+document.getElementById('btn-register').addEventListener('click',()=>loginOnline(true));
+document.getElementById('btn-logout').addEventListener('click',logoutOnline);
+document.getElementById('btn-cloud-upload').addEventListener('click',uploadCloudSave);
+document.getElementById('btn-cloud-download').addEventListener('click',downloadCloudSave);
+document.getElementById('synth-target').addEventListener('change',event=>{ synthTargetId = event.target.value; updateSynthTargetPreview(); });
+document.getElementById('inventory-search').addEventListener('input',event=>{
+  inventoryQuery = event.target.value;
+  renderInventory();
+});
+document.getElementById('enhance-search').addEventListener('input',event=>{
+  enhanceQuery = event.target.value;
+  renderEnhanceTab();
+});
+document.getElementById('setting-volume').addEventListener('input',event=>{
+  settings.volume = Math.max(0, Math.min(1, Number(event.target.value)/100));
+  saveSettings();
+});
+document.getElementById('firebase-config').addEventListener('input',event=>{
+  settings.firebaseConfig = event.target.value;
+  saveSettings();
+});
+window.addEventListener('storage',event=>{
+  if(battleRoomCode && event.key === battleStorageKey()) renderBattleTab();
+});
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+loadSettings();
+loadState();
+initServerOnline();
+if(maybeGrantWorldSecret('도감 완성')) saveState();
+renderResourceHud();
+renderRates();
+renderCollection();
+renderInventory();
+renderEnhanceTab();
+renderBattleTab();
+renderSettingsTab();
+setInterval(refreshServerBattleRoom, 2200);
+</script>
+</body>
+</html>
 
