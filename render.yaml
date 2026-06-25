@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: country-gacha-online
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8787
+      - key: HOST
+        value: 0.0.0.0
+      - key: DATA_DIR
+        value: /app/data
+    # Render 무료 플랜의 파일 시스템은 재시작 때 사라질 수 있습니다.
+    # 오래 운영하려면 Render Dashboard에서 Persistent Disk나 외부 DB를 추가하세요.
