@@ -40,6 +40,19 @@ body{background:
 .resource-icon.gem::after{content:'';position:absolute;left:2px;top:2px;width:4px;height:4px;border-radius:1px;background:rgba(255,255,255,.75);}
 .resource-icon.coin{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff0a8,#ffd45c 45%,#b98016 80%);box-shadow:0 0 12px rgba(255,212,92,.45);}
 .resource-icon.coin::after{content:'';position:absolute;inset:3px;border:1px solid rgba(90,56,5,.55);border-radius:50%;}
+.resource-icon.token{width:15px;height:15px;border-radius:4px;background:linear-gradient(135deg,#f4f7ff,#8f9bb5 48%,#4d5a78);box-shadow:0 0 11px rgba(190,205,255,.35);transform:rotate(45deg);}
+.resource-icon.token::before{content:'';position:absolute;inset:3px;border:1px solid rgba(18,27,46,.55);border-radius:2px;}
+.resource-icon.token::after{content:'';position:absolute;left:5px;top:1px;width:4px;height:13px;border-radius:2px;background:rgba(18,27,46,.5);transform:rotate(90deg);}
+.resource-icon.potion{width:13px;height:17px;border-radius:4px 4px 7px 7px;background:linear-gradient(180deg,#e8fdff 0 25%,#79f4ff 26% 48%,#2d8de0 49%);box-shadow:0 0 13px rgba(121,244,255,.42);}
+.resource-icon.potion::before{content:'';position:absolute;left:3px;top:-4px;width:7px;height:5px;border-radius:2px;background:#e8fdff;border:1px solid rgba(255,255,255,.5);}
+.resource-icon.potion::after{content:'';position:absolute;inset:4px 3px 3px;border-radius:3px;background:rgba(255,255,255,.28);}
+.resource-icon.potion.luck{background:linear-gradient(180deg,#fff8c7 0 25%,#ffe37a 26% 48%,#d29122 49%);}
+.resource-icon.potion.copy{background:linear-gradient(180deg,#edf7ff 0 25%,#b8c7ff 26% 48%,#5d6ddb 49%);}
+.resource-icon.potion.double{background:linear-gradient(180deg,#e8fdff 0 25%,#79f4ff 26% 48%,#2d8de0 49%);}
+.resource-icon.potion.coin2{background:linear-gradient(180deg,#fff5c9 0 25%,#ffd45c 26% 48%,#b98016 49%);}
+.resource-icon.book{width:15px;height:17px;border-radius:3px;background:linear-gradient(135deg,#42331a,#d4af37 48%,#fff0a8);box-shadow:0 0 12px rgba(255,212,92,.38);}
+.resource-icon.book::before{content:'';position:absolute;left:2px;top:2px;width:3px;height:13px;border-radius:2px;background:rgba(11,18,32,.55);}
+.resource-icon.book::after{content:'';position:absolute;right:3px;top:4px;width:6px;height:1px;background:rgba(11,18,32,.55);box-shadow:0 4px 0 rgba(11,18,32,.45),0 8px 0 rgba(11,18,32,.35);}
 .left-nav{position:fixed;left:12px;top:118px;z-index:19;display:flex;flex-direction:column;gap:9px;padding:8px;border:1px solid rgba(255,255,255,.14);border-radius:20px;background:rgba(8,12,22,.72);box-shadow:0 16px 34px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(14px);}
 .left-tab{width:58px;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px solid rgba(255,255,255,.1);border-radius:15px;background:linear-gradient(180deg,rgba(27,39,64,.9),rgba(12,18,32,.9));color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:900;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);transition:transform .15s,border-color .15s,background .15s,color .15s;}
 .left-tab:hover{border-color:rgba(85,228,255,.42);color:var(--text);}
@@ -218,6 +231,7 @@ body{background:
 .chips{display:flex;flex-wrap:wrap;gap:7px;}
 .chip{width:60px;height:72px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:8.5px;text-align:center;background:linear-gradient(180deg,rgba(27,39,64,.9),rgba(18,27,46,.9));border:1px solid var(--line);padding:2px;line-height:1.25;box-shadow:0 8px 18px rgba(0,0,0,.18);}
 .chip.found{border-color:var(--tier-color);}
+.chip.coin-preview{opacity:.68;border-style:dashed;}
 .chip.found.divine-chip{animation:rainbowBorder 3s linear infinite;}
 .chip img{width:28px;border-radius:2px;object-fit:cover;}
 .chip .flag-img-hist{width:28px;height:18px;border-radius:2px;object-fit:cover;background:var(--bg-elevated);}
@@ -247,6 +261,18 @@ body{background:
 .formula-line{font-size:11px;color:var(--text-dim);line-height:1.6;margin-bottom:12px;}
 .selected-list{min-height:38px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
 .selected-pill{font-size:11px;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:4px 8px;background:var(--bg-elevated);}
+.recipe-book{border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(0,0,0,.16);padding:10px;margin:10px 0 12px;}
+.recipe-book-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;}
+.recipe-book-title{font-size:12px;font-weight:900;color:var(--gold);}
+.recipe-book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;}
+.recipe-card{border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(18,27,46,.72);padding:9px;display:flex;flex-direction:column;gap:7px;}
+.recipe-card.locked{opacity:.62;}
+.recipe-card-top{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:12px;font-weight:900;color:var(--text);}
+.recipe-card-top span:last-child{color:var(--text-dim);font-size:10px;}
+.recipe-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.recipe-chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;background:var(--bg-elevated);padding:3px 6px;font-size:10px;color:var(--text-dim);}
+.recipe-chip img,.recipe-chip .flag-fallback,.recipe-chip .composite-flag{width:22px;height:14px;border-radius:2px;box-shadow:none;font-size:7px;}
+.recipe-arrow{color:var(--gold);font-weight:900;font-size:12px;}
 .synth-target{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;font-size:12px;color:var(--text-dim);}
 .synth-select{min-width:210px;max-width:100%;font-family:'Noto Sans KR',sans-serif;font-size:12px;color:var(--text);background:var(--bg-elevated);border:1px solid var(--line);border-radius:4px;padding:8px;}
 .synth-target-preview{width:38px;height:25px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:4px;background:var(--bg-elevated);overflow:hidden;}
@@ -280,6 +306,9 @@ body{background:
 .battle-arena{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;margin:12px 0;}
 .battle-side{min-height:132px;border:1px solid rgba(255,255,255,.11);border-radius:8px;background:rgba(0,0,0,.18);padding:12px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
 .battle-side.active{border-color:var(--tier-color,var(--gold));box-shadow:0 0 20px -10px var(--tier-color,var(--gold));}
+.battle-arena.fighting #battle-host{animation:duelHostStrike .82s cubic-bezier(.2,.9,.2,1) both;}
+.battle-arena.fighting #battle-guest{animation:duelGuestStrike .82s cubic-bezier(.2,.9,.2,1) both;}
+.battle-arena.fighting .battle-vs{animation:impactFlash .82s ease both;color:var(--gold);}
 .battle-side img,.battle-side .flag-fallback,.battle-side .composite-flag{width:58px;height:38px;border-radius:4px;box-shadow:none;font-size:10px;}
 .battle-player{font-size:11px;color:var(--text-dim);font-weight:800;}
 .battle-card-name{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:700;}
@@ -288,6 +317,28 @@ body{background:
 .battle-status{min-height:22px;font-size:12px;color:var(--text-dim);line-height:1.5;}
 .battle-status b{color:var(--gold);}
 .battle-grid-title{font-size:11px;letter-spacing:.12em;color:var(--text-dim);font-weight:900;margin:12px 0 8px;}
+.combat-arena{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;min-height:150px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:radial-gradient(circle at 50% 50%,rgba(255,212,92,.13),transparent 42%),rgba(0,0,0,.16);padding:10px;margin:12px 0;overflow:hidden;}
+.combat-team{display:flex;align-items:center;justify-content:center;gap:6px;min-height:118px;}
+.combat-team.enemy{flex-direction:row-reverse;}
+.combat-card{width:66px;min-height:92px;border:1px solid var(--tier-color,var(--gold));border-radius:8px;background:linear-gradient(180deg,rgba(27,39,64,.95),rgba(10,14,24,.95));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:6px;text-align:center;box-shadow:0 0 18px -9px var(--tier-color,var(--gold));}
+.combat-card.main{width:82px;min-height:110px;}
+.combat-card img,.combat-card .flag-fallback,.combat-card .composite-flag{width:42px;height:28px;border-radius:3px;box-shadow:none;font-size:8px;}
+.combat-card.main img,.combat-card.main .flag-fallback,.combat-card.main .composite-flag{width:52px;height:34px;}
+.combat-name{font-size:9px;line-height:1.2;font-weight:800;}
+.combat-role{font-size:9px;color:var(--gold);font-weight:900;}
+.combat-center{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12px;font-weight:900;color:var(--text-dim);}
+.combat-flash{width:42px;height:42px;border-radius:50%;background:radial-gradient(circle,#fff6bb,#ffd45c 38%,transparent 72%);opacity:.18;filter:blur(.2px);}
+.combat-arena.fighting .combat-team.player .combat-card{animation:chargeRight .78s cubic-bezier(.2,.9,.2,1) both;}
+.combat-arena.fighting .combat-team.enemy .combat-card{animation:chargeLeft .78s cubic-bezier(.2,.9,.2,1) both;}
+.combat-arena.fighting .combat-flash{animation:impactFlash .78s ease both;}
+.battle-side-team{display:flex;gap:5px;align-items:center;justify-content:center;flex-wrap:wrap;}
+.battle-mini-card{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;color:var(--text-dim);}
+.battle-mini-card img,.battle-mini-card .flag-fallback,.battle-mini-card .composite-flag{width:32px;height:21px;border-radius:3px;box-shadow:none;font-size:7px;}
+@keyframes chargeRight{0%{transform:translateX(-12px) scale(.96);opacity:.76;}55%{transform:translateX(24px) scale(1.05);opacity:1;}100%{transform:translateX(0) scale(1);}}
+@keyframes chargeLeft{0%{transform:translateX(12px) scale(.96);opacity:.76;}55%{transform:translateX(-24px) scale(1.05);opacity:1;}100%{transform:translateX(0) scale(1);}}
+@keyframes duelHostStrike{0%{transform:translateX(-10px) scale(.98);}50%{transform:translateX(18px) scale(1.03);}100%{transform:translateX(0) scale(1);}}
+@keyframes duelGuestStrike{0%{transform:translateX(10px) scale(.98);}50%{transform:translateX(-18px) scale(1.03);}100%{transform:translateX(0) scale(1);}}
+@keyframes impactFlash{0%{transform:scale(.4);opacity:.1;}48%{transform:scale(1.8);opacity:.95;}100%{transform:scale(.7);opacity:.18;}}
 .shop-panel{border:1px solid var(--line);border-radius:8px;background:rgba(18,27,46,.72);padding:14px;margin-bottom:18px;}
 .shop-status{min-height:24px;font-size:12px;color:var(--text-dim);line-height:1.5;margin:8px 0 12px;}
 .shop-status b{color:var(--gold);}
@@ -302,6 +353,8 @@ body{background:
 .shop-name{font-size:13px;font-weight:900;color:var(--text);}
 .shop-desc{font-size:11px;line-height:1.45;color:var(--text-dim);flex:1;}
 .shop-price{font-size:12px;font-weight:900;color:var(--gold);}
+.shop-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.shop-actions .btn{flex:1;min-width:74px;padding:10px 8px;font-size:12px;border-radius:10px;}
 .mini-country-row{display:flex;align-items:center;gap:6px;color:var(--text);font-weight:800;}
 .flag-img-small,.mini-country-row img,.gem-chip img{width:24px;height:16px;border-radius:2px;object-fit:cover;box-shadow:none;background:var(--bg-elevated);}
 .raid-minions{display:flex;flex-wrap:wrap;gap:5px;}
@@ -359,8 +412,8 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
   <span class="resource-chip coin" title="코인">
     <span class="resource-icon coin"></span><span class="resource-label">코인</span><b data-resource="coins">0</b>
   </span>
-  <span class="resource-chip coin" title="강화 토큰">
-    <span class="resource-icon coin"></span><span class="resource-label">강화토큰</span><b data-resource="tokens">0</b>
+  <span class="resource-chip token" title="강화 토큰">
+    <span class="resource-icon token"></span><span class="resource-label">강화토큰</span><b data-resource="tokens">0</b>
   </span>
 </aside>
 <nav class="left-nav" aria-label="화면 이동">
@@ -517,6 +570,7 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
         <span class="synth-meta" id="synth-meta">선택 0장</span>
       </div>
       <div class="formula-line">같은 등급 3장씩 → 상위 랜덤 또는 원하는 나라 리스트 · 3의 배수는 한꺼번에 합성 · 숨겨진 조합은 직접 발견</div>
+      <div class="recipe-book" id="secret-recipe-book"></div>
       <div class="selected-list" id="selected-list"></div>
       <label class="synth-target">획득할 나라
         <select class="synth-select" id="synth-target">
@@ -562,7 +616,7 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
         <span class="synth-title">실시간 카드 결투</span>
         <span class="synth-meta">서버 방 코드로 친구와 대전</span>
       </div>
-      <div class="formula-line">한 명은 방을 만들고 다른 한 명은 같은 방 코드를 입력하세요 · 카드를 선택하면 서버 방에 자동 반영됩니다</div>
+      <div class="formula-line">한 명은 방을 만들고 다른 한 명은 같은 방 코드를 입력하세요 · 대표 1장과 보조 2장까지 편성할 수 있습니다</div>
       <div class="battle-row">
         <input class="battle-input" id="battle-name" maxlength="10" placeholder="이름">
         <button class="btn btn-gold" id="btn-battle-create">방 만들기</button>
@@ -587,7 +641,7 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
         <input class="battle-input" id="battle-opponent-code" placeholder="친구 코드 붙여넣기">
         <button class="btn btn-premium" id="btn-battle-manual">수동 대결</button>
       </div>
-      <div class="battle-grid-title">대표 카드 선택</div>
+      <div class="battle-grid-title">전투 편성 선택 · 첫 장 대표, 다음 2장은 보조</div>
       <div id="battle-grid"></div>
     </div>
   </div>
@@ -597,10 +651,11 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
         <span class="synth-title">보스 레이드</span>
         <span class="synth-meta">보스와 쫄병 국가를 격파하고 최종 보상을 획득</span>
       </div>
-      <div class="formula-line">대표 카드 1장을 선택해 레이드 총 전투력을 넘기세요 · 승리 시 일반 최종 또는 스페셜 최종 보상을 얻습니다</div>
+      <div class="formula-line">대표 1장과 보조 2장까지 편성해 레이드 총 전투력을 넘기세요 · 보조 카드는 전투력 45%가 반영됩니다</div>
       <div class="battle-status" id="raid-status">레이드와 대표 카드를 선택하세요</div>
+      <div class="combat-arena" id="raid-combat"></div>
       <div class="shop-grid" id="raid-list"></div>
-      <div class="battle-grid-title">레이드 대표 카드 선택</div>
+      <div class="battle-grid-title">레이드 편성 선택 · 첫 장 대표, 다음 2장은 보조</div>
       <div id="raid-grid"></div>
     </div>
   </div>
@@ -800,16 +855,6 @@ const CONTINENT_DATA = {
 };
 
 const W = filename => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(filename)}?width=320`;
-const DEPENDENT_FLAG_OVERRIDES = {
-  'file:Flag of the Southern Mongolian independence movement.svg': W('Flag of the Southern Mongolian Independence Movement.svg'),
-  'file:Flag of Ningxia Hui Autonomous Region.svg': 'https://flagcdn.com/w320/cn.png',
-  'file:Flag of Guangxi Zhuang Autonomous Region.svg': 'https://flagcdn.com/w320/cn.png',
-  'file:Flag of Württemberg.svg': W('Flag of Württemberg.svg'),
-  'file:Flag of Chukotka Autonomous Okrug.svg': W('Flag of Chukotka.svg'),
-  'file:Flag of Khanty-Mansi Autonomous Okrug.svg': W('Flag of Yugra.svg'),
-  'file:Flag of Hanover 1837-1866.svg': W('Flag of Hanover 1837-1866.svg'),
-  'file:Flagge Herzogtum Anhalt.svg': W('Flagge Herzogtum Anhalt.svg'),
-};
 const C = (base, emblem) => `composite:${base}||${emblem}`;
 const SVG = svg => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 const GOGURYEO_SAMJOGO_FLAG = SVG(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
@@ -828,6 +873,48 @@ const GOGURYEO_SAMJOGO_FLAG = SVG(`<svg xmlns="http://www.w3.org/2000/svg" viewB
     <circle cx="111" cy="-61" r="7" fill="#b5121b"/>
   </g>
 </svg>`);
+const INNER_MONGOL_SYMBOL_FLAG = SVG(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <rect width="900" height="600" fill="#1476c8"/>
+  <rect y="420" width="900" height="180" fill="#1f9a58"/>
+  <circle cx="450" cy="260" r="105" fill="#f4d04f"/>
+  <path d="M450 122l25 78 82-1-67 48 27 77-67-48-67 48 27-77-67-48 82 1z" fill="#1476c8"/>
+  <text x="450" y="545" text-anchor="middle" font-size="70" font-family="serif" fill="#f4d04f">ᠮᠣᠩᠭᠣᠯ</text>
+</svg>`);
+const BAVARIA_LOZENGE_FLAG = SVG(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <rect width="900" height="600" fill="#fff"/>
+  <g transform="translate(-90 -120) rotate(45)">
+    ${Array.from({length:12},(_,y)=>Array.from({length:16},(_,x)=>`<rect x="${x*95}" y="${y*95}" width="47.5" height="95" fill="${(x+y)%2?'#2f80d0':'#fff'}"/>`).join('')).join('')}
+  </g>
+</svg>`);
+const HUI_SYMBOL_FLAG = SVG(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <rect width="900" height="600" fill="#0b8f58"/>
+  <rect y="440" width="900" height="160" fill="#f2f2f2"/>
+  <circle cx="370" cy="250" r="120" fill="#f2f2f2"/>
+  <circle cx="410" cy="230" r="120" fill="#0b8f58"/>
+  <path d="M560 125l22 69h72l-58 42 22 69-58-43-58 43 22-69-58-42h72z" fill="#f2f2f2"/>
+  <text x="450" y="535" text-anchor="middle" font-size="68" font-family="serif" fill="#0b8f58">回</text>
+</svg>`);
+const ZHUANG_SYMBOL_FLAG = SVG(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <rect width="900" height="600" fill="#d6342a"/>
+  <rect y="200" width="900" height="200" fill="#f4d04f"/>
+  <rect y="400" width="900" height="200" fill="#1f8f54"/>
+  <circle cx="450" cy="300" r="105" fill="#fff"/>
+  <path d="M450 190c48 66 48 154 0 220-48-66-48-154 0-220z" fill="#d6342a"/>
+  <path d="M345 300c66-48 154-48 220 0-66 48-154 48-220 0z" fill="#1f8f54" opacity=".95"/>
+  <text x="450" y="332" text-anchor="middle" font-size="72" font-family="serif" fill="#111">壮</text>
+</svg>`);
+const DEPENDENT_FLAG_OVERRIDES = {
+  'file:Flag of the Southern Mongolian independence movement.svg': W('Flag of the Inner Mongolian People\'s Party.svg'),
+  'file:Flag of Ningxia Hui Autonomous Region.svg': W('Flag of the People\'s Republic of China.svg'),
+  'file:Flag of Guangxi Zhuang Autonomous Region.svg': W('Flag of the People\'s Republic of China.svg'),
+  'file:Flag of Bavaria (lozengy).svg': W('Flag of Bavaria (striped).svg'),
+  'file:Flag of Württemberg.svg': W('Flagge Königreich Württemberg.svg'),
+  'file:Flag of Baden.svg': W('Flagge Großherzogtum Baden (1891-1918).svg'),
+  'file:Flag of Chukotka Autonomous Okrug.svg': W('Flag of Chukotka.svg'),
+  'file:Flag of Khanty-Mansi Autonomous Okrug.svg': W('Flag of Yugra.svg'),
+  'file:Flag of Hanover 1837-1866.svg': W('Flag of Hanover 1837-1866.svg'),
+  'file:Flagge Herzogtum Anhalt.svg': W('Flagge Herzogtum Anhalt.svg'),
+};
 const CONTINENT_FLAG_URLS = {
   ct_europe: W('Flag of Europe.svg'),
   ct_africa: W('Flag of the African Union.svg'),
@@ -857,23 +944,27 @@ const SECRET_DATA = {
   ]
 };
 const COIN_ONLY_COUNTRY_DATA = [
-  ['sg','싱가포르','https://flagcdn.com/w320/sg.png'],
-  ['ch','스위스','https://flagcdn.com/w320/ch.png'],
-  ['li','리히텐슈타인','https://flagcdn.com/w320/li.png'],
+  ['sg','싱가포르',W('Flag of Singapore.svg')],
+  ['ch','스위스',W('Flag of Switzerland.svg')],
+  ['li','리히텐슈타인',W('Flag of Liechtenstein.svg')],
   ['d_bm','버뮤다',W('Flag of Bermuda.svg')],
-  ['lu','룩셈부르크','https://flagcdn.com/w320/lu.png'],
-  ['mc','모나코','https://flagcdn.com/w320/mc.png'],
+  ['lu','룩셈부르크',W('Flag of Luxembourg.svg')],
+  ['mc','모나코',W('Flag of Monaco.svg')],
   ['d_hk','홍콩',W('Flag of Hong Kong.svg')],
   ['d_mo','마카오',W('Flag of Macau.svg')],
   ['d_ky','케이맨 제도',W('Flag of the Cayman Islands.svg')],
-  ['coin_venice','베네치아 공화국',W('Flag of the Republic of Venice.svg')],
+  ['coin_venice','베네치아 공화국',W('Flag of Republic of Venice (1659-1675).svg')],
   ['coin_genoa','제노바 공화국',W('Flag of Genoa.svg')],
-  ['coin_hanse','한자동맹',W('Flag of the Hanseatic League.svg')],
+  ['coin_hanse','한자동맹',W('Hanseatenwimpel.svg')],
   ['coin_florence','피렌체 공화국',W('Flag of Florence.svg')],
   ['coin_voc','네덜란드 동인도회사',W('Flag of the Dutch East India Company.svg')],
   ['coin_eic','영국 동인도회사',W('Flag of the British East India Company (1801).svg')],
-  ['coin_lubeck','뤼베크 자유시',W('Flag of Lübeck.svg')],
-  ['coin_novgorod','노브고로드 공화국',W('Flag of Veliky Novgorod.svg')],
+  ['coin_lubeck','뤼베크 자유시',W('Flag of the Free City of Lübeck.svg')],
+  ['coin_bremen','브레멘 자유 한자시',W('Flag of Bremen.svg')],
+  ['coin_hamburg','함부르크 자유 한자시',W('Flag of Hamburg.svg')],
+  ['coin_rostock','로스토크 한자시',W('Flagge der Hansestadt Rostock.svg')],
+  ['coin_wismar','비스마르 한자시',W('Flag of Wismar.svg')],
+  ['coin_novgorod','노브고로드 공화국',W('Coat of Arms of Veliky Novgorod.svg')],
   ['coin_ragusa','라구사 공화국',W('St. Blaise - State Flag of the Ragusan Republic.svg')],
 ];
 const COIN_ONLY_IDS = new Set(COIN_ONLY_COUNTRY_DATA.map(entry=>entry[0]));
@@ -1075,6 +1166,9 @@ function countryFromEntry(entry, t, flagSize='w320'){
   if(t.secret){
     return {id:entry[0], name:entry[1], flagUrl:entry[2], tier:t.key, historical:false, secret:true};
   }
+  if(t.coinOnly){
+    return {id:entry[0], name:entry[1], flagUrl:entry[2], tier:t.key, historical:false, coinOnly:true};
+  }
   if(t.continent){
     return {id:entry[0], name:entry[1], flagUrl:CONTINENT_FLAG_URLS[entry[0]], tier:t.key, historical:false, continent:true, symbol:entry[2]};
   }
@@ -1159,6 +1253,39 @@ const SPECIAL_SYNTH_RECIPES = [
     targetIds:['s_world']
   }
 ];
+const SECRET_RECIPE_BOOK = [
+  ...SPECIAL_SYNTH_RECIPES,
+  {
+    key:'heaven',
+    label:'하늘나라 시크릿 합성',
+    ingredients:['h_jerusalem','h_rome','h_byz'],
+    targetIds:['s_heaven']
+  },
+  {
+    key:'papacy',
+    label:'교황청 시크릿 합성',
+    ingredients:Array.from({length:10}, ()=> 'va'),
+    targetIds:['s_papacy']
+  },
+  {
+    key:'poland_lithuania',
+    label:'폴란드 리투아니아 시크릿 합성',
+    ingredients:['pl','lt'],
+    targetIds:['s_politu']
+  },
+  {
+    key:'unified_korea',
+    label:'통일한국 시크릿 합성',
+    ingredients:['kr','kp'],
+    targetIds:['s_unified_korea']
+  },
+  {
+    key:'benelux',
+    label:'베네룩스 시크릿 합성',
+    ingredients:['be','nl','lu'],
+    targetIds:['s_benelux']
+  }
+];
 
 /* ═══════════════════════════════════════════════
    STATE & STORAGE
@@ -1183,10 +1310,13 @@ let battleRoomCode = '';
 let battleSide = '';
 let battleName = '';
 let raidSelectedId = '';
+let raidTeamIds = [];
 let raidWins = {};
+let secretRecipeBookOwned = false;
 let coins = 0;
 let enhanceTokens = 0;
 let boosts = {luckUntil:0, doubleUntil:0, extraPullUntil:0, coinUntil:0};
+let potionInventory = {};
 let settings = {volume:0.75};
 let online = {
   enabled:false, ready:false, user:null, modules:null, app:null, auth:null, db:null,
@@ -1202,6 +1332,7 @@ const SHOP_ITEMS = [
   {id:'double_potion', type:'boost', boost:'doubleUntil', name:'카드 복제 포션', price:45, minutes:5, desc:'5분 동안 뽑기로 얻는 같은 카드 수량이 2배가 됩니다.'},
   {id:'extra_pull_potion', type:'boost', boost:'extraPullUntil', name:'더블 소환 포션', price:70, minutes:5, desc:'5분 동안 1회 뽑기는 2장, 10연차는 20장이 나옵니다.'},
   {id:'coin_potion', type:'boost', boost:'coinUntil', name:'코인 2배 포션', price:55, minutes:8, desc:'8분 동안 뽑기와 신규 발견으로 얻는 코인이 2배가 됩니다.'},
+  {id:'secret_recipe_book', type:'unlock', unlock:'secretRecipeBook', name:'시크릿 레시피 북', price:120, desc:'보관함 합성 화면에서 발견한 시크릿 조합을 다시 확인할 수 있습니다.'},
   {id:'enhance_tokens_10', type:'tokens', name:'강화 토큰 10개', price:50, amount:10, desc:'일반 강화에 사용하는 전용 토큰입니다.'},
   {id:'enhance_tokens_50', type:'tokens', name:'강화 토큰 50개', price:220, amount:50, desc:'고강화와 최종 강화에 필요한 토큰 묶음입니다.'},
   {id:'gem_pack', type:'gems', name:'보석 3개', price:60, amount:3, desc:'스페셜 강화 재료 보석을 3개 얻습니다.'},
@@ -1224,11 +1355,17 @@ const SHOP_ITEMS = [
   {id:'country_voc', type:'country', countryId:'coin_voc', name:'네덜란드 동인도회사', price:280, desc:'초기 주식회사와 무역 제국을 상징하는 코인 전용 역사 세력입니다.'},
   {id:'country_eic', type:'country', countryId:'coin_eic', name:'영국 동인도회사', price:280, desc:'상업과 식민 무역을 대표하는 코인 전용 역사 세력입니다.'},
   {id:'country_lubeck', type:'country', countryId:'coin_lubeck', name:'뤼베크 자유시', price:230, desc:'한자동맹의 핵심 도시를 대표하는 코인 전용 역사 국가입니다.'},
+  {id:'country_bremen', type:'country', countryId:'coin_bremen', name:'브레멘 자유 한자시', price:210, desc:'북해 무역로를 지킨 코인 전용 한자 도시입니다.'},
+  {id:'country_hamburg', type:'country', countryId:'coin_hamburg', name:'함부르크 자유 한자시', price:230, desc:'엘베강과 북해 무역을 잇는 코인 전용 한자 도시입니다.'},
+  {id:'country_rostock', type:'country', countryId:'coin_rostock', name:'로스토크 한자시', price:200, desc:'발트해 무역권의 코인 전용 한자 도시입니다.'},
+  {id:'country_wismar', type:'country', countryId:'coin_wismar', name:'비스마르 한자시', price:200, desc:'한자동맹의 항구 도시를 담은 코인 전용 역사 국가입니다.'},
   {id:'country_novgorod', type:'country', countryId:'coin_novgorod', name:'노브고로드 공화국', price:240, desc:'북방 교역으로 성장한 코인 전용 역사 국가입니다.'},
   {id:'country_ragusa', type:'country', countryId:'coin_ragusa', name:'라구사 공화국', price:230, desc:'아드리아해 무역 도시국가 코인 전용 역사 국가입니다.'},
   {id:'country_benelux', type:'country', countryId:'s_benelux', name:'베네룩스', price:220, desc:'시크릿 국가를 코인으로 바로 획득합니다.'},
   {id:'country_world', type:'country', countryId:'s_world', name:'세계', price:500, desc:'최고가 상점 상품입니다. 도감 완성 없이도 획득할 수 있습니다.'},
 ];
+const SHOP_COUNTRY_SLOT_COUNT = 6;
+const SHOP_ROTATION_MS = 6 * 60 * 60 * 1000;
 const RAID_DATA = [
   {
     id:'raid_soviet_bloc',
@@ -1320,25 +1457,80 @@ function shopBoostMeta(){
   if(double) parts.push(`복제 ${formatDuration(double)}`);
   if(extraPull) parts.push(`더블소환 ${formatDuration(extraPull)}`);
   if(coin) parts.push(`코인 ${formatDuration(coin)}`);
+  const reset = SHOP_ROTATION_MS - (Date.now() % SHOP_ROTATION_MS);
+  parts.push(`국가상점 ${formatDuration(reset)} 후 변경`);
   return parts.length ? parts.join(' · ') : '물약 없음';
+}
+function shopSeededScore(text){
+  let hash = 2166136261;
+  for(let i=0;i<text.length;i++){
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+function currentShopRotation(){
+  return Math.floor(Date.now() / SHOP_ROTATION_MS);
+}
+function shopItemsForCurrentRotation(){
+  const staticItems = SHOP_ITEMS.filter(item=>item.type !== 'country');
+  const countryPool = SHOP_ITEMS
+    .filter(item=>item.type === 'country' && !['s_world','s_benelux'].includes(item.countryId))
+    .sort((a,b)=>shopSeededScore(`${currentShopRotation()}:${a.id}`)-shopSeededScore(`${currentShopRotation()}:${b.id}`));
+  return [...staticItems, ...countryPool.slice(0, SHOP_COUNTRY_SLOT_COUNT)];
+}
+function potionCount(id){
+  return Math.max(0, Number(potionInventory[id]) || 0);
+}
+function activateBoostItem(item){
+  const now = Date.now();
+  const base = Math.max(now, Number(boosts[item.boost] || 0));
+  boosts[item.boost] = base + item.minutes * 60 * 1000;
+  const status = document.getElementById('shop-status');
+  const effectText = item.boost === 'luckUntil'
+    ? '높은 등급 등장 확률이 강하게 상승합니다'
+    : item.boost === 'extraPullUntil'
+      ? '뽑기 결과 칸이 2배로 펼쳐집니다'
+      : item.boost === 'coinUntil'
+        ? '획득 코인이 2배가 됩니다'
+        : '획득 카드 수량이 2배가 됩니다';
+  if(status) status.innerHTML = `<b>${item.name}</b> 사용 · ${item.minutes}분 활성화 · ${effectText}`;
+  if(item.boost === 'luckUntil'){
+    document.getElementById('result-banner').innerHTML = `<b>행운 포션 발동</b> · 높은 등급 등장 확률이 올라갔습니다`;
+  }
+}
+function useShopPotion(id){
+  const item = SHOP_ITEMS.find(entry=>entry.id === id && entry.type === 'boost');
+  if(!item || potionCount(id) <= 0) return;
+  potionInventory[id] = potionCount(id) - 1;
+  if(potionInventory[id] <= 0) delete potionInventory[id];
+  activateBoostItem(item);
+  playSfx('synth');
+  renderResourceHud();
+  renderShop();
+  saveState();
 }
 function renderShop(){
   const grid = document.getElementById('shop-grid');
   const meta = document.getElementById('shop-boost-meta');
   if(meta) meta.textContent = shopBoostMeta();
   if(!grid) return;
-  grid.innerHTML = SHOP_ITEMS.map(item=>{
+  grid.innerHTML = shopItemsForCurrentRotation().map(item=>{
     const country = item.countryId ? COUNTRY_BY_ID[item.countryId] : null;
     const owned = country && (inventory[country.id] || discovered.has(country.id));
-    const disabled = coins < item.price || owned;
-    const boostIcon = item.boost === 'luckUntil' || item.boost === 'extraPullUntil' ? 'ticket premium' : item.boost === 'doubleUntil' ? 'ticket' : 'coin';
-    const visual = country ? flagImg(country,'flag-img-hist') : `<span class="resource-icon ${item.type === 'gems' ? 'gem' : item.type === 'tokens' ? 'coin' : boostIcon}"></span>`;
-    const action = owned ? '보유 중' : item.type === 'boost' ? '구매/사용' : '구매';
-    return `<div class="shop-card ${owned ? 'owned' : ''}">
+    const unlocked = item.type === 'unlock' && item.unlock === 'secretRecipeBook' && secretRecipeBookOwned;
+    const disabled = coins < item.price || owned || unlocked;
+    const potionClass = item.boost === 'luckUntil' ? 'potion luck' : item.boost === 'doubleUntil' ? 'potion copy' : item.boost === 'extraPullUntil' ? 'potion double' : 'potion coin2';
+    const visual = country ? flagImg(country,'flag-img-hist') : `<span class="resource-icon ${item.type === 'gems' ? 'gem' : item.type === 'tokens' ? 'token' : item.type === 'unlock' ? 'book' : potionClass}"></span>`;
+    const action = owned || unlocked ? '보유 중' : item.type === 'boost' ? '구매/사용' : '구매';
+    return `<div class="shop-card ${owned || unlocked ? 'owned' : ''}">
       <div class="shop-top">${visual}<span class="shop-name">${item.name}</span></div>
-      <div class="shop-desc">${item.desc}</div>
+      <div class="shop-desc">${item.desc}${item.type === 'boost' ? `<br>보유 ${potionCount(item.id)}개` : ''}</div>
       <div class="shop-price">코인 ${item.price}</div>
-      <button class="btn ${item.type === 'country' ? 'btn-gold' : 'btn-premium'}" data-shop-id="${item.id}" ${disabled ? 'disabled' : ''}>${action}</button>
+      <div class="shop-actions">
+        <button class="btn ${item.type === 'country' ? 'btn-gold' : 'btn-premium'}" data-shop-id="${item.id}" ${disabled ? 'disabled' : ''}>${item.type === 'boost' ? '구매' : action}</button>
+        ${item.type === 'boost' ? `<button class="btn btn-gold" data-shop-use-id="${item.id}" ${potionCount(item.id) ? '' : 'disabled'}>사용</button>` : ''}
+      </div>
     </div>`;
   }).join('');
 }
@@ -1368,22 +1560,18 @@ function buyShopItem(id){
     coins -= item.price;
     enhanceTokens += item.amount;
     if(status) status.innerHTML = `강화 토큰 <b>${item.amount}</b>개 구매 완료`;
+  }else if(item.type === 'unlock'){
+    if(item.unlock === 'secretRecipeBook' && secretRecipeBookOwned){
+      if(status) status.textContent = '이미 보유한 기능입니다';
+      return;
+    }
+    coins -= item.price;
+    if(item.unlock === 'secretRecipeBook') secretRecipeBookOwned = true;
+    if(status) status.innerHTML = `<b>${item.name}</b> 구매 완료`;
   }else if(item.type === 'boost'){
     coins -= item.price;
-    const now = Date.now();
-    const base = Math.max(now, Number(boosts[item.boost] || 0));
-    boosts[item.boost] = base + item.minutes * 60 * 1000;
-    const effectText = item.boost === 'luckUntil'
-      ? '높은 등급 등장 확률이 강하게 상승합니다'
-      : item.boost === 'extraPullUntil'
-        ? '뽑기 결과 칸이 2배로 펼쳐집니다'
-        : item.boost === 'coinUntil'
-          ? '획득 코인이 2배가 됩니다'
-          : '획득 카드 수량이 2배가 됩니다';
-    if(status) status.innerHTML = `<b>${item.name}</b> 활성화 · ${item.minutes}분 추가 · ${effectText}`;
-    if(item.boost === 'luckUntil'){
-      document.getElementById('result-banner').innerHTML = `<b>행운 포션 발동</b> · 높은 등급 등장 확률이 올라갔습니다`;
-    }
+    potionInventory[item.id] = potionCount(item.id) + 1;
+    if(status) status.innerHTML = `<b>${item.name}</b> 구매 완료 · 원할 때 사용하세요`;
   }
   playSfx('synth');
   renderResourceHud();
@@ -1402,7 +1590,7 @@ function saveSettings(){
   try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }catch(e){}
 }
 function gameStateSnapshot(){
-  return {discovered:[...discovered], totalPulls, inventory, enhancements, specialEnhancements, enhanceGems, coins, enhanceTokens, boosts, specialSecrets, raidWins, updatedAt:Date.now()};
+  return {discovered:[...discovered], totalPulls, inventory, enhancements, specialEnhancements, enhanceGems, coins, enhanceTokens, boosts, potionInventory, specialSecrets, raidWins, secretRecipeBookOwned, updatedAt:Date.now()};
 }
 function applyGameStateSnapshot(obj){
   if(!obj) return;
@@ -1442,6 +1630,11 @@ function applyGameStateSnapshot(obj){
   enhanceGems = Math.max(0, Number(obj.enhanceGems)||0);
   coins = Math.max(0, Number(obj.coins)||0);
   enhanceTokens = Math.max(0, Number(obj.enhanceTokens)||0);
+  secretRecipeBookOwned = !!obj.secretRecipeBookOwned;
+  potionInventory = {};
+  Object.entries(obj.potionInventory || {}).forEach(([id,count])=>{
+    if(SHOP_ITEMS.some(item=>item.id === id && item.type === 'boost')) potionInventory[id] = Math.max(0, Number(count)||0);
+  });
   boosts = {
     luckUntil: Math.max(0, Number(obj.boosts && obj.boosts.luckUntil)||0),
     doubleUntil: Math.max(0, Number(obj.boosts && obj.boosts.doubleUntil)||0),
@@ -1475,6 +1668,11 @@ function loadState(){
     enhanceGems = Math.max(0, Number(obj.enhanceGems)||0);
     coins = Math.max(0, Number(obj.coins)||0);
     enhanceTokens = Math.max(0, Number(obj.enhanceTokens)||0);
+    secretRecipeBookOwned = !!obj.secretRecipeBookOwned;
+    potionInventory = {};
+    Object.entries(obj.potionInventory || {}).forEach(([id,count])=>{
+      if(SHOP_ITEMS.some(item=>item.id === id && item.type === 'boost')) potionInventory[id] = Math.max(0, Number(count)||0);
+    });
     boosts = {
       luckUntil: Math.max(0, Number(obj.boosts && obj.boosts.luckUntil)||0),
       doubleUntil: Math.max(0, Number(obj.boosts && obj.boosts.doubleUntil)||0),
@@ -2144,14 +2342,12 @@ function renderCollection(){
   const coinChips = COIN_ONLY_COUNTRY_DATA.map(entry=>{
     const id = entry[0];
     const name = entry[1];
-    if(discovered.has(id)){
-      const country = countryFromEntry(entry, COIN_TIER, 'w80');
-      return `<div class="chip found divine-chip ${enhancementClass(id)}" style="--tier-color:${COIN_TIER.color}" title="${name}">
-        ${flagImg(country,'flag-img-hist')}
-        ${enhanceBadgeHtml(id)}
-        <span>${name}</span></div>`;
-    }
-    return `<div class="chip" title="코인 전용"><span class="q">◎</span></div>`;
+    const country = countryFromEntry(entry, COIN_TIER, 'w80');
+    const found = discovered.has(id);
+    return `<div class="chip ${found ? 'found divine-chip' : 'coin-preview'} ${enhancementClass(id)}" style="--tier-color:${COIN_TIER.color}" title="${name}${found ? '' : ' · 상점에서 구매'}">
+      ${flagImg(country,'flag-img-hist')}
+      ${found ? enhanceBadgeHtml(id) : ''}
+      <span>${name}</span></div>`;
   }).join('');
   html += `<div class="tier-group">
     <div class="tier-group-head">
@@ -2261,6 +2457,52 @@ function getSelectedSpecialRecipe(counts=selectedCounts()){
 function getSpecialRecipeTargets(recipe){
   return recipe ? recipe.targetIds.map(id=>COUNTRY_BY_ID[id]).filter(Boolean) : [];
 }
+function recipeIngredientCounts(recipe){
+  return (recipe.ingredients || []).reduce((map,id)=>{
+    map[id] = (map[id] || 0) + 1;
+    return map;
+  }, {});
+}
+function isRecipeKnown(recipe){
+  return (recipe.targetIds || []).some(id=>discovered.has(id));
+}
+function renderSecretRecipeBook(){
+  const el = document.getElementById('secret-recipe-book');
+  if(!el) return;
+  if(!secretRecipeBookOwned){
+    el.innerHTML = `<div class="recipe-book-head">
+      <span class="recipe-book-title">시크릿 레시피 북</span>
+      <span class="synth-meta">상점에서 구매 필요</span>
+    </div>
+    <div class="recipe-row"><span class="recipe-chip">상점에서 시크릿 레시피 북을 구매하면 발견한 조합을 다시 볼 수 있습니다</span></div>`;
+    return;
+  }
+  const knownCount = SECRET_RECIPE_BOOK.filter(isRecipeKnown).length;
+  el.innerHTML = `<div class="recipe-book-head">
+    <span class="recipe-book-title">시크릿 레시피 북</span>
+    <span class="synth-meta">${knownCount} / ${SECRET_RECIPE_BOOK.length} 발견</span>
+  </div>
+  <div class="recipe-book-grid">${SECRET_RECIPE_BOOK.map((recipe,index)=>{
+    const known = isRecipeKnown(recipe);
+    const targets = (recipe.targetIds || []).map(id=>COUNTRY_BY_ID[id]).filter(Boolean);
+    const ingredientEntries = Object.entries(recipeIngredientCounts(recipe));
+    if(!known){
+      return `<div class="recipe-card locked">
+        <div class="recipe-card-top"><span>미발견 레시피 ${index + 1}</span><span>???</span></div>
+        <div class="recipe-row"><span class="recipe-chip">재료 ???</span><span class="recipe-arrow">→</span><span class="recipe-chip">시크릿 ???</span></div>
+      </div>`;
+    }
+    const ingredientsHtml = ingredientEntries.map(([id,count])=>{
+      const country = COUNTRY_BY_ID[id];
+      return `<span class="recipe-chip">${country ? flagImg(country,'flag-img-small') : ''}${country ? country.name : id}${count > 1 ? ` x${count}` : ''}</span>`;
+    }).join('');
+    const targetsHtml = targets.map(country=>`<span class="recipe-chip">${flagImg(country,'flag-img-small')}${country.name}</span>`).join('');
+    return `<div class="recipe-card">
+      <div class="recipe-card-top"><span>${recipe.label}</span><span>${targets.some(c=>discovered.has(c.id)) ? '완성' : '재료 확인'}</span></div>
+      <div class="recipe-row">${ingredientsHtml}<span class="recipe-arrow">→</span>${targetsHtml}</div>
+    </div>`;
+  }).join('')}</div>`;
+}
 function pickOne(list){
   return list[Math.floor(Math.random()*list.length)] || null;
 }
@@ -2280,6 +2522,7 @@ function renderInventory(){
   if(search && search.value !== inventoryQuery) search.value = inventoryQuery;
   cleanSelection();
   renderSynthTarget();
+  renderSecretRecipeBook();
 
   const selectedMap = selectedCounts();
   const selectedGroups = Object.entries(selectedMap);
@@ -2524,7 +2767,7 @@ function getBattleName(){
 function loadBattleRoom(code=battleRoomCode){
   if(online.battleRoom && online.battleRoom.code === code) return online.battleRoom;
   if(!code) return null;
-  try{ return JSON.parse(localStorage.getItem(battleStorageKey(code)) || 'null'); }catch(e){ return null; }
+  try{ return normalizeBattleRoom(JSON.parse(localStorage.getItem(battleStorageKey(code)) || 'null')); }catch(e){ return null; }
 }
 async function saveBattleRoom(room, showError=true){
   if(!room || !room.code) return;
@@ -2543,6 +2786,26 @@ async function saveBattleRoom(room, showError=true){
 function currentBattleRoom(){
   return loadBattleRoom() || null;
 }
+function emptyBattlePlayer(name=''){
+  return {name, cardId:'', cardIds:[], power:0};
+}
+function normalizeBattlePlayer(player, fallbackName=''){
+  const safe = player || {};
+  const ids = Array.isArray(safe.cardIds) && safe.cardIds.length
+    ? safe.cardIds.filter(id=>COUNTRY_BY_ID[id]).slice(0,3)
+    : (safe.cardId && COUNTRY_BY_ID[safe.cardId] ? [safe.cardId] : []);
+  safe.cardIds = ids;
+  safe.cardId = ids[0] || '';
+  safe.name = safe.name || fallbackName;
+  safe.power = Number(safe.power) || 0;
+  return safe;
+}
+function normalizeBattleRoom(room){
+  if(!room) return null;
+  room.host = normalizeBattlePlayer(room.host, '방장');
+  room.guest = normalizeBattlePlayer(room.guest, '도전자');
+  return room;
+}
 function subscribeOnlineBattleRoom(code){
   if(online.battleUnsub) online.battleUnsub();
   online.battleUnsub = null;
@@ -2550,7 +2813,7 @@ function subscribeOnlineBattleRoom(code){
 async function createBattleRoom(){
   battleRoomCode = generateBattleCode();
   battleSide = 'host';
-  const room = {code:battleRoomCode, round:1, createdAt:Date.now(), host:{name:getBattleName(), cardId:'', power:0}, guest:{name:'', cardId:'', power:0}, result:''};
+  const room = {code:battleRoomCode, round:1, createdAt:Date.now(), host:emptyBattlePlayer(getBattleName()), guest:emptyBattlePlayer(''), result:''};
   const saved = await saveBattleRoom(room);
   subscribeOnlineBattleRoom(battleRoomCode);
   playSfx('summon');
@@ -2581,6 +2844,7 @@ async function joinBattleRoom(){
   }
   battleRoomCode = code;
   battleSide = 'guest';
+  normalizeBattleRoom(room);
   room[battleSide].name = getBattleName();
   await saveBattleRoom(room);
   subscribeOnlineBattleRoom(battleRoomCode);
@@ -2603,8 +2867,10 @@ async function resetBattleRound(){
   }
   room.round = (room.round || 1) + 1;
   room.host.cardId = '';
+  room.host.cardIds = [];
   room.host.power = 0;
   room.guest.cardId = '';
+  room.guest.cardIds = [];
   room.guest.power = 0;
   room.result = '';
   await saveBattleRoom(room);
@@ -2622,7 +2888,32 @@ function baseBattlePower(country){
   return base + normal + special + rarityBonus;
 }
 function battlePower(country){
-  return baseBattlePower(country) + Math.floor(Math.random() * 80);
+  return baseBattlePower(country);
+}
+function stableBattleBonus(seed, max=90){
+  const text = String(seed || '');
+  let hash = 2166136261;
+  for(let i=0;i<text.length;i++){
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return Math.abs(hash >>> 0) % max;
+}
+function teamPower(ids, seed=''){
+  const cleanIds = (ids || []).filter(id=>COUNTRY_BY_ID[id]).slice(0,3);
+  const base = cleanIds.reduce((sum,id,index)=>{
+    const weight = index === 0 ? 1 : 0.45;
+    return sum + Math.round(baseBattlePower(COUNTRY_BY_ID[id]) * weight);
+  },0);
+  return base + stableBattleBonus(`${seed}:${cleanIds.join(',')}`, 90);
+}
+function toggleTeamId(ids, id){
+  const next = (ids || []).filter(existing=>COUNTRY_BY_ID[existing]);
+  const index = next.indexOf(id);
+  if(index >= 0) return next;
+  if(next.length >= 3) next.shift();
+  next.push(id);
+  return next;
 }
 async function chooseBattleCard(id){
   const country = COUNTRY_BY_ID[id];
@@ -2631,29 +2922,33 @@ async function chooseBattleCard(id){
   if(!room || !battleSide){
     battleRoomCode = battleRoomCode || 'MANUAL';
     battleSide = battleSide || 'host';
-    room = {code:battleRoomCode, round:1, createdAt:Date.now(), host:{name:getBattleName(), cardId:'', power:0}, guest:{name:'', cardId:'', power:0}, result:''};
+    room = {code:battleRoomCode, round:1, createdAt:Date.now(), host:emptyBattlePlayer(getBattleName()), guest:emptyBattlePlayer(''), result:''};
   }
+  normalizeBattleRoom(room);
   room[battleSide].name = getBattleName();
-  room[battleSide].cardId = id;
-  room[battleSide].power = battlePower(country);
+  room[battleSide].cardIds = toggleTeamId(room[battleSide].cardIds, id);
+  room[battleSide].cardId = room[battleSide].cardIds[0] || '';
+  const seed = `${room.code || battleRoomCode}:${room.round || 1}:${battleSide}`;
+  room[battleSide].power = room[battleSide].cardIds.length ? teamPower(room[battleSide].cardIds, seed) : 0;
   room.result = resolveBattle(room);
   await saveBattleRoom(room);
   playSfx(room.result ? 'burst' : 'reveal');
   renderBattleTab();
 }
 function resolveBattle(room){
-  const hostReady = room.host.cardId && room.host.power;
-  const guestReady = room.guest.cardId && room.guest.power;
+  normalizeBattleRoom(room);
+  const hostReady = room.host.cardIds.length && room.host.power;
+  const guestReady = room.guest.cardIds.length && room.guest.power;
   if(!hostReady || !guestReady) return '';
-  const hostCountry = COUNTRY_BY_ID[room.host.cardId];
-  const guestCountry = COUNTRY_BY_ID[room.guest.cardId];
+  const hostCountry = COUNTRY_BY_ID[room.host.cardIds[0]];
+  const guestCountry = COUNTRY_BY_ID[room.guest.cardIds[0]];
   if(room.host.power === room.guest.power) return `무승부 · ${hostCountry.name} ${room.host.power} vs ${guestCountry.name} ${room.guest.power}`;
   const winnerSide = room.host.power > room.guest.power ? 'host' : 'guest';
   const loserSide = winnerSide === 'host' ? 'guest' : 'host';
   const winner = room[winnerSide];
   const loser = room[loserSide];
-  const winnerCountry = COUNTRY_BY_ID[winner.cardId];
-  const loserCountry = COUNTRY_BY_ID[loser.cardId];
+  const winnerCountry = COUNTRY_BY_ID[winner.cardIds[0]];
+  const loserCountry = COUNTRY_BY_ID[loser.cardIds[0]];
   return `${winner.name || battlePlayerLabel(winnerSide)} 승리 · ${winnerCountry.name} ${winner.power} vs ${loserCountry.name} ${loser.power}`;
 }
 function encodeBattlePayload(payload){
@@ -2665,8 +2960,9 @@ function decodeBattlePayload(code){
   return JSON.parse(decodeURIComponent(escape(atob(padded))));
 }
 function currentManualBattleCard(){
-  const room = currentBattleRoom();
-  const id = room && battleSide && room[battleSide] ? room[battleSide].cardId : '';
+  const room = normalizeBattleRoom(currentBattleRoom());
+  normalizeBattleRoom(room);
+  const id = room && battleSide && room[battleSide] ? room[battleSide].cardIds[0] : '';
   return COUNTRY_BY_ID[id] ? {country:COUNTRY_BY_ID[id], power:room[battleSide].power} : null;
 }
 function makeManualBattleCode(){
@@ -2727,8 +3023,10 @@ function setBattleStatus(text){
   if(el) el.innerHTML = text;
 }
 function battleSideHtml(room, side){
-  const player = room && room[side] ? room[side] : {name:'', cardId:'', power:0};
-  const country = COUNTRY_BY_ID[player.cardId];
+  normalizeBattleRoom(room);
+  const player = room && room[side] ? room[side] : emptyBattlePlayer('');
+  const countries = (player.cardIds || []).map(id=>COUNTRY_BY_ID[id]).filter(Boolean);
+  const country = countries[0];
   const t = country ? TIER_BY_KEY[country.tier] : null;
   const active = battleSide === side ? 'active' : '';
   const color = t ? t.color : 'var(--gold)';
@@ -2739,9 +3037,13 @@ function battleSideHtml(room, side){
       <span class="synth-meta">카드 미제출</span>
     </div>`;
   }
+  const teamHtml = `<div class="battle-side-team">${countries.map((member,index)=>`<span class="battle-mini-card">
+    ${flagImg(member,'flag-img-small')}
+    <span>${index === 0 ? '대표' : '보조'}</span>
+  </span>`).join('')}</div>`;
   return `<div class="battle-side ${active}" style="--tier-color:${color}">
     <span class="battle-player">${battlePlayerLabel(side)} · ${player.name || '이름 없음'}</span>
-    ${flagImg(country,'flag-img-hist')}
+    ${teamHtml}
     <span class="battle-card-name">${country.name}</span>
     <span class="battle-power">${player.power}</span>
   </div>`;
@@ -2752,7 +3054,9 @@ function renderBattleTab(){
   const guestEl = document.getElementById('battle-guest');
   const grid = document.getElementById('battle-grid');
   if(!codeEl || !hostEl || !guestEl || !grid) return;
-  const room = currentBattleRoom();
+  const room = normalizeBattleRoom(currentBattleRoom());
+  const arenaEl = document.querySelector('#battle-panel-tab .battle-arena');
+  if(arenaEl) arenaEl.classList.toggle('fighting', !!(room && room.result));
   codeEl.textContent = battleRoomCode || '없음';
   const hostHtml = battleSideHtml(room, 'host');
   const guestHtml = battleSideHtml(room, 'guest');
@@ -2762,8 +3066,8 @@ function renderBattleTab(){
     setBattleStatus('방을 만들거나 입장하세요');
   }else if(room.result){
     setBattleStatus(`<b>${room.result}</b>`);
-  }else if(room.host.cardId || room.guest.cardId){
-    setBattleStatus('상대가 대표 카드를 고르면 결과가 공개됩니다');
+  }else if(room.host.cardIds.length || room.guest.cardIds.length){
+    setBattleStatus('대표와 보조 카드를 편성하세요 · 양쪽이 1장 이상 내면 결과가 공개됩니다');
   }else{
     const mode = serverOnline.enabled ? '서버' : '로컬';
     setBattleStatus(`${mode} ${battlePlayerLabel(battleSide)}로 입장했습니다 · 라운드 ${room.round || 1}`);
@@ -2784,9 +3088,10 @@ function renderBattleTab(){
   }
   grid.innerHTML = `<div class="inventory-grid">${ownedAll.map(({country,count})=>{
     const t = TIER_BY_KEY[country.tier];
-    const picked = room && battleSide && room[battleSide] && room[battleSide].cardId === country.id;
+    const pickedIndex = room && battleSide && room[battleSide] ? room[battleSide].cardIds.indexOf(country.id) : -1;
+    const picked = pickedIndex >= 0;
     return `<button class="inventory-card ${picked ? 'selected' : ''} ${enhancementClass(country.id)}" data-battle-id="${country.id}" style="--tier-color:${t.color}" title="${country.name}">
-      <span class="inv-selected">${picked ? '출전' : ''}</span>
+      <span class="inv-selected">${picked ? (pickedIndex === 0 ? '대표' : `보조${pickedIndex}`) : ''}</span>
       <span class="inv-count">x${count}</span>
       ${enhanceBadgeHtml(country.id)}
       ${flagImg(country,'flag-img-hist')}
@@ -2810,8 +3115,13 @@ function raidEnemyPower(raid){
   },0);
   return Math.round(total * raid.difficulty);
 }
-function raidPlayerPower(country){
-  return Math.round(baseBattlePower(country) * 1.35) + Math.floor(Math.random() * 180);
+function raidPlayerPower(ids){
+  const cleanIds = (ids || []).filter(id=>COUNTRY_BY_ID[id]).slice(0,3);
+  const total = cleanIds.reduce((sum,id,index)=>{
+    const weight = index === 0 ? 1.35 : 0.6;
+    return sum + Math.round(baseBattlePower(COUNTRY_BY_ID[id]) * weight);
+  },0);
+  return total + Math.floor(Math.random() * 180);
 }
 function raidRewardCountry(country, raid){
   if(raid.rewardType === 'special_final'){
@@ -2835,22 +3145,48 @@ function fallbackRaidReward(raid){
   coins += 100;
   return '이미 최종 보상이 있어 강화 토큰 35개와 코인 100개를 획득';
 }
-function runRaid(id){
+function combatCardHtml(country, role=''){
+  if(!country) return '';
+  const t = TIER_BY_KEY[country.tier];
+  return `<div class="combat-card ${role === '대표' || role === '보스' ? 'main' : ''}" style="--tier-color:${t.color}">
+    <span class="combat-role">${role}</span>
+    ${flagImg(country,'flag-img-hist')}
+    <span class="combat-name">${country.name}</span>
+  </div>`;
+}
+function renderRaidCombat(raid=null, fighting=false){
+  const arena = document.getElementById('raid-combat');
+  if(!arena) return;
+  const playerCountries = raidTeamIds.map(teamId=>COUNTRY_BY_ID[teamId]).filter(Boolean);
+  const enemyCountries = raid ? raidEnemyIds(raid).map(enemyId=>COUNTRY_BY_ID[enemyId]).filter(Boolean).slice(0,3) : [];
+  arena.className = `combat-arena${fighting ? ' fighting' : ''}`;
+  arena.innerHTML = `
+    <div class="combat-team player">${playerCountries.length ? playerCountries.map((member,index)=>combatCardHtml(member,index === 0 ? '대표' : '보조')).join('') : '<span class="synth-meta">우리 편성 없음</span>'}</div>
+    <div class="combat-center"><span>RAID</span><span class="combat-flash"></span><span>${raid ? raid.name : '대기'}</span></div>
+    <div class="combat-team enemy">${enemyCountries.length ? enemyCountries.map((member,index)=>combatCardHtml(member,index === 0 ? '보스' : '지원')).join('') : '<span class="synth-meta">레이드 선택</span>'}</div>`;
+}
+async function runRaid(id){
   const raid = RAID_DATA.find(entry=>entry.id === id);
+  raidTeamIds = raidTeamIds.filter(teamId=>COUNTRY_BY_ID[teamId] && inventory[teamId] > 0).slice(0,3);
+  raidSelectedId = raidTeamIds[0] || '';
   const country = COUNTRY_BY_ID[raidSelectedId];
   if(!raid){
     setRaidStatus('레이드를 찾을 수 없습니다');
     return;
   }
-  if(!country || !(inventory[country.id] > 0)){
+  if(!country || !raidTeamIds.length){
     setRaidStatus('레이드에 낼 대표 카드를 먼저 선택하세요');
     return;
   }
-  const playerPower = raidPlayerPower(country);
+  renderRaidCombat(raid, true);
+  playSfx('summon');
+  await wait(820);
+  const playerPower = raidPlayerPower(raidTeamIds);
   const enemyPower = raidEnemyPower(raid);
   if(playerPower < enemyPower){
     playSfx('tab');
-    setRaidStatus(`${raid.name} 패배 · ${country.name} ${playerPower} vs 레이드 ${enemyPower}`);
+    renderRaidCombat(raid, false);
+    setRaidStatus(`${raid.name} 패배 · ${country.name} 부대 ${playerPower} vs 레이드 ${enemyPower}`);
     return;
   }
   raidWins[raid.id] = (raidWins[raid.id] || 0) + 1;
@@ -2869,20 +3205,25 @@ function runRaid(id){
   renderInventory();
   renderEnhanceTab();
   renderRaidTab();
-  setRaidStatus(`<b>${raid.name} 승리</b> · ${country.name} ${playerPower} vs 레이드 ${enemyPower} · ${rewardText}`);
+  renderRaidCombat(raid, false);
+  setRaidStatus(`<b>${raid.name} 승리</b> · ${country.name} 부대 ${playerPower} vs 레이드 ${enemyPower} · ${rewardText}`);
 }
 function selectRaidCard(id){
   const country = COUNTRY_BY_ID[id];
   if(!country || !(inventory[id] > 0)) return;
-  raidSelectedId = id;
+  raidTeamIds = toggleTeamId(raidTeamIds, id);
+  raidSelectedId = raidTeamIds[0] || '';
   playSfx('tab');
   renderRaidTab();
-  setRaidStatus(`${country.name}을 레이드 대표 카드로 선택했습니다`);
+  setRaidStatus(raidTeamIds.length ? `${raidTeamIds.map((teamId,index)=>`${index === 0 ? '대표' : '보조'} ${COUNTRY_BY_ID[teamId].name}`).join(' · ')}` : '레이드 편성을 비웠습니다');
 }
 function renderRaidTab(){
   const list = document.getElementById('raid-list');
   const grid = document.getElementById('raid-grid');
   if(!list || !grid) return;
+  raidTeamIds = raidTeamIds.filter(teamId=>COUNTRY_BY_ID[teamId] && inventory[teamId] > 0).slice(0,3);
+  raidSelectedId = raidTeamIds[0] || '';
+  renderRaidCombat(null, false);
   list.innerHTML = RAID_DATA.map(raid=>{
     const boss = COUNTRY_BY_ID[raid.bossId];
     const minions = raid.minionIds.map(id=>COUNTRY_BY_ID[id]).filter(Boolean);
@@ -2919,9 +3260,10 @@ function renderRaidTab(){
   }
   grid.innerHTML = `<div class="inventory-grid">${ownedAll.map(({country,count})=>{
     const t = TIER_BY_KEY[country.tier];
-    const picked = raidSelectedId === country.id;
+    const pickedIndex = raidTeamIds.indexOf(country.id);
+    const picked = pickedIndex >= 0;
     return `<button class="inventory-card ${picked ? 'selected' : ''} ${enhancementClass(country.id)}" data-raid-card-id="${country.id}" style="--tier-color:${t.color}" title="${country.name}">
-      <span class="inv-selected">${picked ? '대표' : ''}</span>
+      <span class="inv-selected">${picked ? (pickedIndex === 0 ? '대표' : `보조${pickedIndex}`) : ''}</span>
       <span class="inv-count">x${count}</span>
       ${enhanceBadgeHtml(country.id)}
       ${flagImg(country,'flag-img-hist')}
@@ -2934,7 +3276,7 @@ async function fetchServerBattleRoom(showError=false){
   try{
     const data = await serverApi(`/api/rooms/${battleRoomCode}`);
     if(data.room && data.room.state){
-      online.battleRoom = data.room.state;
+      online.battleRoom = normalizeBattleRoom(data.room.state);
       try{ localStorage.setItem(battleStorageKey(battleRoomCode), JSON.stringify(online.battleRoom)); }catch(e){}
       return online.battleRoom;
     }
@@ -3259,7 +3601,7 @@ document.getElementById('btn-dependent-ten').addEventListener('click',()=>playPu
 document.getElementById('btn-reset').addEventListener('click',()=>{
   if(!confirm('정말 초기화하시겠습니까?')) return;
   Object.keys(specialSecrets).forEach(id=>delete COUNTRY_BY_ID[id]);
-  discovered=new Set(); totalPulls=0; inventory={}; enhancements={}; specialEnhancements={}; enhanceGems=0; coins=0; enhanceTokens=0; boosts={luckUntil:0,doubleUntil:0,extraPullUntil:0,coinUntil:0}; specialSecrets={}; raidWins={}; selectedCards=[]; synthTargetId=''; inventoryQuery=''; enhanceTargetId=''; enhanceQuery=''; enhanceMaterialCards=[]; battleRoomCode=''; battleSide=''; raidSelectedId='';
+  discovered=new Set(); totalPulls=0; inventory={}; enhancements={}; specialEnhancements={}; enhanceGems=0; coins=0; enhanceTokens=0; boosts={luckUntil:0,doubleUntil:0,extraPullUntil:0,coinUntil:0}; potionInventory={}; specialSecrets={}; raidWins={}; secretRecipeBookOwned=false; selectedCards=[]; synthTargetId=''; inventoryQuery=''; enhanceTargetId=''; enhanceQuery=''; enhanceMaterialCards=[]; battleRoomCode=''; battleSide=''; raidSelectedId=''; raidTeamIds=[];
   renderResourceHud();
   document.getElementById('cards-area').innerHTML='';
   document.getElementById('result-banner').innerHTML='&nbsp;';
@@ -3287,6 +3629,11 @@ document.getElementById('raid-list').addEventListener('click',event=>{
   if(btn) runRaid(btn.dataset.raidId);
 });
 document.getElementById('shop-grid').addEventListener('click',event=>{
+  const useBtn = event.target.closest('[data-shop-use-id]');
+  if(useBtn){
+    useShopPotion(useBtn.dataset.shopUseId);
+    return;
+  }
   const btn = event.target.closest('[data-shop-id]');
   if(btn) buyShopItem(btn.dataset.shopId);
 });
