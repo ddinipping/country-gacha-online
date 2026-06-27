@@ -2344,9 +2344,10 @@ function renderCollection(){
     const name = entry[1];
     const country = countryFromEntry(entry, COIN_TIER, 'w80');
     const found = discovered.has(id);
-    return `<div class="chip ${found ? 'found divine-chip' : 'coin-preview'} ${enhancementClass(id)}" style="--tier-color:${COIN_TIER.color}" title="${name}${found ? '' : ' · 상점에서 구매'}">
+    if(!found) return `<div class="chip" title="???"><span class="q">?</span></div>`;
+    return `<div class="chip found divine-chip ${enhancementClass(id)}" style="--tier-color:${COIN_TIER.color}" title="${name}">
       ${flagImg(country,'flag-img-hist')}
-      ${found ? enhanceBadgeHtml(id) : ''}
+      ${enhanceBadgeHtml(id)}
       <span>${name}</span></div>`;
   }).join('');
   html += `<div class="tier-group">
