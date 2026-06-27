@@ -294,11 +294,17 @@ body{background:
 .shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;}
 .shop-card{border:1px solid rgba(255,255,255,.11);border-radius:8px;background:rgba(0,0,0,.18);padding:12px;display:flex;flex-direction:column;gap:8px;min-height:150px;}
 .shop-card.owned{opacity:.72;}
+.shop-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.shop-card-top b{display:block;color:var(--text);font-size:13px;}
+.shop-card-top span{display:block;color:var(--text-dim);font-size:11px;margin-top:2px;}
 .shop-top{display:flex;align-items:center;gap:8px;min-height:38px;}
 .shop-top img,.shop-top .flag-fallback,.shop-top .composite-flag{width:42px;height:28px;border-radius:4px;box-shadow:none;font-size:8px;}
 .shop-name{font-size:13px;font-weight:900;color:var(--text);}
 .shop-desc{font-size:11px;line-height:1.45;color:var(--text-dim);flex:1;}
 .shop-price{font-size:12px;font-weight:900;color:var(--gold);}
+.mini-country-row{display:flex;align-items:center;gap:6px;color:var(--text);font-weight:800;}
+.flag-img-small,.mini-country-row img,.gem-chip img{width:24px;height:16px;border-radius:2px;object-fit:cover;box-shadow:none;background:var(--bg-elevated);}
+.raid-minions{display:flex;flex-wrap:wrap;gap:5px;}
 .settings-panel{border:1px solid var(--line);border-radius:8px;background:rgba(18,27,46,.72);padding:14px;margin-bottom:18px;}
 .settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0;}
 .settings-field{display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--text-dim);font-weight:800;}
@@ -403,6 +409,16 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
     </span>
     <span>결투</span>
   </button>
+  <button class="tab-btn left-tab" data-tab="raid" type="button" title="레이드">
+    <span class="nav-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path class="fill" d="M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7z"/>
+        <path d="M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7z"/>
+        <path d="M9 12h6M12 9v6"/>
+      </svg>
+    </span>
+    <span>레이드</span>
+  </button>
   <button class="tab-btn left-tab" data-tab="shop" type="button" title="상점">
     <span class="nav-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24">
@@ -486,6 +502,7 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
     <button class="tab-btn" data-tab="inventory">보관함</button>
     <button class="tab-btn" data-tab="enhance">강화</button>
     <button class="tab-btn" data-tab="battle">결투장</button>
+    <button class="tab-btn" data-tab="raid">레이드</button>
     <button class="tab-btn" data-tab="shop">상점</button>
     <button class="tab-btn" data-tab="settings">설정</button>
   </div>
@@ -542,10 +559,10 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
   <div class="tab-panel" id="battle-panel-tab">
     <div class="battle-panel">
       <div class="synth-top">
-        <span class="synth-title">카드 배틀</span>
-        <span class="synth-meta">방 코드로 친구와 대전</span>
+        <span class="synth-title">실시간 카드 결투</span>
+        <span class="synth-meta">서버 방 코드로 친구와 대전</span>
       </div>
-      <div class="formula-line">카드를 선택해 대표로 내보내세요 · 전투력은 등급, 강화, 스페셜 강화가 반영됩니다</div>
+      <div class="formula-line">한 명은 방을 만들고 다른 한 명은 같은 방 코드를 입력하세요 · 카드를 선택하면 서버 방에 자동 반영됩니다</div>
       <div class="battle-row">
         <input class="battle-input" id="battle-name" maxlength="10" placeholder="이름">
         <button class="btn btn-gold" id="btn-battle-create">방 만들기</button>
@@ -564,7 +581,7 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
         <div class="battle-side" id="battle-guest"></div>
       </div>
       <div class="battle-status" id="battle-status">방을 만들거나 입장하세요</div>
-      <div class="battle-row">
+      <div class="battle-row battle-manual-row" style="display:none">
         <button class="btn btn-gold" id="btn-battle-share">내 배틀 코드 만들기</button>
         <input class="battle-input" id="battle-share-code" placeholder="내 코드" readonly>
         <input class="battle-input" id="battle-opponent-code" placeholder="친구 코드 붙여넣기">
@@ -572,6 +589,19 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
       </div>
       <div class="battle-grid-title">대표 카드 선택</div>
       <div id="battle-grid"></div>
+    </div>
+  </div>
+  <div class="tab-panel" id="raid-panel-tab">
+    <div class="battle-panel">
+      <div class="synth-top">
+        <span class="synth-title">보스 레이드</span>
+        <span class="synth-meta">보스와 쫄병 국가를 격파하고 최종 보상을 획득</span>
+      </div>
+      <div class="formula-line">대표 카드 1장을 선택해 레이드 총 전투력을 넘기세요 · 승리 시 일반 최종 또는 스페셜 최종 보상을 얻습니다</div>
+      <div class="battle-status" id="raid-status">레이드와 대표 카드를 선택하세요</div>
+      <div class="shop-grid" id="raid-list"></div>
+      <div class="battle-grid-title">레이드 대표 카드 선택</div>
+      <div id="raid-grid"></div>
     </div>
   </div>
   <div class="tab-panel" id="shop-panel-tab">
@@ -830,18 +860,21 @@ const COIN_ONLY_COUNTRY_DATA = [
   ['sg','싱가포르','https://flagcdn.com/w320/sg.png'],
   ['ch','스위스','https://flagcdn.com/w320/ch.png'],
   ['li','리히텐슈타인','https://flagcdn.com/w320/li.png'],
-  ['d_bm','버뮤다','https://flagcdn.com/w320/bm.png'],
+  ['d_bm','버뮤다',W('Flag of Bermuda.svg')],
   ['lu','룩셈부르크','https://flagcdn.com/w320/lu.png'],
   ['mc','모나코','https://flagcdn.com/w320/mc.png'],
-  ['d_hk','홍콩','https://flagcdn.com/w320/hk.png'],
-  ['d_mo','마카오','https://flagcdn.com/w320/mo.png'],
-  ['d_ky','케이맨 제도','https://flagcdn.com/w320/ky.png'],
+  ['d_hk','홍콩',W('Flag of Hong Kong.svg')],
+  ['d_mo','마카오',W('Flag of Macau.svg')],
+  ['d_ky','케이맨 제도',W('Flag of the Cayman Islands.svg')],
   ['coin_venice','베네치아 공화국',W('Flag of the Republic of Venice.svg')],
   ['coin_genoa','제노바 공화국',W('Flag of Genoa.svg')],
   ['coin_hanse','한자동맹',W('Flag of the Hanseatic League.svg')],
   ['coin_florence','피렌체 공화국',W('Flag of Florence.svg')],
   ['coin_voc','네덜란드 동인도회사',W('Flag of the Dutch East India Company.svg')],
   ['coin_eic','영국 동인도회사',W('Flag of the British East India Company (1801).svg')],
+  ['coin_lubeck','뤼베크 자유시',W('Flag of Lübeck.svg')],
+  ['coin_novgorod','노브고로드 공화국',W('Flag of Veliky Novgorod.svg')],
+  ['coin_ragusa','라구사 공화국',W('St. Blaise - State Flag of the Ragusan Republic.svg')],
 ];
 const COIN_ONLY_IDS = new Set(COIN_ONLY_COUNTRY_DATA.map(entry=>entry[0]));
 
@@ -1149,9 +1182,11 @@ let enhanceMaterialCards = [];
 let battleRoomCode = '';
 let battleSide = '';
 let battleName = '';
+let raidSelectedId = '';
+let raidWins = {};
 let coins = 0;
 let enhanceTokens = 0;
-let boosts = {luckUntil:0, doubleUntil:0};
+let boosts = {luckUntil:0, doubleUntil:0, extraPullUntil:0, coinUntil:0};
 let settings = {volume:0.75};
 let online = {
   enabled:false, ready:false, user:null, modules:null, app:null, auth:null, db:null,
@@ -1163,8 +1198,10 @@ let serverOnline = {
   user: null
 };
 const SHOP_ITEMS = [
-  {id:'luck_potion', type:'boost', boost:'luckUntil', name:'운 2배 물약', price:35, minutes:10, desc:'10분 동안 높은 등급의 가중치가 크게 올라갑니다.'},
-  {id:'double_potion', type:'boost', boost:'doubleUntil', name:'2배로 뜨는 물약', price:45, minutes:5, desc:'5분 동안 뽑기로 얻는 카드 수량이 2배가 됩니다.'},
+  {id:'luck_potion', type:'boost', boost:'luckUntil', name:'행운 포션', price:35, minutes:10, desc:'10분 동안 높은 등급의 가중치가 크게 올라갑니다.'},
+  {id:'double_potion', type:'boost', boost:'doubleUntil', name:'카드 복제 포션', price:45, minutes:5, desc:'5분 동안 뽑기로 얻는 같은 카드 수량이 2배가 됩니다.'},
+  {id:'extra_pull_potion', type:'boost', boost:'extraPullUntil', name:'더블 소환 포션', price:70, minutes:5, desc:'5분 동안 1회 뽑기는 2장, 10연차는 20장이 나옵니다.'},
+  {id:'coin_potion', type:'boost', boost:'coinUntil', name:'코인 2배 포션', price:55, minutes:8, desc:'8분 동안 뽑기와 신규 발견으로 얻는 코인이 2배가 됩니다.'},
   {id:'enhance_tokens_10', type:'tokens', name:'강화 토큰 10개', price:50, amount:10, desc:'일반 강화에 사용하는 전용 토큰입니다.'},
   {id:'enhance_tokens_50', type:'tokens', name:'강화 토큰 50개', price:220, amount:50, desc:'고강화와 최종 강화에 필요한 토큰 묶음입니다.'},
   {id:'gem_pack', type:'gems', name:'보석 3개', price:60, amount:3, desc:'스페셜 강화 재료 보석을 3개 얻습니다.'},
@@ -1186,8 +1223,31 @@ const SHOP_ITEMS = [
   {id:'country_florence', type:'country', countryId:'coin_florence', name:'피렌체 공화국', price:220, desc:'은행과 르네상스 상업으로 유명한 코인 전용 역사 국가입니다.'},
   {id:'country_voc', type:'country', countryId:'coin_voc', name:'네덜란드 동인도회사', price:280, desc:'초기 주식회사와 무역 제국을 상징하는 코인 전용 역사 세력입니다.'},
   {id:'country_eic', type:'country', countryId:'coin_eic', name:'영국 동인도회사', price:280, desc:'상업과 식민 무역을 대표하는 코인 전용 역사 세력입니다.'},
+  {id:'country_lubeck', type:'country', countryId:'coin_lubeck', name:'뤼베크 자유시', price:230, desc:'한자동맹의 핵심 도시를 대표하는 코인 전용 역사 국가입니다.'},
+  {id:'country_novgorod', type:'country', countryId:'coin_novgorod', name:'노브고로드 공화국', price:240, desc:'북방 교역으로 성장한 코인 전용 역사 국가입니다.'},
+  {id:'country_ragusa', type:'country', countryId:'coin_ragusa', name:'라구사 공화국', price:230, desc:'아드리아해 무역 도시국가 코인 전용 역사 국가입니다.'},
   {id:'country_benelux', type:'country', countryId:'s_benelux', name:'베네룩스', price:220, desc:'시크릿 국가를 코인으로 바로 획득합니다.'},
   {id:'country_world', type:'country', countryId:'s_world', name:'세계', price:500, desc:'최고가 상점 상품입니다. 도감 완성 없이도 획득할 수 있습니다.'},
+];
+const RAID_DATA = [
+  {
+    id:'raid_soviet_bloc',
+    name:'소련과 동구권',
+    bossId:'h_ussr',
+    minionIds:['h_ddr','h_czecho','h_yugo','pl','hu','ro','bg'],
+    difficulty:1.02,
+    rewardType:'normal_final',
+    rewardLabel:'일반 최종'
+  },
+  {
+    id:'raid_nato',
+    name:'미국과 NATO',
+    bossId:'us',
+    minionIds:['gb','fr','de','it','tr','ca','pl','nl','be','no'],
+    difficulty:1.08,
+    rewardType:'special_final',
+    rewardLabel:'스페셜 최종'
+  }
 ];
 
 function normalizeStoredId(id){
@@ -1243,8 +1303,9 @@ function formatDuration(ms){
   return `${m}:${String(s).padStart(2,'0')}`;
 }
 function addCoins(amount, reason=''){
-  const gain = Math.max(0, Math.floor(Number(amount)||0));
+  let gain = Math.max(0, Math.floor(Number(amount)||0));
   if(!gain) return;
+  if(isBoostActive('coinUntil')) gain *= 2;
   coins += gain;
   renderResourceHud();
   if(activeTab === 'shop') renderShop();
@@ -1252,9 +1313,13 @@ function addCoins(amount, reason=''){
 function shopBoostMeta(){
   const luck = boostRemainingMs('luckUntil');
   const double = boostRemainingMs('doubleUntil');
+  const extraPull = boostRemainingMs('extraPullUntil');
+  const coin = boostRemainingMs('coinUntil');
   const parts = [];
-  if(luck) parts.push(`운 ${formatDuration(luck)}`);
-  if(double) parts.push(`2배 ${formatDuration(double)}`);
+  if(luck) parts.push(`행운 ${formatDuration(luck)}`);
+  if(double) parts.push(`복제 ${formatDuration(double)}`);
+  if(extraPull) parts.push(`더블소환 ${formatDuration(extraPull)}`);
+  if(coin) parts.push(`코인 ${formatDuration(coin)}`);
   return parts.length ? parts.join(' · ') : '물약 없음';
 }
 function renderShop(){
@@ -1266,7 +1331,8 @@ function renderShop(){
     const country = item.countryId ? COUNTRY_BY_ID[item.countryId] : null;
     const owned = country && (inventory[country.id] || discovered.has(country.id));
     const disabled = coins < item.price || owned;
-    const visual = country ? flagImg(country,'flag-img-hist') : `<span class="resource-icon ${item.type === 'gems' ? 'gem' : item.boost === 'luckUntil' ? 'ticket premium' : 'coin'}"></span>`;
+    const boostIcon = item.boost === 'luckUntil' || item.boost === 'extraPullUntil' ? 'ticket premium' : item.boost === 'doubleUntil' ? 'ticket' : 'coin';
+    const visual = country ? flagImg(country,'flag-img-hist') : `<span class="resource-icon ${item.type === 'gems' ? 'gem' : item.type === 'tokens' ? 'coin' : boostIcon}"></span>`;
     const action = owned ? '보유 중' : item.type === 'boost' ? '구매/사용' : '구매';
     return `<div class="shop-card ${owned ? 'owned' : ''}">
       <div class="shop-top">${visual}<span class="shop-name">${item.name}</span></div>
@@ -1307,7 +1373,17 @@ function buyShopItem(id){
     const now = Date.now();
     const base = Math.max(now, Number(boosts[item.boost] || 0));
     boosts[item.boost] = base + item.minutes * 60 * 1000;
-    if(status) status.innerHTML = `<b>${item.name}</b> 활성화 · ${item.minutes}분 추가`;
+    const effectText = item.boost === 'luckUntil'
+      ? '높은 등급 등장 확률이 강하게 상승합니다'
+      : item.boost === 'extraPullUntil'
+        ? '뽑기 결과 칸이 2배로 펼쳐집니다'
+        : item.boost === 'coinUntil'
+          ? '획득 코인이 2배가 됩니다'
+          : '획득 카드 수량이 2배가 됩니다';
+    if(status) status.innerHTML = `<b>${item.name}</b> 활성화 · ${item.minutes}분 추가 · ${effectText}`;
+    if(item.boost === 'luckUntil'){
+      document.getElementById('result-banner').innerHTML = `<b>행운 포션 발동</b> · 높은 등급 등장 확률이 올라갔습니다`;
+    }
   }
   playSfx('synth');
   renderResourceHud();
@@ -1326,7 +1402,7 @@ function saveSettings(){
   try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }catch(e){}
 }
 function gameStateSnapshot(){
-  return {discovered:[...discovered], totalPulls, inventory, enhancements, specialEnhancements, enhanceGems, coins, enhanceTokens, boosts, specialSecrets, updatedAt:Date.now()};
+  return {discovered:[...discovered], totalPulls, inventory, enhancements, specialEnhancements, enhanceGems, coins, enhanceTokens, boosts, specialSecrets, raidWins, updatedAt:Date.now()};
 }
 function applyGameStateSnapshot(obj){
   if(!obj) return;
@@ -1368,8 +1444,14 @@ function applyGameStateSnapshot(obj){
   enhanceTokens = Math.max(0, Number(obj.enhanceTokens)||0);
   boosts = {
     luckUntil: Math.max(0, Number(obj.boosts && obj.boosts.luckUntil)||0),
-    doubleUntil: Math.max(0, Number(obj.boosts && obj.boosts.doubleUntil)||0)
+    doubleUntil: Math.max(0, Number(obj.boosts && obj.boosts.doubleUntil)||0),
+    extraPullUntil: Math.max(0, Number(obj.boosts && obj.boosts.extraPullUntil)||0),
+    coinUntil: Math.max(0, Number(obj.boosts && obj.boosts.coinUntil)||0)
   };
+  raidWins = {};
+  Object.entries(obj.raidWins || {}).forEach(([id,count])=>{
+    if(RAID_DATA.some(raid=>raid.id === id)) raidWins[id] = Math.max(0, Number(count)||0);
+  });
 }
 function loadState(){
   try{
@@ -1395,8 +1477,14 @@ function loadState(){
     enhanceTokens = Math.max(0, Number(obj.enhanceTokens)||0);
     boosts = {
       luckUntil: Math.max(0, Number(obj.boosts && obj.boosts.luckUntil)||0),
-      doubleUntil: Math.max(0, Number(obj.boosts && obj.boosts.doubleUntil)||0)
+      doubleUntil: Math.max(0, Number(obj.boosts && obj.boosts.doubleUntil)||0),
+      extraPullUntil: Math.max(0, Number(obj.boosts && obj.boosts.extraPullUntil)||0),
+      coinUntil: Math.max(0, Number(obj.boosts && obj.boosts.coinUntil)||0)
     };
+    raidWins = {};
+    Object.entries(obj.raidWins || {}).forEach(([id,count])=>{
+      if(RAID_DATA.some(raid=>raid.id === id)) raidWins[id] = Math.max(0, Number(count)||0);
+    });
     const hasSavedInventory = Object.prototype.hasOwnProperty.call(obj, 'inventory');
     inventory = {};
     Object.entries(obj.inventory || {}).forEach(([rawId,count])=>{
@@ -1499,7 +1587,7 @@ async function serverSyncAfterLogin(){
     if(data.state){
       applyGameStateSnapshot(data.state);
       try{ localStorage.setItem(STORE_KEY, JSON.stringify(gameStateSnapshot())); }catch(e){}
-      renderResourceHud(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab(); renderShop();
+      renderResourceHud(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab(); renderRaidTab(); renderShop();
       setSettingsStatus(`<b>${serverOnline.user.email}</b> 서버 저장 불러오기 완료`);
       return true;
     }
@@ -1540,7 +1628,7 @@ async function serverDownloadSave(){
     }
     applyGameStateSnapshot(data.state);
     try{ localStorage.setItem(STORE_KEY, JSON.stringify(gameStateSnapshot())); }catch(e){}
-    renderResourceHud(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab(); renderShop();
+    renderResourceHud(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab(); renderRaidTab(); renderShop();
     setSettingsStatus('서버 저장 불러오기 완료');
     return true;
   }catch(e){
@@ -1772,6 +1860,11 @@ function premiumTenPull(){
 function dependentTenPull(){
   return pullMany(10, pickDependentTier, ALL_DEPENDENT_COUNTRIES);
 }
+function applyExtraPullBoost(getResults, results){
+  if(!isBoostActive('extraPullUntil')) return results;
+  const bonus = getResults();
+  return [...results, ...bonus];
+}
 
 /* ═══════════════════════════════════════════════
    RENDER HELPERS
@@ -1928,7 +2021,8 @@ async function playPull(getResults, size){
   playSfx('summon');
   await wait(1100);
 
-  const results = getResults();
+  const baseResults = getResults();
+  const results = applyExtraPullBoost(getResults, baseResults);
   const top = topCountry(results);
   const topT = TIER_BY_KEY[top.tier];
   const isSecret = !!topT.secret;
@@ -1966,8 +2060,14 @@ async function playPull(getResults, size){
 
   const t = topT;
   const histMark = (top.historical || top.continent || top.dependent) ? ` ${t.symbol}` : '';
+  const boostLine = [
+    isBoostActive('luckUntil') ? '행운 포션 적용' : '',
+    isBoostActive('extraPullUntil') ? `더블 소환으로 ${results.length}장` : '',
+    isBoostActive('doubleUntil') ? '카드 복제 적용' : '',
+    isBoostActive('coinUntil') ? '코인 2배 적용' : ''
+  ].filter(Boolean).join(' · ');
   document.getElementById('result-banner').innerHTML =
-    `최고 등급 <b>${t.label}${histMark}</b> · ${top.name}`;
+    `최고 등급 <b>${t.label}${histMark}</b> · ${top.name}${boostLine ? `<br><span>${boostLine}</span>` : ''}`;
   maybeGrantWorldSecret('도감 완성');
 
   await wait(results.length*130+700);
@@ -2511,7 +2611,7 @@ async function resetBattleRound(){
   playSfx('synth');
   renderBattleTab();
 }
-function battlePower(country){
+function baseBattlePower(country){
   if(!country) return 0;
   const t = TIER_BY_KEY[country.tier];
   const rank = Number(t.rank) || 0;
@@ -2519,7 +2619,10 @@ function battlePower(country){
   const normal = enhanceLevel(country.id) * 70;
   const special = specialEnhanceLevel(country.id) * 95;
   const rarityBonus = country.secret ? 260 : country.continent ? 170 : country.historical ? 120 : country.dependent ? 60 : 0;
-  return base + normal + special + rarityBonus + Math.floor(Math.random() * 80);
+  return base + normal + special + rarityBonus;
+}
+function battlePower(country){
+  return baseBattlePower(country) + Math.floor(Math.random() * 80);
 }
 async function chooseBattleCard(id){
   const country = COUNTRY_BY_ID[id];
@@ -2662,7 +2765,7 @@ function renderBattleTab(){
   }else if(room.host.cardId || room.guest.cardId){
     setBattleStatus('상대가 대표 카드를 고르면 결과가 공개됩니다');
   }else{
-    const mode = online.ready && online.user ? '온라인' : '오프라인';
+    const mode = serverOnline.enabled ? '서버' : '로컬';
     setBattleStatus(`${mode} ${battlePlayerLabel(battleSide)}로 입장했습니다 · 라운드 ${room.round || 1}`);
   }
 
@@ -2684,6 +2787,141 @@ function renderBattleTab(){
     const picked = room && battleSide && room[battleSide] && room[battleSide].cardId === country.id;
     return `<button class="inventory-card ${picked ? 'selected' : ''} ${enhancementClass(country.id)}" data-battle-id="${country.id}" style="--tier-color:${t.color}" title="${country.name}">
       <span class="inv-selected">${picked ? '출전' : ''}</span>
+      <span class="inv-count">x${count}</span>
+      ${enhanceBadgeHtml(country.id)}
+      ${flagImg(country,'flag-img-hist')}
+      <span class="inv-name">${country.name}</span>
+    </button>`;
+  }).join('')}</div>`;
+}
+function setRaidStatus(text){
+  const el = document.getElementById('raid-status');
+  if(el) el.innerHTML = text;
+}
+function raidEnemyIds(raid){
+  return [raid.bossId, ...raid.minionIds].filter(id=>COUNTRY_BY_ID[id]);
+}
+function raidEnemyPower(raid){
+  const ids = raidEnemyIds(raid);
+  const total = ids.reduce((sum,id,index)=>{
+    const country = COUNTRY_BY_ID[id];
+    const weight = index === 0 ? 1.45 : 0.55;
+    return sum + Math.round(baseBattlePower(country) * weight);
+  },0);
+  return Math.round(total * raid.difficulty);
+}
+function raidPlayerPower(country){
+  return Math.round(baseBattlePower(country) * 1.35) + Math.floor(Math.random() * 180);
+}
+function raidRewardCountry(country, raid){
+  if(raid.rewardType === 'special_final'){
+    specialEnhancements[country.id] = 6;
+    const finalSecret = createSpecialFinalSecret(country);
+    addCountry(finalSecret, 1);
+    return `${finalSecret.name} 획득`;
+  }
+  enhancements[country.id] = 11;
+  discovered.add(country.id);
+  inventory[country.id] = Math.max(1, inventory[country.id] || 0);
+  return `${country.name} 일반 최종 달성`;
+}
+function fallbackRaidReward(raid){
+  if(raid.rewardType === 'special_final'){
+    enhanceGems += 3;
+    coins += 120;
+    return '이미 최종 보상이 있어 보석 3개와 코인 120개를 획득';
+  }
+  enhanceTokens += 35;
+  coins += 100;
+  return '이미 최종 보상이 있어 강화 토큰 35개와 코인 100개를 획득';
+}
+function runRaid(id){
+  const raid = RAID_DATA.find(entry=>entry.id === id);
+  const country = COUNTRY_BY_ID[raidSelectedId];
+  if(!raid){
+    setRaidStatus('레이드를 찾을 수 없습니다');
+    return;
+  }
+  if(!country || !(inventory[country.id] > 0)){
+    setRaidStatus('레이드에 낼 대표 카드를 먼저 선택하세요');
+    return;
+  }
+  const playerPower = raidPlayerPower(country);
+  const enemyPower = raidEnemyPower(raid);
+  if(playerPower < enemyPower){
+    playSfx('tab');
+    setRaidStatus(`${raid.name} 패배 · ${country.name} ${playerPower} vs 레이드 ${enemyPower}`);
+    return;
+  }
+  raidWins[raid.id] = (raidWins[raid.id] || 0) + 1;
+  let rewardText = '';
+  const alreadyNormalFinal = raid.rewardType === 'normal_final' && enhanceLevel(country.id) >= 11;
+  const alreadySpecialFinal = raid.rewardType === 'special_final' && specialEnhanceLevel(country.id) >= 6 && Object.values(specialSecrets).some(secret=>secret.baseId === country.id);
+  if(alreadyNormalFinal || alreadySpecialFinal){
+    rewardText = fallbackRaidReward(raid);
+  }else{
+    rewardText = raidRewardCountry(country, raid);
+  }
+  playSfx('burst');
+  saveState();
+  renderResourceHud();
+  renderCollection();
+  renderInventory();
+  renderEnhanceTab();
+  renderRaidTab();
+  setRaidStatus(`<b>${raid.name} 승리</b> · ${country.name} ${playerPower} vs 레이드 ${enemyPower} · ${rewardText}`);
+}
+function selectRaidCard(id){
+  const country = COUNTRY_BY_ID[id];
+  if(!country || !(inventory[id] > 0)) return;
+  raidSelectedId = id;
+  playSfx('tab');
+  renderRaidTab();
+  setRaidStatus(`${country.name}을 레이드 대표 카드로 선택했습니다`);
+}
+function renderRaidTab(){
+  const list = document.getElementById('raid-list');
+  const grid = document.getElementById('raid-grid');
+  if(!list || !grid) return;
+  list.innerHTML = RAID_DATA.map(raid=>{
+    const boss = COUNTRY_BY_ID[raid.bossId];
+    const minions = raid.minionIds.map(id=>COUNTRY_BY_ID[id]).filter(Boolean);
+    const t = boss ? TIER_BY_KEY[boss.tier] : TIER_BY_KEY.legend;
+    return `<div class="shop-card" style="--tier-color:${t.color}">
+      <div class="shop-card-top">
+        <div>
+          <b>${raid.name}</b>
+          <span>${raid.rewardLabel} 보상 · 승리 ${raidWins[raid.id] || 0}회</span>
+        </div>
+        <span class="shop-price">전투력 ${raidEnemyPower(raid)}</span>
+      </div>
+      <div class="shop-desc">
+        <div class="battle-grid-title">보스</div>
+        <div class="mini-country-row">${boss ? `${flagImg(boss,'flag-img-small')}<span>${boss.name}</span>` : '보스 없음'}</div>
+        <div class="battle-grid-title">지원 국가</div>
+        <div class="raid-minions">${minions.map(country=>`<span class="gem-chip">${flagImg(country,'flag-img-small')} ${country.name}</span>`).join('')}</div>
+      </div>
+      <button class="btn btn-premium" data-raid-id="${raid.id}">레이드 도전</button>
+    </div>`;
+  }).join('');
+  const ownedAll = Object.entries(inventory)
+    .filter(([,count])=>count>0)
+    .map(([id,count])=>({country:COUNTRY_BY_ID[id], count}))
+    .filter(item=>item.country)
+    .sort((a,b)=>{
+      const rankA = TIER_BY_KEY[a.country.tier].rank;
+      const rankB = TIER_BY_KEY[b.country.tier].rank;
+      return rankA-rankB || a.country.name.localeCompare(b.country.name, 'ko');
+    });
+  if(!ownedAll.length){
+    grid.innerHTML = `<div class="empty-note">레이드에 낼 카드가 없습니다</div>`;
+    return;
+  }
+  grid.innerHTML = `<div class="inventory-grid">${ownedAll.map(({country,count})=>{
+    const t = TIER_BY_KEY[country.tier];
+    const picked = raidSelectedId === country.id;
+    return `<button class="inventory-card ${picked ? 'selected' : ''} ${enhancementClass(country.id)}" data-raid-card-id="${country.id}" style="--tier-color:${t.color}" title="${country.name}">
+      <span class="inv-selected">${picked ? '대표' : ''}</span>
       <span class="inv-count">x${count}</span>
       ${enhanceBadgeHtml(country.id)}
       ${flagImg(country,'flag-img-hist')}
@@ -2997,12 +3235,14 @@ function setTab(tab){
   document.getElementById('inventory-panel').classList.toggle('active', tab==='inventory');
   document.getElementById('enhance-panel-tab').classList.toggle('active', tab==='enhance');
   document.getElementById('battle-panel-tab').classList.toggle('active', tab==='battle');
+  document.getElementById('raid-panel-tab').classList.toggle('active', tab==='raid');
   document.getElementById('shop-panel-tab').classList.toggle('active', tab==='shop');
   document.getElementById('settings-panel-tab').classList.toggle('active', tab==='settings');
-  document.getElementById('section-title').textContent = tab==='inventory' ? '보관함' : tab==='enhance' ? '강화' : tab==='battle' ? '결투장' : tab==='shop' ? '상점' : tab==='settings' ? '설정' : '도감';
+  document.getElementById('section-title').textContent = tab==='inventory' ? '보관함' : tab==='enhance' ? '강화' : tab==='battle' ? '결투장' : tab==='raid' ? '레이드' : tab==='shop' ? '상점' : tab==='settings' ? '설정' : '도감';
   if(tab==='inventory') renderInventory();
   if(tab==='enhance') renderEnhanceTab();
   if(tab==='battle') renderBattleTab();
+  if(tab==='raid') renderRaidTab();
   if(tab==='shop') renderShop();
   if(tab==='settings') renderSettingsTab();
 }
@@ -3019,11 +3259,11 @@ document.getElementById('btn-dependent-ten').addEventListener('click',()=>playPu
 document.getElementById('btn-reset').addEventListener('click',()=>{
   if(!confirm('정말 초기화하시겠습니까?')) return;
   Object.keys(specialSecrets).forEach(id=>delete COUNTRY_BY_ID[id]);
-  discovered=new Set(); totalPulls=0; inventory={}; enhancements={}; specialEnhancements={}; enhanceGems=0; coins=0; enhanceTokens=0; boosts={luckUntil:0,doubleUntil:0}; specialSecrets={}; selectedCards=[]; synthTargetId=''; inventoryQuery=''; enhanceTargetId=''; enhanceQuery=''; enhanceMaterialCards=[]; battleRoomCode=''; battleSide='';
+  discovered=new Set(); totalPulls=0; inventory={}; enhancements={}; specialEnhancements={}; enhanceGems=0; coins=0; enhanceTokens=0; boosts={luckUntil:0,doubleUntil:0,extraPullUntil:0,coinUntil:0}; specialSecrets={}; raidWins={}; selectedCards=[]; synthTargetId=''; inventoryQuery=''; enhanceTargetId=''; enhanceQuery=''; enhanceMaterialCards=[]; battleRoomCode=''; battleSide=''; raidSelectedId='';
   renderResourceHud();
   document.getElementById('cards-area').innerHTML='';
   document.getElementById('result-banner').innerHTML='&nbsp;';
-  saveState(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab(); renderShop();
+  saveState(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab(); renderRaidTab(); renderShop();
 });
 document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>setTab(btn.dataset.tab)));
 document.getElementById('inventory-grid').addEventListener('click',event=>{
@@ -3037,6 +3277,14 @@ document.getElementById('enhance-grid').addEventListener('click',event=>{
 document.getElementById('battle-grid').addEventListener('click',event=>{
   const card = event.target.closest('.inventory-card');
   if(card) chooseBattleCard(card.dataset.battleId);
+});
+document.getElementById('raid-grid').addEventListener('click',event=>{
+  const card = event.target.closest('.inventory-card');
+  if(card) selectRaidCard(card.dataset.raidCardId);
+});
+document.getElementById('raid-list').addEventListener('click',event=>{
+  const btn = event.target.closest('[data-raid-id]');
+  if(btn) runRaid(btn.dataset.raidId);
 });
 document.getElementById('shop-grid').addEventListener('click',event=>{
   const btn = event.target.closest('[data-shop-id]');
@@ -3089,6 +3337,7 @@ renderCollection();
 renderInventory();
 renderEnhanceTab();
 renderBattleTab();
+renderRaidTab();
 renderShop();
 renderSettingsTab();
 setInterval(refreshServerBattleRoom, 2200);
