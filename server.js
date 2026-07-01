@@ -1,4 +1,4 @@
-import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
+﻿import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { createReadStream, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize } from 'node:path';
@@ -197,7 +197,12 @@ function serveStatic(req, res){
     '.png': 'image/png',
     '.svg': 'image/svg+xml'
   };
-  res.writeHead(200, { 'content-type': types[extname(filePath)] || 'application/octet-stream' });
+  res.writeHead(200, {
+    'content-type': types[extname(filePath)] || 'application/octet-stream',
+    'cache-control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    'pragma': 'no-cache',
+    'expires': '0'
+  });
   createReadStream(filePath).pipe(res);
 }
 
@@ -207,3 +212,4 @@ createServer((req, res)=>{
 }).listen(port, host, ()=>{
   console.log(`Country Gacha Online: http://${host === '0.0.0.0' ? 'localhost' : host}:${port}`);
 });
+
