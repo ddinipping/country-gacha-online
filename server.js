@@ -1,4 +1,4 @@
-﻿import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
+import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { createReadStream, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize } from 'node:path';
@@ -72,6 +72,17 @@ function getUser(req, db){
   return uid ? { token, uid, user: db.users[uid] } : null;
 }
 
+function publicUser(user){
+  return { uid: user.uid, loginId: user.loginId || user.email || '', nickname: user.nickname || '' };
+}
+function rankFor(user){
+  const state = user.state || {};
+  const discovered = Array.isArray(state.discovered) ? state.discovered.length : 0;
+  const pulls = Math.max(0, Number(state.totalPulls) || 0);
+  const coins = Math.max(0, Number(state.coins) || 0);
+  return { discovered, pulls, score: discovered * 10000 + Math.min(pulls, 999999) + Math.floor(Math.log10(coins + 1) * 100) };
+}
+
 async function handleApi(req, res){
   const url = new URL(req.url, `http://${req.headers.host}`);
   const db = readDb();
@@ -82,38 +93,57 @@ async function handleApi(req, res){
     }
 
     if(req.method === 'POST' && url.pathname === '/api/register'){
-      const { email, password } = await readBody(req);
-      const cleanEmail = String(email || '').trim().toLowerCase();
-      if(!cleanEmail || String(password || '').length < 4) return json(res, 400, { error: 'email_and_password_required' });
-      if(Object.values(db.users).some(u=>u.email === cleanEmail)) return json(res, 409, { error: 'email_exists' });
+      const { loginId, password } = await readBody(req);
+      const cleanId = String(loginId || '').trim().toLowerCase();
+      if(!/^[a-z0-9_]{3,20}$/.test(cleanId) || String(password || '').length < 4) return json(res, 400, { error: '아이디는 영문, 숫자, 밑줄 3~20자이며 비밀번호는 4자 이상이어야 합니다' });
+      if(Object.values(db.users).some(u=>String(u.loginId || u.email || '').toLowerCase() === cleanId)) return json(res, 409, { error: '이미 사용 중인 로그인 아이디입니다' });
       const uid = randomBytes(12).toString('hex');
       const pass = hashPassword(password);
-      db.users[uid] = { uid, email: cleanEmail, pass, state: null, createdAt: Date.now(), updatedAt: Date.now() };
+      db.users[uid] = { uid, loginId: cleanId, nickname: '', pass, state: null, createdAt: Date.now(), updatedAt: Date.now() };
       const token = makeToken();
       db.sessions[token] = uid;
       writeDb(db);
-      return json(res, 200, { token, user: { uid, email: cleanEmail } });
+      return json(res, 200, { token, user: publicUser(db.users[uid]) });
     }
 
     if(req.method === 'POST' && url.pathname === '/api/login'){
-      const { email, password } = await readBody(req);
-      const cleanEmail = String(email || '').trim().toLowerCase();
-      const user = Object.values(db.users).find(u=>u.email === cleanEmail);
+      const { loginId, password } = await readBody(req);
+      const cleanId = String(loginId || '').trim().toLowerCase();
+      const user = Object.values(db.users).find(u=>String(u.loginId || u.email || '').toLowerCase() === cleanId);
       if(!user) return json(res, 401, { error: 'invalid_login' });
       const pass = hashPassword(password, user.pass.salt);
       if(!safeEqual(pass.hash, user.pass.hash)) return json(res, 401, { error: 'invalid_login' });
       const token = makeToken();
       db.sessions[token] = user.uid;
       writeDb(db);
-      return json(res, 200, { token, user: { uid: user.uid, email: user.email } });
+      return json(res, 200, { token, user: publicUser(user) });
     }
 
     if(req.method === 'GET' && url.pathname === '/api/me'){
       const current = getUser(req, db);
       if(!current) return json(res, 401, { error: 'unauthorized' });
-      return json(res, 200, { user: { uid: current.uid, email: current.user.email } });
+      return json(res, 200, { user: publicUser(current.user) });
     }
 
+    if(req.method === 'POST' && url.pathname === '/api/profile'){
+      const current = getUser(req, db);
+      if(!current) return json(res, 401, { error: 'unauthorized' });
+      const { nickname } = await readBody(req);
+      const clean = String(nickname || '').trim();
+      if(clean.length < 2 || clean.length > 16) return json(res, 400, { error: '닉네임은 2~16자로 입력하세요' });
+      if(Object.values(db.users).some(u=>u.uid !== current.uid && String(u.nickname || '').toLowerCase() === clean.toLowerCase())) return json(res, 409, { error: '이미 사용 중인 닉네임입니다' });
+      current.user.nickname = clean;
+      current.user.updatedAt = Date.now();
+      writeDb(db);
+      return json(res, 200, { user: publicUser(current.user) });
+    }
+
+    if(req.method === 'GET' && url.pathname === '/api/ranking'){
+      const ranking = Object.values(db.users).map(user=>({ ...rankFor(user), nickname:user.nickname || user.loginId || user.email || '이름 없음' }))
+        .sort((a,b)=>b.score-a.score || b.discovered-a.discovered || b.pulls-a.pulls).slice(0,100)
+        .map((entry,index)=>({ rank:index+1, ...entry }));
+      return json(res, 200, { ranking, updatedAt:Date.now() });
+    }
     if(req.method === 'POST' && url.pathname === '/api/save'){
       const current = getUser(req, db);
       if(!current) return json(res, 401, { error: 'unauthorized' });
