@@ -6,14 +6,12 @@
 <title>국가뽑기 | 국가 뽑기 온라인</title><meta name="description" content="전 세계의 현재 국가, 역사 국가, 종속 지역과 국기를 수집하고 합성·강화·결투하는 국기뽑기 온라인 게임">
 <meta name="keywords" content="국가뽑기, 국기뽑기, 나라뽑기, 국기 게임, 국가 가챠, 역사 국가 게임">
 <meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="canonical" href="https://country-gacha-online.onrender.com/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:title" content="국가뽑기 | 국가 뽑기 온라인">
 <meta property="og:description" content="국기를 뽑아 국가를 수집하고 합성·강화·결투하는 온라인 게임">
-<meta property="og:url" content="https://country-gacha-online.onrender.com/">
 <meta name="twitter:card" content="summary">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"국가뽑기","alternateName":["국가 뽑기 온라인","나라뽑기","World Power Gacha"],"url":"https://country-gacha-online.onrender.com/","inLanguage":"ko","applicationCategory":"Game","operatingSystem":"Web Browser","description":"현재 국가와 역사 국가의 국기를 수집하고 합성, 강화, 결투하는 온라인 수집 게임"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"국가뽑기","alternateName":["국가 뽑기 온라인","나라뽑기","World Power Gacha"],"inLanguage":"ko","applicationCategory":"Game","operatingSystem":"Web Browser","description":"현재 국가와 역사 국가의 국기를 수집하고 합성, 강화, 결투하는 온라인 수집 게임"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
@@ -511,6 +509,8 @@ footer{text-align:center;font-size:11px;color:var(--text-dim);margin-top:38px;op
 @media(max-width:520px){.profile-row{grid-template-columns:1fr}.profile-row .btn{justify-self:stretch}}
 </style><style id="password-visibility-v1-style">
 .password-visibility{height:34px;border:1px solid #405674;background:#132238;color:#dce8f7;font-size:11px;font-weight:800;padding:0 10px;cursor:pointer;margin-top:5px}
+</style><style id="mobile-gacha-performance-v2">
+@media(max-width:600px){body{background:#090d18}.bg-grid{display:none}.resource-hud{backdrop-filter:none;-webkit-backdrop-filter:none}#cards-area .card-slot.small .card-front{animation:none!important;box-shadow:0 0 12px rgba(0,0,0,.45)!important}#cards-area .card-slot.small .card-front::before,#cards-area .card-slot.small .card-front::after{animation:none!important}.summon-cinematic{filter:none!important}.summon-cinematic .r2,.summon-cinematic .vertical{display:none!important}}
 </style></head>
 <body>
 <div class="bg-grid"></div>
@@ -887,9 +887,9 @@ const CURRENT_DATA = {
   legend:    [['us','미국'],['cn','중국'],['ru','러시아'],['gb','영국'],['fr','프랑스'],['de','독일'],['in','인도']],
   myth:      [['jp','일본'],['kr','대한민국'],['it','이탈리아'],['ca','캐나다'],['br','브라질'],['au','호주'],['il','이스라엘'],['sa','사우디아라비아'],['es','스페인'],['tr','튀르키예'],['ir','이란'],['pk','파키스탄'],['id','인도네시아'],['mx','멕시코'],['pl','폴란드']],
   epic:      [['nl','네덜란드'],['ch','스위스'],['se','스웨덴'],['ae','아랍에미리트'],['sg','싱가포르'],['eg','이집트'],['ng','나이지리아'],['za','남아프리카공화국'],['ar','아르헨티나'],['th','태국'],['vn','베트남'],['no','노르웨이'],['be','벨기에'],['ua','우크라이나'],['qa','카타르'],['kw','쿠웨이트'],['iq','이라크'],['dz','알제리'],['ph','필리핀'],['my','말레이시아'],['bd','방글라데시'],['co','콜롬비아'],['cl','칠레'],['cd','콩고민주공화국']],
-  sr:        [['at','오스트리아'],['gr','그리스'],['pt','포르투갈'],['dk','덴마크'],['fi','핀란드'],['ie','아일랜드'],['nz','뉴질랜드'],['cz','체코'],['hu','헝가리'],['ro','루마니아'],['kz','카자흐스탄'],['ma','모로코'],['ke','케냐'],['et','에티오피아'],['lk','스리랑카'],['pe','페루'],['ve','베네수엘라'],['cu','쿠바'],['do','도미니카공화국'],['jo','요르단'],['om','오만'],['bh','바레인'],['mm','미얀마'],['kh','캄보디아'],['la','라오스'],['mn','몽골'],['uz','우즈베키스탄'],['az','아제르바이잔'],['by','벨라루스'],['sk','슬로바키아'],['kp','북한']],
+  sr:        [['at','오스트리아'],['gr','그리스'],['pt','포르투갈','https://commons.wikimedia.org/wiki/Special:FilePath/Flag%20Portugal%20(1830).svg?width=320'],['dk','덴마크'],['fi','핀란드'],['ie','아일랜드'],['nz','뉴질랜드'],['cz','체코'],['hu','헝가리'],['ro','루마니아'],['kz','카자흐스탄'],['ma','모로코'],['ke','케냐'],['et','에티오피아'],['lk','스리랑카'],['pe','페루'],['ve','베네수엘라'],['cu','쿠바'],['do','도미니카공화국'],['jo','요르단'],['om','오만'],['bh','바레인'],['mm','미얀마'],['kh','캄보디아'],['la','라오스'],['mn','몽골'],['uz','우즈베키스탄'],['az','아제르바이잔'],['by','벨라루스'],['sk','슬로바키아'],['kp','북한']],
   rare:      [['bg','불가리아'],['rs','세르비아'],['hr','크로아티아'],['si','슬로베니아'],['lt','리투아니아'],['lv','라트비아'],['ee','에스토니아'],['is','아이슬란드'],['lu','룩셈부르크'],['cy','키프로스'],['mt','몰타'],['tn','튀니지'],['ly','리비아'],['sd','수단'],['gh','가나'],['tz','탄자니아'],['ug','우간다'],['zw','짐바브웨'],['zm','잠비아'],['ao','앙골라'],['mz','모잠비크'],['sn','세네갈'],['ci','코트디부아르'],['cm','카메룬'],['uy','우루과이'],['ec','에콰도르'],['bo','볼리비아'],['py','파라과이'],['pa','파나마'],['cr','코스타리카'],['gt','과테말라'],['hn','온두라스'],['sv','엘살바도르'],['ni','니카라과'],['jm','자메이카'],['tt','트리니다드토바고'],['np','네팔'],['af','아프가니스탄'],['ye','예멘'],['sy','시리아'],['lb','레바논'],['am','아르메니아'],['ge','조지아'],['md','몰도바'],['ba','보스니아헤르체고비나'],['mk','북마케도니아'],['al','알바니아'],['me','몬테네그로'],['xk','코소보'],['tm','투르크메니스탄'],['kg','키르기스스탄'],['tj','타지키스탄']],
-  common:    [['fj','피지'],['pg','파푸아뉴기니'],['sb','솔로몬제도'],['vu','바누아투'],['ws','사모아'],['to','통가'],['ki','키리바시'],['tv','투발루'],['nr','나우루'],['pw','팔라우'],['mh','마셜제도'],['fm','미크로네시아연방'],['bs','바하마'],['bb','바베이도스'],['lc','세인트루시아'],['vc','세인트빈센트그레나딘'],['gd','그레나다'],['dm','도미니카'],['kn','세인트키츠네비스'],['ag','앤티가바부다'],['ml','말리'],['bf','부르키나파소'],['ne','니제르'],['td','차드'],['cf','중앙아프리카공화국'],['cg','콩고공화국'],['ga','가봉'],['gq','적도기니'],['st','상투메프린시페'],['gn','기니'],['gw','기니비사우'],['sl','시에라리온'],['lr','라이베리아'],['tg','토고'],['bj','베냉'],['mr','모리타니'],['gm','감비아'],['cv','카보베르데'],['km','코모로'],['mg','마다가스카르'],['mw','말라위'],['bw','보츠와나'],['na','나미비아'],['ls','레소토'],['sz','에스와티니'],['rw','르완다'],['bi','부룬디'],['dj','지부티'],['er','에리트레아'],['so','소말리아'],['ss','남수단'],['bt','부탄'],['mv','몰디브'],['bn','브루나이'],['tl','동티모르'],['ad','안도라'],['mc','모나코'],['sm','산마리노'],['li','리히텐슈타인'],['va','바티칸시국'],['ps','팔레스타인'],['sc','세이셸'],['mu','모리셔스'],['gy','가이아나'],['sr','수리남'],['bz','벨리즈'],['ht','아이티']]
+  common:    [['fj','피지'],['pg','파푸아뉴기니'],['sb','솔로몬제도'],['vu','바누아투'],['ws','사모아'],['to','통가'],['ki','키리바시'],['tv','투발루'],['nr','나우루'],['pw','팔라우'],['mh','마셜제도'],['fm','미크로네시아연방'],['bs','바하마'],['bb','바베이도스'],['lc','세인트루시아'],['vc','세인트빈센트그레나딘'],['gd','그레나다'],['dm','도미니카'],['kn','세인트키츠네비스'],['ag','앤티가바부다'],['ml','말리'],['bf','부르키나파소'],['ne','니제르'],['td','차드'],['cf','중앙아프리카공화국'],['cg','콩고공화국'],['ga','가봉'],['gq','적도기니'],['st','상투메프린시페'],['gn','기니'],['gw','기니비사우'],['sl','시에라리온'],['lr','라이베리아'],['tg','토고'],['bj','베냉'],['mr','모리타니'],['gm','감비아'],['cv','카보베르데'],['km','코모로'],['mg','마다가스카르'],['mw','말라위'],['bw','보츠와나'],['na','나미비아'],['ls','레소토'],['sz','에스와티니'],['rw','르완다'],['bi','부룬디'],['dj','지부티'],['er','에리트레아'],['so','소말리아'],['ss','남수단'],['bt','부탄'],['mv','몰디브'],['bn','브루나이'],['tl','동티모르'],['ad','안도라'],['sm','산마리노'],['li','리히텐슈타인'],['va','바티칸시국'],['ps','팔레스타인'],['sc','세이셸'],['mu','모리셔스'],['gy','가이아나'],['sr','수리남'],['bz','벨리즈'],['ht','아이티']]
 };
 
 // Dependent/autonomous regions: [id, name, flag code | file:name | URL | composite, governing country/area]
@@ -2471,7 +2471,7 @@ function renderSettingsTab(){
   const volume = document.getElementById('setting-volume');
   const user = document.getElementById('online-user');
   if(volume) volume.value = Math.round(settings.volume * 100);
-  if(user) user.textContent = serverOnline.user ? `서버 로그인: ${serverOnline.user.nickname || serverOnline.user.loginId}` : serverOnline.enabled ? '서버 접속 가능' : '오프라인';
+  if(user) user.textContent = serverOnline.user ? `서버 로그인: ${serverOnline.user.nickname || serverOnline.user.loginId || serverOnline.user.email}` : serverOnline.enabled ? '서버 접속 가능' : '오프라인';
 }
 async function serverApi(path, options={}){
   const headers = {'content-type':'application/json', ...(options.headers || {})};
@@ -2492,7 +2492,7 @@ async function initServerOnline(){
     const data = await serverApi('/api/me');
     serverOnline.user = data.user;
     renderSettingsTab();
-    setSettingsStatus(`<b>${serverOnline.user.nickname || serverOnline.user.loginId}</b> 서버 계정 연결됨`);
+    setSettingsStatus(`<b>${serverOnline.user.nickname || serverOnline.user.loginId || serverOnline.user.email}</b> 서버 계정 연결됨`);
     window.promptNicknameIfNeeded?.();
     return true;
   }catch(e){
@@ -2511,17 +2511,31 @@ async function serverLogin(create=false){
     return true;
   }
   try{
-    const data = await serverApi(create ? '/api/register' : '/api/login', {
-      method:'POST',
-      body:JSON.stringify({loginId, password})
-    });
+    let data;
+    try{
+      data = await serverApi(create ? '/api/register' : '/api/login', {
+        method:'POST', body:JSON.stringify({loginId, email:loginId, password})
+      });
+    }catch(loginError){
+      if(create || !String(loginError.message || loginError).includes('invalid_login')) throw loginError;
+      try{
+        data = await serverApi('/api/register', {
+          method:'POST', body:JSON.stringify({loginId, email:loginId, password})
+        });
+        data.restoredAccount = true;
+      }catch(restoreError){
+        throw loginError;
+      }
+    }
     serverOnline.token = data.token;
     serverOnline.user = data.user;
     localStorage.setItem('country_gacha_server_token', serverOnline.token);
+    localStorage.setItem('country_gacha_last_login_id', loginId);
+    serverOnline.user.loginId = serverOnline.user.loginId || serverOnline.user.email || loginId;
     renderSettingsTab();
     window.promptNicknameIfNeeded?.();
-    if(create){
-      setSettingsStatus('서버 가입 완료');
+    if(create || data.restoredAccount){
+      setSettingsStatus(data.restoredAccount ? '서버 계정이 초기화되어 같은 아이디로 자동 복구했습니다' : '서버 가입 완료');
       await serverUploadSave(false);
     }else{
       await serverSyncAfterLogin();
@@ -2539,7 +2553,7 @@ async function serverSyncAfterLogin(){
       applyGameStateSnapshot(data.state);
       try{ localStorage.setItem(STORE_KEY, JSON.stringify(gameStateSnapshot())); }catch(e){}
       renderResourceHud(); renderCollection(); renderInventory(); renderEnhanceTab(); renderBattleTab(); renderRaidTab(); renderShop();
-      setSettingsStatus(`<b>${serverOnline.user.nickname || serverOnline.user.loginId}</b> 서버 저장 불러오기 완료`);
+      setSettingsStatus(`<b>${serverOnline.user.nickname || serverOnline.user.loginId || serverOnline.user.email}</b> 서버 저장 불러오기 완료`);
       return true;
     }
     await serverUploadSave(false);
@@ -4985,7 +4999,7 @@ setInterval(()=>{ if(!document.hidden && activeTab === 'shop') renderShop(); }, 
   const fronts=[...area.querySelectorAll('.card-front')],tiers=fronts.map(el=>[...el.classList].find(x=>x.startsWith('tier-'))?.slice(5)||'common');
   const best=[...tiers].sort((a,b)=>(power[b]??0)-(power[a]??0))[0]||'common',rank=power[best]??0,color=colors[best]||'#ffe37a';
   slots.forEach((el,i)=>{const tier=tiers[i]||'common';el.classList.remove('impact-arrive');el.style.setProperty('--impact-delay',`${Math.min(i*72,620)}ms`);el.style.setProperty('--card-glow',colors[tier]||color);requestAnimationFrame(()=>el.classList.add('impact-arrive'))});
-  stage.classList.remove('gacha-charge','gacha-jackpot');void stage.offsetWidth;stage.classList.add('gacha-charge');cinematic(color,rank);burst(color,(matchMedia('(max-width:600px)').matches?8:18)+rank*(matchMedia('(max-width:600px)').matches?1:3),rank);
+  stage.classList.remove('gacha-charge','gacha-jackpot');void stage.offsetWidth;stage.classList.add('gacha-charge');cinematic(color,rank);burst(color,(matchMedia('(max-width:600px)').matches?5:18)+rank*(matchMedia('(max-width:600px)').matches ? .7 : 3),rank);
   if(rank>=5){setTimeout(()=>stage.classList.add('gacha-jackpot'),260);const [label,labelColor]=call[best]||['초월급 등장',color],box=document.createElement('div');box.className='impact-call';box.style.setProperty('--impact-color',labelColor);box.innerHTML=`${label}<small>${slots.length>=10?'10연속 소환':'국가 소환'}</small>`;document.body.appendChild(box);setTimeout(()=>box.remove(),1900)}
   setTimeout(()=>stage.classList.remove('gacha-charge','gacha-jackpot'),2050);
  }
@@ -5082,11 +5096,15 @@ setInterval(()=>{ if(!document.hidden && activeTab === 'shop') renderShop(); }, 
  const skinOf=id=>{try{return (JSON.parse(localStorage.getItem(skinKey)||'{}')||{})[id]||'default'}catch(e){return 'default'}};
  window.getCountrySkin=skinOf;
  window.applyAllCountrySkins=()=>{
-  const names=new Map(Object.values(COUNTRY_BY_ID).map(c=>[c.name,c.id]));
+  let countryMap;
+  try{ countryMap=COUNTRY_BY_ID; }catch(e){ return false; }
+  if(!countryMap)return false;
+  const names=new Map(Object.values(countryMap).map(c=>[c.name,c.id]));
   document.querySelectorAll('.inventory-card[data-id]').forEach(el=>window.applyCountrySkin?.(el,el.dataset.id));
   document.querySelectorAll('#collection-grid .chip[title]').forEach(el=>{const name=(el.title||'').split(' · ')[0],id=names.get(name);if(id)window.applyCountrySkin?.(el,id)});
+  return true;
  };
- let skinTimer=0;new MutationObserver(()=>{clearTimeout(skinTimer);skinTimer=setTimeout(window.applyAllCountrySkins,40)}).observe(document.querySelector('.collection')||document.body,{childList:true,subtree:true});window.applyAllCountrySkins();
+ let skinTimer=0;new MutationObserver(()=>{clearTimeout(skinTimer);skinTimer=setTimeout(()=>window.applyAllCountrySkins?.(),80)}).observe(document.querySelector('.collection')||document.body,{childList:true,subtree:true});setTimeout(()=>window.applyAllCountrySkins?.(),0);
  function modal(){const back=document.createElement('div');back.className='game-modal-backdrop';back.id='community-modal';back.innerHTML='<section class="game-modal"><header class="game-modal-head"><h3>교환 · 카드 자랑</h3><button class="modal-close">×</button></header><div class="community-tabs"><button class="btn btn-gold" data-view="trade">교환소</button><button class="btn" data-view="showcase">카드 자랑</button><button class="btn" id="community-refresh">새로고침</button></div><div id="community-body"></div></section>';back.querySelector('.modal-close').onclick=()=>back.classList.remove('open');back.onclick=e=>{if(e.target===back)back.classList.remove('open')};document.body.appendChild(back);return back}
  const back=modal(),body=back.querySelector('#community-body');let view='trade',data={trades:[],showcases:[]};
  const hub=document.querySelector('#utility-hub-modal .utility-menu-grid');if(hub){const b=document.createElement('button');b.className='utility-menu-btn';b.textContent='교환 · 카드 자랑';b.onclick=()=>{document.getElementById('utility-hub-modal').classList.remove('open');openCommunity()};hub.appendChild(b)}
@@ -5147,6 +5165,8 @@ setInterval(()=>{ if(!document.hidden && activeTab === 'shop') renderShop(); }, 
  function attach(input){if(!input||input.dataset.visibilityReady)return;input.dataset.visibilityReady='1';const button=document.createElement('button');button.type='button';button.className='password-visibility';button.textContent='비밀번호 표시';button.onclick=()=>{const show=input.type==='password';input.type=show?'text':'password';button.textContent=show?'비밀번호 숨기기':'비밀번호 표시'};input.insertAdjacentElement('afterend',button)}
  document.querySelectorAll('input[type="password"]').forEach(attach);new MutationObserver(()=>document.querySelectorAll('input[type="password"]:not([data-visibility-ready])').forEach(attach)).observe(document.body,{childList:true,subtree:true});
 })();
+</script><script id="login-prefill-performance-v1">
+(()=>{const input=document.getElementById('login-id');if(input&&!input.value)input.value=localStorage.getItem('country_gacha_last_login_id')||''})();
 </script></body>
 </html>
 
